@@ -1,0 +1,131 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage[]{mathtools}
+\usepackage{amsthm}
+\DeclareMathOperator{\Tr}{Tr}
+\usepackage[]{thmtools}
+\declaretheorem{theorem}
+\declaretheorem[numberwithin=section]{definition}
+\usepackage[]{bbm}
+\usepackage[]{amssymb}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\begin{document}
+
+{\parindent 0pt \begin{tabular}[t]{l}
+EE 227BT \\
+\end{tabular}  \hfill \today \vskip 0.2in }
+
+\parindent 0pt
+\parskip 8pt
+
+% OUTLINE
+%
+%               1. WRITE LATER:  Set the state of how CSP's relate to optimization and decision problems
+%					ASSUME "x" background...
+%               2. WRITE ASAP: Provide formal defintion of problem statement and examples
+%
+%
+%
+%
+%
+%
+%
+%
+
+\section*{Preliminaries}
+
+The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
+
+It is assumed that the reader has some familiarity fundamentals of algorithmic complexity, including big-Oh notation for algorithm runtime, as well as NP-hardness and NP-completeness. 
+For the reader's convenience, we define some key terms in complexity theory below.
+
+A reader with some knowledge of ``approximation algorithms" is likely to better appreciate the material in this report, but strictly speaking, the prior knowledge is not necessary. 
+We provide a very brief introduction to approximation algorithms below. 
+Those experienced in the field should pay special attention to Definition \ref{def:twoParamApproxAlg}, which has seen only limited use.
+
+\subsubsection*{NP-Hardness and NP-Completeness}
+
+\begin{definition}
+\textbf{Decision Problem: } A decision problem is a \textit{question}.
+ Given some input data, and a set of rules, does the input data satisfy the rules?
+\end{definition}
+It is implied that sufficient data is provided to definitively answer ``yes" or ``no", even if determining the answer might take a prohibitively long amount of time.
+\begin{definition}
+\textbf{NP: } A decision problem is in NP if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
+There are no requirements for ``no" answers.
+\end{definition}
+\begin{definition}
+\textbf{NP Complete: } A decision problem $\mathcal{P}$ is said to be NP-Complete if (1)
+$\mathcal{P} \in $ NP, and (2) any other problem $\mathcal{Q} \in$ NP can be stated ``succinctly" in terms of $\mathcal{P}$ .
+\end{definition}
+By ``succinctly", we mean that the transformation from $\mathcal{Q}$ to the equivalent problem in the terms of $\mathcal{P}$ can be done in both polynomial time and space.
+\footnote{This process of carrying out this transformation is usually called a ``reduction."}
+\begin{definition}
+\textbf{NP-Hard: } A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be NP-Hard if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
+\end{definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   The simplest way to understand CSP's: your constriants are all of a similar form, and can be rewritten as unconstrained optimization with the goal of maximizing number of satisfied constraints.
+%   Super clear for how this is what's happening with Max-SAT
+%   Not so clear about how this is happening with Max-Cut. (other than being binary, what constraints are there?)
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Approximation Algorithms for Optimization Problems}\label{subsec:intractProbCope}
+
+Although ``problems" are said to be intractable, we actually only solve problem \textit{instances}. 
+In a variety of circumstances, it is reasonable to solve an instance of an intractable problem with an exact but exponential algorithm.
+
+For example, there is billions of dollars of capital involved in coordinating the movements of even a handful of trans-oceanic shipping vessels. 
+Although not necessarily the case, it is very likely that such a logistics problem would be NP-Hard.
+Nevertheless, if there are a sufficiently small number of decisions to be made in this planning process, it could make perfect sense to solve the planning problem with an exact algorithm.
+
+The situation changes slightly when deadlines are involved, since getting \textit{some} solution by a deadline time is often more important than getting the \textit{best} solution after that time. 
+The presence of imminent deadlines does not completely rule out the use of exact algorithms; high powered computers with sophisticated (but still exponential) algorithms are often used under these circumstances. 
+Logistics for airlines is one prominent example.
+
+But when an intractable problem has thousands of variables, exact methods are typically worthless. 
+For those facing intractable problems of this scale, algorithms which provide solutions within a reasonable amount of time are of paramount importance.  
+When the algorithm \textit{does} have a performance guarantee, it is referred to as an ``approximation algorithm."
+We give a definition below in the case where the objective is to maximize some function. 
+
+\begin{definition}
+\textbf{$\alpha$ Approximation Algorithm: } Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
+Let $A$ denote an efficient algorithm which returns a feasible but potentially sub-optimal solution for any $I \in \Omega$. 
+Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote the value of the optimal solution for $I$ by $OPT(I)$. We call $A$ a $\alpha$ approximation if
+\begin{equation*}
+\frac{OPT(I)}{A(I)} \leq \alpha ~ \forall I \in \Omega
+\end{equation*}
+\label{def:commonApproxAlg}
+\end{definition}
+
+Definition \ref{def:commonApproxAlg} is the most common definition of an approximation algorithm, and is suitable for many applications. It can be useful, however, to describe how performance guarantees relate to the optimal objective value. 
+\begin{definition}
+\textbf{$(\alpha,\beta)$  Approximation Algorithm: } Let $\Omega$, $I$, and $A$ be as before. 
+Define $\Omega_\beta$ as the set of all problem instances with $OPT(I) \geq \beta \forall I \in \Omega_\beta$.
+We call $A$ an $(\alpha,\beta)$ approximation if 
+\begin{equation*}
+\frac{OPT(I)}{A(I)} \leq \alpha ~ \forall I \in \Omega_{\beta}
+\end{equation*}
+\label{def:twoParamApproxAlg}
+\end{definition}
+
+\section{Introduction}
+
+\subsection{Getting Oriented with Constraint Satisfaction Problems}
+
+There is a great deal of research going into the approximabilty of constraint satisfaction problems, and some claims regarding CSP's can seem quite sensational. 
+The list of points below gives some facts relating to CSP's to help orient the reader.
+
+\begin{itemize}
+\item[1.] CSP's are a very broad class of problems, which are NP-Hard in general.
+\item[2.] The objective of a CSP is to satisfy as many constraints as possible; there is no constraint in a CSP that is ``safe" from violation.
+\item[3.] Some optimization problems (such as Max-Cut), and some decision problems (such as 3-SAT) can be stated as CSP's.
+\item[4.] Semidefinite Programming is the primary technique for CSP approximation.
+\item[5.] The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
+\end{itemize}
+
+\end{document}
