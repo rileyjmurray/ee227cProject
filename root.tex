@@ -1,16 +1,21 @@
 \documentclass[letterpaper]{article}
 
-\usepackage[margin=2.5cm]{geometry}
+%\usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amsthm,amssymb}
+\usepackage{fullpage}
+\usepackage[]{mathtools}
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[]{bbm}
 
 \input{sections/shortcuts}
-
-\DeclareMathOperator{\Tr}{Tr}
 \newtheorem{thm}{Theorem}
-\newtheorem{definition}{Definition}
-\usepackage[]{bbm}
+\declaretheoremstyle[bodyfont=\normalfont, spaceabove=0.5cm]{noItalics}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{definition}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{Definition}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand{\norm}[1]{\lVert #1 \rVert}
+\DeclareMathOperator{\Tr}{Tr}
 
 \begin{document}
 	\begin{center}
@@ -19,24 +24,14 @@
 		}
 	\end{center}
 	
-	
 	% intro
 	\input{sections/introduction}
 	
 	% lp relaxation
 	
 	
-	
-	
-	
 	% sdp relaxation
 	\input{sections/sdp}
-	
-	
-	
-	
-	
-	
 	
 	
 	\bibliographystyle{abbrv}
