@@ -35,7 +35,7 @@ Those experienced in the field should pay special attention to Definition \ref{d
 
 The focus of this paper will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
 
-\subsubsection*{NP-Hardness and NP-Completeness}
+\subsection*{NP-Hardness and NP-Completeness}
 \begin{definition}
 \textbf{Decision Problem  } A decision problem is a \textit{question}.
  Given some input data, and a set of rules, does the input data satisfy the rules?
@@ -108,7 +108,6 @@ The list of points below gives some facts relating to CSP's to help orient the r
 \item The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
 \end{itemize}
 
-
 \subsection{The CSP Framework and CSP Instances}
 Define the \textit{arity} of an indicator function $R$ as the number of arguments it takes, and denote the arity by $\text{ar}(R)$.
 
@@ -152,8 +151,5 @@ When we do this, we can interpret the weights as probabilities and $C$ as a rand
 \end{equation}
 
 \textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. The ``constraints" in Definition \ref{def:CSPinstance} depart from this convention in that a feasible solution is not required to satisfy any of these constraints. It may seem for a moment then that CSP's do not have inviolable constraints - but this is not the case. The CSP Framework has one and only one inviolable constraint: each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
-
-
-
 
 \end{document}
