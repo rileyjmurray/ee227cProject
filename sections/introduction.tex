@@ -145,11 +145,15 @@ To simplify notation, we will often write $F(C_i)$ in place of $R_i(F(S_i))$.
 
 \subsubsection{Discussion of Definition \ref{def:CSPinstance}}
 \textbf{Remarks on the objective function - }Without loss of generality, we may take the weights to sum to 1. 
-When we do this, we can interpret the weights as probabilities and $C$ as a random variable ($C = C_i$ with probabilty $w_i$). In this notation, we can write any CSP instance as
+When we do this, we can interpret the weights as probabilities and $C$ as a random variable ($C = C_i$ with probabilty $w_i$). 
+In this notation, we can write any CSP instance as
 \begin{equation}
 \max_{F: V \to D} \mathbb{E}\left[F(C)\right]
 \end{equation}
 
-\textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. The ``constraints" in Definition \ref{def:CSPinstance} depart from this convention in that a feasible solution is not required to satisfy any of these constraints. It may seem for a moment then that CSP's do not have inviolable constraints - but this is not the case. The CSP Framework has one and only one inviolable constraint: each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
+\textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. 
+The ``constraints" in Definition \ref{def:CSPinstance} depart from this convention in that a feasible solution is not required to satisfy any of these constraints. 
+It may seem for a moment then that CSP's do not have inviolable constraints - but this is not the case. 
+The CSP Framework has one and only one inviolable constraint: each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
 
 \end{document}
