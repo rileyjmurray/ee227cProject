@@ -4,8 +4,11 @@
 \usepackage{amsthm}
 \DeclareMathOperator{\Tr}{Tr}
 \usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
 \declaretheorem{theorem}
-\declaretheorem[numberwithin=section]{definition}
+\declaretheoremstyle[bodyfont=\normalfont, spaceabove=0.5cm]{noItalics}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{definition}
+\declaretheorem[numbered=no, style=remark]{remark}
 \usepackage[]{bbm}
 \usepackage[]{amssymb}
 \renewcommand{\vec}[1]{\mathbf{#1}}
@@ -19,20 +22,6 @@ EE 227BT \\
 \parindent 0pt
 \parskip 8pt
 
-% OUTLINE
-%
-%               1. WRITE LATER:  Set the state of how CSP's relate to optimization and decision problems
-%					ASSUME "x" background...
-%               2. WRITE ASAP: Provide formal defintion of problem statement and examples
-%
-%
-%
-%
-%
-%
-%
-%
-
 \section*{Preliminaries}
 
 The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
@@ -44,35 +33,26 @@ A reader with some knowledge of ``approximation algorithms" is likely to better 
 We provide a very brief introduction to approximation algorithms below. 
 Those experienced in the field should pay special attention to Definition \ref{def:twoParamApproxAlg}, which has seen only limited use.
 
-\subsubsection*{NP-Hardness and NP-Completeness}
+The focus of this paper will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
 
+\subsubsection*{NP-Hardness and NP-Completeness}
 \begin{definition}
-\textbf{Decision Problem: } A decision problem is a \textit{question}.
+\textbf{Decision Problem  } A decision problem is a \textit{question}.
  Given some input data, and a set of rules, does the input data satisfy the rules?
 \end{definition}
 It is implied that sufficient data is provided to definitively answer ``yes" or ``no", even if determining the answer might take a prohibitively long amount of time.
 \begin{definition}
-\textbf{NP: } A decision problem is in NP if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
+\textbf{NP  } A decision problem is in NP if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
 There are no requirements for ``no" answers.
 \end{definition}
 \begin{definition}
-\textbf{NP Complete: } A decision problem $\mathcal{P}$ is said to be NP-Complete if (1)
+\textbf{NP Complete  } A decision problem $\mathcal{P}$ is said to be NP-Complete if (1)
 $\mathcal{P} \in $ NP, and (2) any other problem $\mathcal{Q} \in$ NP can be stated ``succinctly" in terms of $\mathcal{P}$ .
 \end{definition}
-By ``succinctly", we mean that the transformation from $\mathcal{Q}$ to the equivalent problem in the terms of $\mathcal{P}$ can be done in both polynomial time and space.
-\footnote{This process of carrying out this transformation is usually called a ``reduction."}
+By ``succinctly", we mean that the transformation from $\mathcal{Q}$ to the equivalent problem in the terms of $\mathcal{P}$ can be done in both polynomial time and space.\footnote{This process of carrying out this transformation is usually called a ``reduction."}
 \begin{definition}
-\textbf{NP-Hard: } A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be NP-Hard if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
+\textbf{NP-Hard  } A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be NP-Hard if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
 \end{definition}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%   The simplest way to understand CSP's: your constriants are all of a similar form, and can be rewritten as unconstrained optimization with the goal of maximizing number of satisfied constraints.
-%   Super clear for how this is what's happening with Max-SAT
-%   Not so clear about how this is happening with Max-Cut. (other than being binary, what constraints are there?)
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Approximation Algorithms for Optimization Problems}\label{subsec:intractProbCope}
 
@@ -83,7 +63,7 @@ For example, there is billions of dollars of capital involved in coordinating th
 Although not necessarily the case, it is very likely that such a logistics problem would be NP-Hard.
 Nevertheless, if there are a sufficiently small number of decisions to be made in this planning process, it could make perfect sense to solve the planning problem with an exact algorithm.
 
-The situation changes slightly when deadlines are involved, since getting \textit{some} solution by a deadline time is often more important than getting the \textit{best} solution after that time. 
+The situation changes slightly when deadlines are involved, since getting \textit{some} solution by a deadline is often more important than getting the \textit{best} solution after that time. 
 The presence of imminent deadlines does not completely rule out the use of exact algorithms; high powered computers with sophisticated (but still exponential) algorithms are often used under these circumstances. 
 Logistics for airlines is one prominent example.
 
@@ -93,9 +73,9 @@ When the algorithm \textit{does} have a performance guarantee, it is referred to
 We give a definition below in the case where the objective is to maximize some function. 
 
 \begin{definition}
-\textbf{$\alpha$ Approximation Algorithm: } Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
+\textbf{($\alpha$)-Approximation Algorithm: } Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
 Let $A$ denote an efficient algorithm which returns a feasible but potentially sub-optimal solution for any $I \in \Omega$. 
-Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote the value of the optimal solution for $I$ by $OPT(I)$. We call $A$ a $\alpha$ approximation if
+Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote the value of the optimal solution for $I$ by $OPT(I)$. We call $A$ an $\alpha$-approximation if
 \begin{equation*}
 \frac{OPT(I)}{A(I)} \leq \alpha ~ \forall I \in \Omega
 \end{equation*}
@@ -104,7 +84,7 @@ Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote th
 
 Definition \ref{def:commonApproxAlg} is the most common definition of an approximation algorithm, and is suitable for many applications. It can be useful, however, to describe how performance guarantees relate to the optimal objective value. 
 \begin{definition}
-\textbf{$(\alpha,\beta)$  Approximation Algorithm: } Let $\Omega$, $I$, and $A$ be as before. 
+\textbf{$(\alpha,\beta)$-Approximation Algorithm } Let $\Omega$, $I$, and $A$ be as before. 
 Define $\Omega_\beta$ as the set of all problem instances with $OPT(I) \geq \beta \forall I \in \Omega_\beta$.
 We call $A$ an $(\alpha,\beta)$ approximation if 
 \begin{equation*}
@@ -121,11 +101,59 @@ There is a great deal of research going into the approximabilty of constraint sa
 The list of points below gives some facts relating to CSP's to help orient the reader.
 
 \begin{itemize}
-\item[1.] CSP's are a very broad class of problems, which are NP-Hard in general.
-\item[2.] The objective of a CSP is to satisfy as many constraints as possible; there is no constraint in a CSP that is ``safe" from violation.
-\item[3.] Some optimization problems (such as Max-Cut), and some decision problems (such as 3-SAT) can be stated as CSP's.
-\item[4.] Semidefinite Programming is the primary technique for CSP approximation.
-\item[5.] The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
+\item CSP's are a very broad class of problems, which are NP-Hard in general.
+\item The objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables be in some simple, discrete domain.
+\item The CSP framework can be applied to both optimization problems (such as Max-Cut) and decision problems (such as 3-SAT)
+\item Semidefinite Programming is the primary technique for CSP approximation.
+\item The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
 \end{itemize}
+
+
+\subsection{The CSP Framework and CSP Instances}
+Define the \textit{arity} of an indicator function $R$ as the number of arguments it takes, and denote the arity by $\text{ar}(R)$.
+
+\begin{definition}
+\textbf{The CSP Framework} \\
+Let $D$ be a finite domain of fixed cardinality $q$. 
+Let $R$ denote an indicator function over $D$ with arity $r \leq k$ (i.e. $R:D^r \to \{0,1\}$). 
+Let $\Gamma$ be a possibly exhaustive set of such functions. 
+$D$ and $\Gamma$ define a \textit{class} of problems which we denote CSP($\Gamma$).
+\label{def:CSPframework}
+\end{definition}
+
+We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serve as \textit{labels}, without any of the algebreic structure implied by the use of integers.
+
+\textbf{Examples}
+\begin{itemize}
+\item $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of up to $k$ literals.
+\item Cut : $D = \{0,1\}$, $\Gamma = \{\neq\}$ is the ``not equal" operator. The Cut problem seeks a partition of a graph into two disjoint sets.
+\item $q-$Coloring : $D = \{0,1,\ldots,q-1\}$, $\Gamma = \{\neq\}$.
+\item $3-$CSP : $D = \{0,1\}$, $\Gamma$ is all relations on up to three binary variables.
+\end{itemize}
+
+\begin{definition}
+\textbf{CSP Instance}\\
+An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by a set of $n$ variables (denoted $V$), as well as $m$ constraints and $m$ positive weights (one for each constraint). 
+Every constraint $C_i \in \mathcal{C}$ has the form $C_i = (R_i,S_i)$ where $R_i \in \Gamma$ and $S_i$ (said to be the \textit{scope} of $C_i$) is a possibly ordered list of \text{ar}($R_i$) variables. 
+
+If $F$ (a mapping $ V\to D$) is a given assignment of variables, then $R_i(F(S_i))$ equals either 1 or 0, in which case constraint $C_i$ is said to be ``satisfied" or ``not satisfied" respectively.
+The objective is to maximize the weighted sum of satisfied constraints $\sum_{i = 1}^m w_i R_i(F(S_i))$. 
+
+$\mathcal{C}$ is said to be \textit{satisfiable} if $\forall i, ~ R_i(F(S_i)) = 1$ at optimality.
+\label{def:CSPinstance}
+\end{definition}
+To simplify notation, we will often write $F(C_i)$ in place of $R_i(F(S_i))$.
+
+\subsubsection{Discussion of Definition \ref{def:CSPinstance}}
+\textbf{Remarks on the objective function - }Without loss of generality, we may take the weights to sum to 1. 
+When we do this, we can interpret the weights as probabilities and $C$ as a random variable ($C = C_i$ with probabilty $w_i$). In this notation, we can write any CSP instance as
+\begin{equation}
+\max_{F: V \to D} \mathbb{E}\left[F(C)\right]
+\end{equation}
+
+\textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. The ``constraints" in Definition \ref{def:CSPinstance} depart from this convention in that a feasible solution is not required to satisfy any of these constraints. It may seem for a moment then that CSP's do not have inviolable constraints - but this is not the case. The CSP Framework has one and only one inviolable constraint: each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
+
+
+
 
 \end{document}
