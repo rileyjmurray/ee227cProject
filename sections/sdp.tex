@@ -11,7 +11,7 @@
 %\input sdpbegin.tex
 %\input sdpmain.tex
 
-\section{Motivation}
+\subsection{Motivation}
 
 Recall that we started with an Integer Programming formulation of the CSP - Introduce $D$ slack variables, namely $\mu_v(\ell) \in \{ 0, 1 \}, \fa \ell \in D, v \in V $ for each variable $v \in V$, with the constraint as $\sum_{\ell  \in D} \mu_v(\ell) = 1$, which is simply saying that each variable takes exactly one of the values $\ell$ in $D$. 
 Similarly one introduces dummy variables for each constraint $C=(R,S)$, namely $\la_C(L) \in \{ 0, 1\} \fa L : S \rightarrow D$, where $L$ simply stands for an assignment over the variables in the scope of $C$. 
@@ -27,7 +27,7 @@ The relaxation will be with respect to IP formulation, but tightening with respe
 The intuition for such a relaxation can be motivated by the relaxation procedure for MAX - CUT problem which we present next. 
 It is further established, that this relaxation is in-fact the optimal poly-time relaxation for any general CSP, first by assuming Unique Games Conjecture and then later in fact more generally. 
 
-\section{MAX-CUT Problem - Revisited!}
+\subsection{MAX-CUT Problem - Revisited!}
 
 MAX CUT problem can be formulated as the following integer quadratic program : 
 \al{
@@ -43,7 +43,7 @@ If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then o
 which is clearly an SDP and can be solved in polynomial time, i.e. efficiently! 
 Thus we see that the SDPs did pop out for a MAX CUT relaxation.
 
-\section{Basic SDP Relxation}
+\subsection{Basic SDP Relxation}
 
 The SDP relaxation is similar to the LP realization but with an important generalization. 
 We will have the exactly same probability distribution $\la_C$ for each constraint and the same objective function. 
@@ -106,7 +106,7 @@ an equivalent formulation; i.e., any solution $\mathcal{S}$ to the Basic SDP whi
 = \mbox{SDPVal}_\C (\Sm)$.
 \end{remark}
 
-\section{How is this an SDP?}
+\subsection{How is this an SDP?}
 
 Note that for a given $C =(R, S) \in \mathcal{C}$, $\la_C$ is a probability distribution over all possible assignments $\mathcal{L}_C = \{L | L: V|_S \rightarrow D\}$. 
 If we define 
@@ -145,7 +145,7 @@ Last but not the least, the way we have defined $\Si$, we have the equivalent co
 Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
 
 
-\section{Some Analysis}
+\subsection{Some Analysis}
 
 \begin{remark}
 The consistent first and second moment constraints imply 
@@ -183,7 +183,7 @@ Thus we have
 }
 \end{proof}
 
-\section{Intuition for Rounding}
+\subsection{Intuition for Rounding}
 Next question that comes to our mind is - 
 \textit{``How do we get a near optimal assignment from the solution of the relaxed problem"}. 
 Note that the solution of the relaxed problem gives us a PSD matrix and probability distributions over constraints. 
