@@ -1,0 +1,40 @@
+\section{LP relaxations for CSP}
+The goal of this section is to develop a canonical LP relaxation for CSP problems. The relaxations in this section can be applied for any CSP. 
+In addition, for some CSPs other LP relaxations have been developed. However, these relaxations are not within the scope of this project.
+
+\subsection{Simple LP relaxation}
+Probably the most intuitive integer program for CSPs has variables $z_c$ to denote whether constraint $c \in C$ is satisfied and binary variables $x_v^t$ to denote whether variable $v \in V$ takes value $t \in D$. 
+Then, a CSP can be denoted as the following integer program.
+\begin{alignat}{3}
+	\max \quad & \sum_{c \in C}w_c z_c & \label{eq:lp_weak}\\
+	\text{s.t.} \quad & z_c \le R_c( x_{S_c} ) & \quad c \in C \nonumber \\
+	& \sum_{t \in D} x_v^t = 1 & \quad v \in V \nonumber\\
+	& z_c \in \{0,1\} & \quad c \in C \nonumber\\z
+	&	x_v^t \in \{0,1\}	& \quad v \in  V \nonumber
+\end{alignat}
+where $x_{S_c}$ are the variables corresponding to the CSP variables in the scope of constraint $c \in C$ and $R_c$ is a linear formulation of the operator $R_c \in \Gamma$. 
+That is $R_c$ evaluates to $1$ if the constraint is satisfied and $0$ otherwise. 
+Note that if the constraint $c$ is satisfied, then $z_c = 1$ and $w_c$ is contributed to the objective function, and if the constraint is not satisfied, then $z_c$ is forced to be zero. 
+
+A convex relaxation can be obtain by relaxing the integrality constraints, and require that $x_v^t, z_c \in [ 0,1]$. 
+However, the corresponding LP relaxation is usually weak. In particular, consider the case of Max-Cut. 
+Then, following the formulation in \eqref{eq:lp_weak}, the Max-Cut problem can be formulated as:
+\begin{alignat}{3}
+\max \quad & \sum_{c \in C}w_{uv} z_{uv} & \label{eq:maxCut_weak}\\
+\text{s.t.} \quad & z_{uv} \le x_u + x_v & \quad [u,v] \in E \label{eq:maxCut_low} \\
+& z_{uv} \le 2 - ( x_u + x_v ) & \quad [u,v] \in E \label{eq:maxCut_upp}\\
+& z_{uv} \in \{0,1\} & \quad [u,v] \in E \nonumber\\
+&	x_v \in \{0,1\}	& \quad v \in  V \nonumber
+\end{alignat}
+where we replace $x_{u}^0$ and $x_u^1$ with a single variable $x_u$. 
+Constraints \eqref{eq:maxCut_low} and \eqref{eq:maxCut_upp} ensure that $w_{uv}$ contributes to the cut if and only if $x_u$ and $x_v$ have different values.
+
+Let us consider the LP formulation for the formulation given in \eqref{eq:maxCut_weak}. 
+By the definition of CSP, the weights sum up to $1$. 
+Hence, the maximum achievable objective value for the LP relaxation is $1$. 
+Consider the solution $z_{uv}$ equal to $1$ for all $[u,v] \in E$ (i.e. the set of constraints $C$) and $x_v = \frac{1}{2}$. 
+Observe that this solution is feasible for the LP relaxation, since each of the constraints. Furthermore, the solution is optimal since it achieves the maximum achievable value of $1$. 
+However, this LP relaxation does not provide information about the best value of the variable $x_u$. 
+Therefore, a more involved LP formulation is considered.
+
+\subsection{Canonical LP relaxation}
