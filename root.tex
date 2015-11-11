@@ -16,6 +16,15 @@
 \newcommand{\norm}[1]{\lVert #1 \rVert}
 \DeclareMathOperator{\Tr}{Tr}
 
+% --to donotes
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+
 \begin{document}
 	\begin{center}
 		{
@@ -27,7 +36,7 @@
 	\input{sections/introduction}
 	
 	% lp relaxation
-	
+	\input{sections/linearRelaxation}
 	
 	% sdp relaxation
 	\input{sections/sdp}
