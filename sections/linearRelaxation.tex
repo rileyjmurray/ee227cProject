@@ -3,30 +3,31 @@ The goal of this section is to develop a canonical LP relaxation for CSP problem
 In addition, for some CSPs other LP relaxations have been developed. However, these relaxations are not within the scope of this project.
 
 \subsection{Simple LP relaxation}
-Probably the most intuitive integer program for CSPs has variables $z_c$ to denote whether constraint $c \in C$ is satisfied and binary variables $x_v^t$ to denote whether variable $v \in V$ takes value $t \in D$. 
+Probably the most intuitive integer program for CSPs has variables $z_c$ to denote whether constraint $c \in \mathcal{C}$ is satisfied and binary variables $\mu_v^t$ to denote whether variable $v \in V$ takes value $t \in D$. 
 Then, a CSP can be denoted as the following integer program.
 \begin{alignat}{3}
-	\max \quad & \sum_{c \in C}w_c z_c & \label{eq:lp_weak}\\
-	\text{s.t.} \quad & z_c \le R_c( x_{S_c} ) & \quad c \in C \nonumber \\
-	& \sum_{t \in D} x_v^t = 1 & \quad v \in V \nonumber\\
-	& z_c \in \{0,1\} & \quad c \in C \nonumber\\z
-	&	x_v^t \in \{0,1\}	& \quad v \in  V \nonumber
+	\max \quad & \sum_{C_i \in \mathcal{C}}w_{C_i} z_{C_i} & \label{eq:lp_weak}\\
+	\text{s.t.} \quad & z_{C_i} \le R_{i}( \mu_{S_i} ) & \quad C_i = (R_i, S_i) \in \mathcal{C} \nonumber \\
+	& \sum_{t \in D} \mu_v^t = 1 & \quad v \in V \nonumber\\
+	& z_{C_i} \in \{0,1\} & \quad {C_i} \in \mathcal{C} \nonumber\\
+	&	\mu_v^t \in \{0,1\}	& \quad v \in  V \nonumber
 \end{alignat}
-where $x_{S_c}$ are the variables corresponding to the CSP variables in the scope of constraint $c \in C$ and $R_c$ is a linear formulation of the operator $R_c \in \Gamma$. 
-That is $R_c$ evaluates to $1$ if the constraint is satisfied and $0$ otherwise. 
-Note that if the constraint $c$ is satisfied, then $z_c = 1$ and $w_c$ is contributed to the objective function, and if the constraint is not satisfied, then $z_c$ is forced to be zero. 
+where $\mu_{S_i}$ are the variables corresponding to the CSP variables $x_{S_i}$ in the scope of constraint ${C_i} \in \mathcal{C}$ and $R_i$ is a linear formulation of the operator $R_i \in \Gamma$ corresponding to constraint $C_i$. 
+That is $R_i$ evaluates to $1$ if the constraint is satisfied and $0$ otherwise. 
+Note that if the constraint ${C_i}$ is satisfied, then $z_{C_i} = 1$ and $w_{C_i}$ is contributed to the objective function, and if the constraint is not satisfied, then $z_{C_i}$ is forced to be zero. 
 
-A convex relaxation can be obtain by relaxing the integrality constraints, and require that $x_v^t, z_c \in [ 0,1]$. 
-However, the corresponding LP relaxation is usually weak. In particular, consider the case of Max-Cut. 
+A convex relaxation can be obtain by relaxing the integrality constraints, and require that $\mu_v^t, z_{C_i} \in [ 0,1]$. 
+Then, all $\mu_v^t$ for $t \in D$ can be considered as a probability distribution over the possible values $x_v$ can take.
+However, this LP relaxation is usually weak, and it provides no information about possible assignments. In particular, consider the case of Max-Cut. 
 Then, following the formulation in \eqref{eq:lp_weak}, the Max-Cut problem can be formulated as:
 \begin{alignat}{3}
-\max \quad & \sum_{c \in C}w_{uv} z_{uv} & \label{eq:maxCut_weak}\\
+\max \quad & \sum_{[u,v]\in E}w_{uv} z_{uv} & \label{eq:maxCut_weak}\\
 \text{s.t.} \quad & z_{uv} \le x_u + x_v & \quad [u,v] \in E \label{eq:maxCut_low} \\
 & z_{uv} \le 2 - ( x_u + x_v ) & \quad [u,v] \in E \label{eq:maxCut_upp}\\
 & z_{uv} \in \{0,1\} & \quad [u,v] \in E \nonumber\\
 &	x_v \in \{0,1\}	& \quad v \in  V \nonumber
 \end{alignat}
-where we replace $x_{u}^0$ and $x_u^1$ with a single variable $x_u$. 
+where we replace $\mu_{u}^0$ and $\mu_u^1$ with a single variable $x_u$. 
 Constraints \eqref{eq:maxCut_low} and \eqref{eq:maxCut_upp} ensure that $w_{uv}$ contributes to the cut if and only if $x_u$ and $x_v$ have different values.
 
 Let us consider the LP formulation for the formulation given in \eqref{eq:maxCut_weak}. 
@@ -38,3 +39,58 @@ However, this LP relaxation does not provide information about the best value of
 Therefore, a more involved LP formulation is considered.
 
 \subsection{Canonical LP relaxation}
+Although the above LP relaxation provides no information, LP relaxations of other integer programming formulations of CSP are a useful tool.
+Let us consider the canonical LP relaxation used in the literature.
+In addition to a probability distribution over the possible value each variable can take, the formulation contains a probability distribution over the possible assignments for each constraint.
+This allows us to impose the constraint that the marginal probability for each variable matches the probability that it occurs in an assignment with the same value.
+
+Again we use $\mu_v^t$ to denote the probability that $\mu_v$ takes value $t \in D$. 
+Since these variables should form a probability distribution for a fixed $v \in V$, we require that the sum over $t \in D$ is equal to $1$ and that the $\mu_v^t$ are non-negative.
+Similarly, for constraint $C_i = (R_i, S_i) \in \mathcal{C}$ we introduce a probability distribution over all possible local assignments.
+Let $\lambda_{C_i}$ be a probability distribution over $D^{|S_i|}$, all possible input values.
+For example, suppose $D = \{0,1\}$ and $S_i = (x_2,x_3)$. 
+Then, the corresponding variables are $\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1]$. Again, we require that the variables corresponding to a given constraint $C_i \in \mathcal{C}$ sum up to 1 and are non-negative.
+
+The objective is to maximize the probability, denoted as the expectation of an indicator, that the constraint $C_i$ is satisfied by a local assignment $\lambda_{C_i}[\cdot]$ where $C_i \in \mathcal{C}$ is randomly drawn with weight $w_{C_i}$ and local assignment $(\bar{x}_{S_{C_i}})$ is randomly drawn with probability $\lambda_{C_i}[\bar{x}_{S_{C_i}}]$. 
+Mathematically, this can be written as:
+\[
+	OPT_{LP} = \underset{C_i \in \mathcal{C}}{\Ex} \left[ \underset{L \sim \lambda_{C_i}}{\Ex} \left[ R_i( L (S_i )) \right] \right]
+\]
+where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
+
+Without additional constraints, the current LP is not practical. 
+The problem is that $\lambda_C$ variables are not coupled across constraints in $\mathcal{C}$. 
+This allows us to separately select a satisfying assignment for each of the constraints. 
+Hence, $OPT_{LP} = 1$ regardless of the particular instance. 
+As eluded upon, this can be addressed by coupling the marginal probabilities for a variable $x_v$ based on the assignment probabilities $\lambda_C$ variables with $x_v$ in its scope and the corresponding $\mu_v$ variables.
+For each constraint $C_i \in \mathcal{C}$, each variable $v \in V$, and for each $ t \in D$, we require that:
+\[
+	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = t] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = t]
+\]
+We refer to these constraints as first-order consistency constraints.
+It remains to show that these constraints are indeed linear.
+If $T_{C_i}(v)$ is the set of local assignments for constraint $C_i \in \mathcal{C}$ that assigns variable $x_v$  the value $t \in D$, then the corresponding constraint can be written as:
+\[
+	\sum_{y \in T_{C_i}(v)} \lambda_{C_i}[y] = \mu_v^t
+\]
+For the example given above with scope $(x_2,x_3)$, $D = \{0,1\}$, variable $v = 3$, and $ t = 1$, the constraint can be written as:
+\[
+	\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1] + \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1] = \mu_3^1
+\]
+
+The complete formulation is then:
+\begin{alignat}{3}
+\max \quad & \sum_{C_i \in \mathcal{C}} w_{C_i} \sum_{ y \in Y }  \lambda_{C_i}[y] \  R_i(L(S_i))) \label{eq:lp_strong}\\
+\text{s.t.} \quad & 	\sum_{y \in T_{C_i}(v)} \lambda_{C_i}[y] = \mu_v^t & \quad C_i \in \mathcal{C}, v \in V, t \in D \nonumber \\
+& \sum_{y \in Y} \lambda_{C_i}[ y ] = 1 & \quad  C_i \in \mathcal{C} \nonumber\\
+& \sum_{t \in D} \mu_v^t = 1 & \quad v \in V \nonumber\\
+& \lambda_{C_i}[ y ] \ge 0 & \quad C_i \in \mathcal{C}, y \in Y \nonumber\\
+&	\mu_v^t \ge 0	& \quad v \in  V, t \in D \nonumber
+\end{alignat}
+where $Y$ is the set of all possible local input assignments for the variables in scope $S_i$, and $T_{C_i}(v)$ is the set of input assignments for $C_i \in \mathcal{C}$ that have $x_v = t$.
+
+Observe that this formulation couples the local assignments for different constraints through the variables $\mu$. Stronger relaxations are possible by requiring that all pairwise marginals are preserved. For example, for all sets of two variables. However, this results in a semi-infinite LP with an exponential number of constraints. 
+
+
+
+\subsection{Rounding schemes for LP}
