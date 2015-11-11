@@ -3,41 +3,41 @@
 %\usepackage[]{mathtools}
 %\usepackage{amsthm}
 %\DeclareMathOperator{\Tr}{Tr}
-\usepackage[]{thmtools}
-\usepackage[dvipsnames]{xcolor}
-\declaretheorem{theorem}
-\declaretheoremstyle[
-	bodyfont=\normalfont, 
-	spaceabove=0.5cm]{defFormat}
-\declaretheoremstyle[
-	postheadspace=1cm,
-	bodyfont=\normalfont, 
-	spaceabove=0.5cm]{inLineDefFormat}
-\declaretheoremstyle[
-	spaceabove=0.5cm, 
-	spacebelow=0.5cm,
-	postheadspace=1cm]{namedTheorem}
-\declaretheorem[
-	numberwithin=section, 
-	style=defFormat, 
-	shaded]{definition}
-\declaretheorem[
-	style=inLineDefFormat, 
-	sibling=definition,
-	shaded,
-	name=Definition]{ILdefinition}
-\declaretheorem[
-	numbered=no, 
-	style=namedTheorem, 
-	shaded, 
-	name=The Unique Games Conjecture]{ugc}
-\declaretheorem[numbered=no, style=remark]{remark}
+%\usepackage[]{thmtools}
+%\usepackage[dvipsnames]{xcolor}
+%\declaretheorem{theorem}
+%\declaretheoremstyle[
+%	bodyfont=\normalfont, 
+%	spaceabove=0.5cm]{defFormat}
+%\declaretheoremstyle[
+%	postheadspace=1cm,
+%	bodyfont=\normalfont, 
+%	spaceabove=0.5cm]{inLineDefFormat}
+%\declaretheoremstyle[
+%	spaceabove=0.5cm, 
+%	spacebelow=0.5cm,
+%	postheadspace=1cm]{namedTheorem}
+%\declaretheorem[
+%	numberwithin=section, 
+%	style=defFormat, 
+%	shaded]{definition}
+%\declaretheorem[
+%	style=inLineDefFormat, 
+%	sibling=definition,
+%	shaded,
+%	name=Definition]{ILdefinition}
+%\declaretheorem[
+%	numbered=no, 
+%	style=namedTheorem, 
+%	shaded, 
+%	name=The Unique Games Conjecture]{ugc}
+%\declaretheorem[numbered=no, style=remark]{remark}
 %\usepackage[]{bbm}
 %\usepackage[]{amssymb}
 %\begin{document}
 
-\parindent 0pt
-\parskip 8pt
+%\parindent 0pt
+%\parskip 8pt
 
 \section*{Preliminaries}
 The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
@@ -150,7 +150,6 @@ We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serv
 \item $3-$CSP : $D = \{0,1\}$, $\Gamma$ is all relations on up to three binary variables.
 \end{itemize}
 
-\improvement{@Riley, could you add that the weights sum to 1? i.e. max value is 1 (this makes my discussion (Q) easier)}
 \begin{definition}
 \textbf{CSP Instance}\\
 An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by a set of $n$ variables (denoted $V$), as well as $m$ constraints and $m$ positive weights (one for each constraint). 
@@ -162,7 +161,6 @@ The objective is to maximize the weighted sum of satisfied constraints $\sum_{i 
 $\mathcal{C}$ is said to be \textit{satisfiable} if $\forall i, ~ R_i(F(S_i)) = 1$ at optimality.
 \label{def:CSPinstance}
 \end{definition}
-
 To simplify notation, we will often write $F(C_i)$ in place of $R_i(F(S_i))$.
 
 \subsubsection{Discussion of Definition \ref{def:CSPinstance}}

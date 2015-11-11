@@ -3,32 +3,52 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage[]{mathtools}
-\usepackage[]{thmtools}
-\usepackage[dvipsnames]{xcolor}
 \usepackage[]{bbm}
 
-\input{sections/shortcuts}
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\declaretheorem{theorem}
+\declaretheoremstyle[
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{defFormat}
+\declaretheoremstyle[
+	postheadspace=1cm,
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{inLineDefFormat}
+\declaretheoremstyle[
+	spaceabove=0.5cm, 
+	spacebelow=0.5cm,
+	postheadspace=1cm]{namedTheorem}
+\declaretheorem[
+	numberwithin=section, 
+	style=defFormat, 
+	shaded]{definition}
+\declaretheorem[
+	style=inLineDefFormat, 
+	sibling=definition,
+	shaded,
+	name=Definition]{ILdefinition}
+\declaretheorem[
+	numbered=no, 
+	style=namedTheorem, 
+	shaded, 
+	name=The Unique Games Conjecture]{ugc}
+\declaretheorem[numbered=no, style=remark]{remark}
 \newtheorem{thm}{Theorem}
-\declaretheoremstyle[bodyfont=\normalfont, spaceabove=0.5cm]{noItalics}
-\declaretheorem[numberwithin=section, style=noItalics, shaded]{definition}
-\declaretheorem[numberwithin=section, style=noItalics, shaded]{Definition}
+\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
+
+\input{sections/shortcuts}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand{\norm}[1]{\lVert #1 \rVert}
 \DeclareMathOperator{\Tr}{Tr}
 
-% --to donotes
-\usepackage{xargs}                      % Use more than one optional parameter in a new commands
-\usepackage[dvipsnames]{xcolor}
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\parindent 0pt
+\parskip 8pt
 
 \begin{document}
 	\begin{center}
 		{
-		\bf \huge Write a good title page + abstract?
+		\bf \huge SDP Relaxations for Combinatorial Optimization
 		}
 	\end{center}
 	
@@ -36,11 +56,10 @@
 	\input{sections/introduction}
 	
 	% lp relaxation
-	\input{sections/linearRelaxation}
+	\input{sections/linearRelaxation}	
 	
 	% sdp relaxation
 	\input{sections/sdp}
-	
 	
 	\bibliographystyle{abbrv}
 	\bibliography{references/references}
