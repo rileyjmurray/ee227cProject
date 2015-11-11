@@ -3,27 +3,43 @@
 %\usepackage[]{mathtools}
 %\usepackage{amsthm}
 %\DeclareMathOperator{\Tr}{Tr}
-%\usepackage[]{thmtools}
-%\usepackage[dvipsnames]{xcolor}
-%\declaretheorem{theorem}
-%\declaretheoremstyle[bodyfont=\normalfont, spaceabove=0.5cm]{noItalics}
-%\declaretheorem[numberwithin=section, style=noItalics, shaded]{definition}
-%\declaretheorem[numbered=no, style=remark]{remark}
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\declaretheorem{theorem}
+\declaretheoremstyle[
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{defFormat}
+\declaretheoremstyle[
+	postheadspace=1cm,
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{inLineDefFormat}
+\declaretheoremstyle[
+	spaceabove=0.5cm, 
+	spacebelow=0.5cm,
+	postheadspace=1cm]{namedTheorem}
+\declaretheorem[
+	numberwithin=section, 
+	style=defFormat, 
+	shaded]{definition}
+\declaretheorem[
+	style=inLineDefFormat, 
+	sibling=definition,
+	shaded,
+	name=Definition]{ILdefinition}
+\declaretheorem[
+	numbered=no, 
+	style=namedTheorem, 
+	shaded, 
+	name=The Unique Games Conjecture]{ugc}
+\declaretheorem[numbered=no, style=remark]{remark}
 %\usepackage[]{bbm}
 %\usepackage[]{amssymb}
-%\renewcommand{\vec}[1]{\mathbf{#1}}
-%\newcommand{\norm}[1]{\lVert #1 \rVert}
 %\begin{document}
-
-{\parindent 0pt \begin{tabular}[t]{l}
-EE 227BT \\
-\end{tabular}  \hfill \today \vskip 0.2in }
 
 \parindent 0pt
 \parskip 8pt
 
 \section*{Preliminaries}
-
 The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
 
 It is assumed that the reader has some familiarity fundamentals of algorithmic complexity, including big-Oh notation for algorithm runtime, as well as NP-hardness and NP-completeness. 
@@ -33,26 +49,26 @@ A reader with some knowledge of ``approximation algorithms" is likely to better 
 We provide a very brief introduction to approximation algorithms below. 
 Those experienced in the field should pay special attention to Definition \ref{def:twoParamApproxAlg}, which has seen only limited use.
 
-The focus of this paper will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
+The focus of this report will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
 
 \subsection*{NP-Hardness and NP-Completeness}
-\begin{definition}
-\textbf{Decision Problem  } A decision problem is a \textit{question}.
- Given some input data, and a set of rules, does the input data satisfy the rules?
-\end{definition}
+\begin{ILdefinition}
+A \textbf{decision problem} is an algorithmic question.
+Given some input data, and a set of rules, does the input data satisfy the rules?
+\end{ILdefinition}
 It is implied that sufficient data is provided to definitively answer ``yes" or ``no", even if determining the answer might take a prohibitively long amount of time.
-\begin{definition}
-\textbf{NP  } A decision problem is in NP if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
+\begin{ILdefinition}
+\textbf{NP} is a collection of decision problems. A decision problem is in \textbf{NP} if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
 There are no requirements for ``no" answers.
-\end{definition}
-\begin{definition}
-\textbf{NP Complete  } A decision problem $\mathcal{P}$ is said to be NP-Complete if (1)
+\end{ILdefinition}
+\begin{ILdefinition}
+A decision problem $\mathcal{P}$ is said to be \textbf{NP-Complete} if (1)
 $\mathcal{P} \in $ NP, and (2) any other problem $\mathcal{Q} \in$ NP can be stated ``succinctly" in terms of $\mathcal{P}$ .
-\end{definition}
+\end{ILdefinition}
 By ``succinctly", we mean that the transformation from $\mathcal{Q}$ to the equivalent problem in the terms of $\mathcal{P}$ can be done in both polynomial time and space.\footnote{This process of carrying out this transformation is usually called a ``reduction."}
-\begin{definition}
-\textbf{NP-Hard  } A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be NP-Hard if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
-\end{definition}
+\begin{ILdefinition}
+A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be \textbf{NP-Hard} if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
+\end{ILdefinition}
 
 \subsection*{Approximation Algorithms for Optimization Problems}\label{subsec:intractProbCope}
 
@@ -73,7 +89,8 @@ When the algorithm \textit{does} have a performance guarantee, it is referred to
 We give a definition below in the case where the objective is to maximize some function. 
 
 \begin{definition}
-\textbf{($\alpha$)-Approximation Algorithm: } Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
+\textbf{($\alpha$)-Approximation Algorithm} \\
+Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
 Let $A$ denote an efficient algorithm which returns a feasible but potentially sub-optimal solution for any $I \in \Omega$. 
 Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote the value of the optimal solution for $I$ by $OPT(I)$. We call $A$ an $\alpha$-approximation if
 \begin{equation*}
@@ -84,7 +101,8 @@ Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote th
 
 Definition \ref{def:commonApproxAlg} is the most common definition of an approximation algorithm, and is suitable for many applications. It can be useful, however, to describe how performance guarantees relate to the optimal objective value. 
 \begin{definition}
-\textbf{$(\alpha,\beta)$-Approximation Algorithm } Let $\Omega$, $I$, and $A$ be as before. 
+\textbf{$(\alpha,\beta)$-Approximation Algorithm } \\
+Let $\Omega$, $I$, and $A$ be as before. 
 Define $\Omega_\beta$ as the set of all problem instances with $OPT(I) \geq \beta \forall I \in \Omega_\beta$.
 We call $A$ an $(\alpha,\beta)$ approximation if 
 \begin{equation*}
@@ -92,6 +110,7 @@ We call $A$ an $(\alpha,\beta)$ approximation if
 \end{equation*}
 \label{def:twoParamApproxAlg}
 \end{definition}
+\newpage
 
 \section{Introduction}
 
@@ -101,9 +120,9 @@ There is a great deal of research going into the approximabilty of constraint sa
 The list of points below gives some facts relating to CSP's to help orient the reader.
 
 \begin{itemize}
-\item CSP's are a very broad class of problems, which are NP-Hard in general.
-\item The objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables be in some simple, discrete domain.
 \item The CSP framework can be applied to both optimization problems (such as Max-Cut) and decision problems (such as 3-SAT)
+\item Most CSP's are NP-Hard to solve optimally. Because of this, discussion of CSP's centers on developing approximate solutions to these problems.
+\item In CSP approximation, the objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables must be in some simple, discrete domain.
 \item Semidefinite Programming is the primary technique for CSP approximation.
 \item The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
 \end{itemize}
@@ -124,9 +143,10 @@ We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serv
 
 \textbf{Examples}
 \begin{itemize}
-\item $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of up to $k$ literals.
-\item Cut : $D = \{0,1\}$, $\Gamma = \{\neq\}$ is the ``not equal" operator. The Cut problem seeks a partition of a graph into two disjoint sets.
-\item $q-$Coloring : $D = \{0,1,\ldots,q-1\}$, $\Gamma = \{\neq\}$.
+\item Cut : The Cut problem seeks a partition of a graph into two disjoint sets.  $D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
+\item $q-$Coloring : Color the nodes of a graph using at most $q$ colors. Our domain is $D = \{0,1,\ldots,q-1\}$, and $\Gamma$ is again $\{\neq\}$. Note that $q-$coloring extends the Cut problem to support $q \geq 2$ disjoint sets.
+\item E3-SAT : Here, the domain is $D = \{0,1\}$, and our constraint types (elements of $\Gamma$) are of the form $(x_j \vee x_j \vee x_k)$, $(x_i\vee \bar{x}_j \vee x_k)$, $(\bar{x}_i \vee \bar{x}_j \vee x_k)$, $\ldots$ - all disjunctions on \textit{`E'xactly} $3$ literals. 
+\item $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of \textit{up to} $k$ literals.
 \item $3-$CSP : $D = \{0,1\}$, $\Gamma$ is all relations on up to three binary variables.
 \end{itemize}
 
@@ -152,8 +172,76 @@ In this notation, we can write any CSP instance as
 \end{equation}
 
 \textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. 
-The ``constraints" in Definition \ref{def:CSPinstance} depart from this convention in that a feasible solution is not required to satisfy any of these constraints. 
-It may seem for a moment then that CSP's do not have inviolable constraints - but this is not the case. 
-The CSP Framework has one and only one inviolable constraint: each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
+Definition \ref{def:CSPinstance} departs from this convention in that a feasible solution is not required to satisfy any of a CSP's ``constraints." 
+Are CSP's then accurately understood as unconstrained optimization? 
+Not quite. 
+The CSP Framework has one and only one inviolable constraint (and that constraint is precisely what makes them difficult): each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
+
+\subsection{Complexity for Solving and Approximating CSP's}
+One of the most surprising results in CSP's and approximation algorithms is the lack of a consistent relationship between the difficulty of solving a problem optimally, and the difficulty of approximating the problem.
+
+Take 3-SAT for example. 
+It is well known that it is NP-Hard to find a satisfiable assignment to a 3-SAT instance even \textit{given} that it is satisfiable. 
+It is equivalent to say that it is NP-Hard to $(1,1)$ approximate 3-SAT. 
+But if we consider 3-SAT as a CSP where the \textit{objective} is to satisfy as many constraints as possible, there exists a well known $(\frac{7}{8}\beta,\beta)$ polynomial time approximation algorithm - for all $ \beta \leq 1$! 
+From this we might expect that approximating an optimization problem (such as a CSP) is easier than solving the original decision problem. 
+Alas, this is not the case. 
+
+For example, the 2-SAT decision problem can be solved in polynomial time, but the 2-SAT CSP problem is NP-Hard to approximate by better than 0.955. 
+The Max-Cut problem is yet another example of this phenomenon. 
+There is a polynomial time algorithm for determining whether or not a Max-Cut instance is satisfyable\footnote{one need only check whether the graph is bipartite}, 
+but the best approximation algorithm for Max-Cut in the general case is a $(0.878\beta,\beta)$ approximation. 
+It has been proven that it is NP-Hard to approximate Max-Cut by a factor better than 0.942, 
+but it may yet be NP-Hard to do better than 0.878! 
+
+Whether existing approximation algorithms can be improved for a huge swath of combinatorial problems (including Max-Cut), depends heavily on the truth of the Unique Games Conjecture. 
+We address this next.
+
+\subsection{Hardness of Approximation: The Unique Games Conjecture} 
+In 2002, Subhash Khot published a paper entitled \textit{On the Power of Unique 2-Prover 1-Round Games}. 
+In his paper, Khot put forward the Unique Games Conjecture- currently of the most important open problems in theoretical computer science.
+
+It can be difficult to get a handle on what the Unique Games Conjecture claims. 
+The purpose of this section is to provide the reader with the background necessary to understand how the Unique Games Conjecture relates to CSP approximation. 
+This will become critically important in subsequent sections on SDP relaxations of CSP's.
+
+\begin{itemize}
+\item The UGC is a statement of the hardness of approximation: 
+for some problems, it is NP-Hard to determine whether every solution for a given instance is \textit{extremely poor}, or whether an \textit{almost perfect} solution exists for the instance.
+\item If true, the UGC would imply that many already existing approximation algorithms cannot be improved upon. 
+This includes approximation algorithms which are not for CSP's and do not use semidefinite programming.
+\end{itemize}
+
+\subsubsection{What is a ``Unique Game"?}
+
+A ``unique game" is a game in the game-theory sense that relates to Probabilistically Checkable Proofs (PCP's). 
+It is a slightly less general version of ``2-Prover 1-Round games." 
+Below we list the three conditions of 2-Prover 1-Round games, and then the additional condition that makes such a game ``unique."
+\begin{itemize}
+\item The game pits two \textit{provers} against a \textit{verifier}.
+\item The verifier asks one question of each prover.\footnote{Questions are drawn from appropriate probability distributions.}
+\item Given the answers returned by the two provers, the verifier returns ``True" or ``False."
+\item[\textbf{*}] The answer of one prover \textit{uniquely} determines the answer of the other prover.
+\end{itemize}
+
+\subsubsection{What does UGC have to do with CSP's or combinatorial optimization?}
+
+Khot posed the ``game" in the UGC in three equivalent ways
+\begin{itemize}
+\item The 2-Prover 1-Round game with uniqueness (specified above).
+\item A CSP where the constraints to be satisfied are a system of linear equations in two variables, modulo 2.
+\item A new graph-theoretic CSP called ``Label Cover."\footnote{Khot's game chose a particular type of Label Cover problem where the graph is bipartite, but subsequent discussions of Unique Games do not emphasize this characteristic. }
+\end{itemize}
+
+If it is claimed that an algorithm is for ``Unique Games," the reader would do well to clarify which formation the author's work with. Because graph theory has a larger research community than those working with Probabilistically Checkable Proofs, several researchers (including Khot himself) primarily use the Label Cover formulation of Unique Games in discourse. 
+
+The interested reader is strongly recommended to read Khot's original paper for a precise definitions for Proababilistically Checkable Proofs, the Two-Prover One-Round ``unique" game, and the Label Cover problem. But suffice it to say
+
+\begin{ugc}
+For arbitrarily small constants $\epsilon$, $\delta > 0$, there exists a constant $k = k(\epsilon,\delta)$ such that it is NP-Hard to determine whether a unique Label Cover instance with label sets of size $k$ at satisfies \textit{at least} $1-\epsilon$ or \textit{at most} $\delta$ constraints.
+\end{ugc}
+
+
+
 
 %\end{document}
