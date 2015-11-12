@@ -1,34 +1,65 @@
 %\documentclass[12pt]{article}
 %\usepackage{fullpage,marginnote,caption}
 %\usepackage{bbm,amsmath,amssymb,amsthm,verbatim}
-%
-%\input{shortcuts}
-%
+
+%\input shortcuts.tex
+
 %\begin{document}
 
-\section{SDP Duality}
+\begin{center}
+\large \bf SDP Duality
+\end{center}
+
+\bigskip
 
 %\input sdpbegin.tex
 %\input sdpmain.tex
 
-\subsection{Motivation}
+\section{Motivation}
 
-Recall that we started with an Integer Programming formulation of the CSP - Introduce $D$ slack variables, namely $\mu_v(\ell) \in \{ 0, 1 \}, \fa \ell \in D, v \in V $ for each variable $v \in V$, with the constraint as $\sum_{\ell  \in D} \mu_v(\ell) = 1$, which is simply saying that each variable takes exactly one of the values $\ell$ in $D$. 
-Similarly one introduces dummy variables for each constraint $C=(R,S)$, namely $\la_C(L) \in \{ 0, 1\} \fa L : S \rightarrow D$, where $L$ simply stands for an assignment over the variables in the scope of $C$. 
-Similar to the constraint in previous case, we add the constraint $\sum_L \la_C(L) = 1$ which implies that exactly one assignment is chosen from all possible assignments for this constraint.  
+We recall the relaxations and try to motivate our way through the various relaxations -
+\begin{discussion}{\bf Integer Programming formulation of the CSP}\\
+Introduce $D$ slack variables, namely $\mu_v(\ell) \in \{ 0, 1 \}, \fa \ell \in D$ for each variable $v \in V$, call them \textit{variable indicators}. 
+Next, for each $C=(R,S)\in \C$, denote by $\Lm_C$, the set of all possible assignments $L : S \rightarrow D$. 
+$L$ can be viewed as restriction of a full assignment $F: V \rightarrow D$ to $S$, i.e., $F|_S$\footnote{We distinguish between partial assignments and total assignments for clarity, and hence use different symbols namely $L$ for partial, and, $F$ for total assignment respectively.}. 
+Next, introduce dummy variables \textit{constraint indicators} for each constraint $C=(R,S)$, namely $\la_C(L) \in \{ 0, 1\} \fa L \in \Lm_C$. 
+Impose the following constraints 
+\al{
+\fa v \in V, \fa \ell \in D ~:~ \mu_v(\ell) &\in \{0, 1\} \label{vval}\\
+ \fa C \in \C, \fa L_C \in \Lm_C ~:~ \la_C(L) &\in \{0, 1\}  \label{cval}
+}
+The interpretation of $\mu_v(\ell)=1$ is that variable $v$ is assigned value $\ell$, similarly $\la_C(L)=1$ stands for picking up local assignment $L$ for the constraint $C$. 
+To ensure consistency we impose the following logical constraints -
+ \al{
+\sum_{\ell  \in D} \mu_v(\ell) &= 1\label{vass}\\
+\sum_{L \in \Lm_C} \la_C(L) &= 1 \label{cass}\\
+\sum_{\substack{L \in \Lm_C \\ L(v) = \ell }} \la_C(L) &= \mu_v(\ell) \label{cons}
+} where (\ref{vval}) and (\ref{vass}) say that $\fa v \in V$, exactly one $\mu_v(\ell)$ is $1$, and all others are zero, which for us simply means that each variable takes exactly one of the values $\ell$ in $D$. 
+Similarly (\ref{cval}) and (\ref{cass}) imply that $\fa C \in \C$ exactly one assignment $L$ is chosen from $\Lm_C$. (\ref{cons}) stands for consistency across \textit{variable indicators} and \textit{constraint indicators}.
 Thus this is an exact formulation of CSP and hence is NP Hard. 
+\end{discussion}
 
-Then LP relaxation was motivated by relaxing the first condition for both set of dummy variables viz, $\mu_v(\ell) \in \{ 0, 1\} \rightarrow \mu_v(\ell) \in [0, 1]$ and similarly, $\la_C(L) \in [0, 1]$ but keeping the later constraints $\sum_{\ell  \in D} \mu_v(\ell) = 1 = \sum_L \la_C(L)$ intact. 
-We also preserve the consistency conditions. 
-This relaxation is then easily interpretable as that of an assignment of probability values to all possible combinations for variables in a constraint, and imposing conditions for consistent marginals for a variable with respect to each constraint. 
+\begin{discussion}{\bf LP Relaxation}\\
+LP relaxation was motivated by relaxing the values that the \textit{variable indicators} and \textit{constraint indicators} can take. 
+We relax the constraints (\ref{vval}) and (\ref{cval}), but keep (\ref{vass}), (\ref{cass})  and (\ref{cons}) constraints intact. 
+In place of the binary range of values $\{0, 1\}$ we now allow the \textit{indicators} to belong to the entire interval $[0, 1]$ and call them \textit{distributions} instead (for the reasons that become apparent soon).
+That is, now (\ref{vass}) and (\ref{cass}) are relaxed to 
+\al{
+\fa v \in V, \fa \ell \in D ~:~ \mu_v(\ell) &\in [0, 1] \label{lvas}\\
+\fa C \in \C, \fa L_C \in \Lm_C ~:~ \la_C(L) &\in [0, 1] \label{lcas} 
+}
+(\ref{lvas}) and (\ref{lcas}) combined with (\ref{vass}) and (\ref{cass}) give us the following interpretation - \\
+\textit{$\fa v \in V, \mu_v(\cdot) : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C \in \C, \la_C(\cdot) : \Lm_C \rightarrow [0,1]$ denotes the \textit{probability distribution over all possible assignments $L \in \Lm_C$ for variables in a constraint}.  (\ref{cons}) imposes conditions for consistency across \textit{distribution} $\mu_v(\cdot)$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
+\end{discussion}
 
 We can go a step further in restricting our search space, by introducing a second order consistency condition such that we get an SDP relaxation. 
 The relaxation will be with respect to IP formulation, but tightening with respect to the LP relaxation and hence our values will be now closer to the optimal value of CSP. 
 The intuition for such a relaxation can be motivated by the relaxation procedure for MAX - CUT problem which we present next. 
-It is further established, that this relaxation is in-fact the optimal poly-time relaxation for any general CSP, first by assuming Unique Games Conjecture and then later in fact more generally. 
 
-\subsection{MAX-CUT Problem - Revisited!}
+It is further established, that this relaxation is in-fact the optimal poly-time relaxation for any general CSP, first by assuming Unique Games Conjecture \cite{Khot} and then later in fact more generally \cite{nphard}. 
 
+%\section*{MAX-CUT Problem - Revisited!}
+\begin{example}{\bf MAX - CUT}\label{maxcut}\\
 MAX CUT problem can be formulated as the following integer quadratic program : 
 \al{
  \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-x_ix_j) ~:~ x_i \in \{ -1, 1\}
@@ -42,8 +73,9 @@ If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then o
 \[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]
 which is clearly an SDP and can be solved in polynomial time, i.e. efficiently! 
 Thus we see that the SDPs did pop out for a MAX CUT relaxation.
+\end{example}
 
-\subsection{Basic SDP Relxation}
+\section{Basic SDP Relaxation}
 
 The SDP relaxation is similar to the LP realization but with an important generalization. 
 We will have the exactly same probability distribution $\la_C$ for each constraint and the same objective function. 
@@ -79,7 +111,7 @@ One can think of them as follows:
 
 We are ready to properly define the SDP relaxation using this random variable representation and its covariance structure.  
 We denote an SDP solution by $\Sm$. 
-
+\begin{definition}
 {\bf Basic SDP for CSP$(\C)$}  
 \al{
 \mbox{SDPOpt}(\C) = \max_{\substack{\la_C, \Si, A}} \mbox{SDPVal}_\C(\Sm) :=\sum_{C=(R,S) \in \mathcal{C}} w_C \Pb_{L \sim \la_C} \lrbb{L(S) \mbox{\ satisfies \ } R} \text{\footnotemark} 
@@ -95,23 +127,18 @@ And we also impose the conditions for valid probability distribution :
 \Pb_{L \sim \la_C} (L(v) = \ell \wedge L(v) = \ell') &= 0, \fa \ell \neq \ell' \label{eq1}\\
 \sum_{\ell \in D}\Pb_{L \sim \la_C} (L(v) = \ell) &= 1 \label{eq2}
 }
-We also define the following constraint: (though this condition is deemed redundant by the Remark \ref{remark01} that follows, but explicitly assuming it here makes our life easy): 
+We also define the following constraint: (though this condition is deemed redundant by the Remark \ref{remark01}, but explicitly assuming it here makes our life easy): 
 \al{
 \Pb_{L \sim \la_C} (L(v) = \ell ) = \Ex[I_v(\ell)] = A_{v, \ell} \label{cfm}
 }
+\end{definition}
 
-\begin{remark}\label{remark01}
-If we drop the ``consistent first moment" condition (\ref{cfm}) from the Basic SDP, we get
-an equivalent formulation; i.e., any solution $\mathcal{S}$ to the Basic SDP which doesn't satisfy  (\ref{cfm}) can be transformed into a solution $\mathcal{S}'$ which does satisfy  (\ref{cfm}) and has $\mbox{SDPVal}_\C(\Sm')
-= \mbox{SDPVal}_\C (\Sm)$.
-\end{remark}
+\section{How is this an SDP?}
 
-\subsection{How is this an SDP?}
-
-Note that for a given $C =(R, S) \in \mathcal{C}$, $\la_C$ is a probability distribution over all possible assignments $\mathcal{L}_C = \{L | L: V|_S \rightarrow D\}$. 
+Note that for a given $C =(R, S) \in \mathcal{C}$, $\la_C$ is a probability distribution over all possible assignments $\mathcal{L}_C = \{L: S \rightarrow D\}$. 
 If we define 
 \al{
-\phi_C(L) = \mathbb{I}[\mbox{L satisfies R}], \fa L \in \mathcal{L}_C,
+\phi_C(L) = \mathbb{I}[L \mbox{ satisfies } R], \fa L \in \mathcal{L}_C,
 }
 then 
 \al{
@@ -145,7 +172,12 @@ Last but not the least, the way we have defined $\Si$, we have the equivalent co
 Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
 
 
-\subsection{Some Analysis}
+\section{Some Analysis}
+\begin{remark}\label{remark01}
+If we drop the ``consistent first moment" condition (\ref{cfm}) from the Basic SDP, we get
+an equivalent formulation; i.e., any solution $\mathcal{S}$ to the Basic SDP which doesn't satisfy  (\ref{cfm}) can be transformed into a solution $\mathcal{S}'$ which does satisfy  (\ref{cfm}) and has $\mbox{SDPVal}_\C(\Sm')
+= \mbox{SDPVal}_\C (\Sm)$.
+\end{remark}
 
 \begin{remark}
 The consistent first and second moment constraints imply 
@@ -183,7 +215,7 @@ Thus we have
 }
 \end{proof}
 
-\subsection{Intuition for Rounding}
+\section{Intuition for Rounding}
 Next question that comes to our mind is - 
 \textit{``How do we get a near optimal assignment from the solution of the relaxed problem"}. 
 Note that the solution of the relaxed problem gives us a PSD matrix and probability distributions over constraints. 
@@ -205,5 +237,58 @@ This perspective is the one that's actually used computationally, on a computer.
 \item Jointly Gaussian Pseudo-indicator random variables which satisfy the consistent first and second moment constraints. 
 This perspective is suited for developing``SDP Rounding algortihms". 
 }
+Let's discuss a classical rounding scheme for MAX-CUT and then introduce a more general rounding scheme - 
+\begin{example}{\bf Randomized Rounding [GW Rounding]}\\
+By now, we know how to relax MAX-CUT to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
+We will borrow notation and variables from Example \ref{maxcut}.
+
+We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
+We do this by choosing a vector $\hat{n} \in \R^n$ (where $\hat{n}$ denotes the normal to the hyperplane) from any rotationally symmetric distribution. Then set, $x_i = \sgn{\hat{n} \cdot y_i} \in \{-1, 1 \}$.
+
+{\bf Analysis of the Rounding} 
+For a given graph $G = (V, E)$, with $V =\{1, \ldots, n\}$, and $E$ the set of edges, fix $(i, j) \in E$. Then the probability that the edge $(i, j)$ is cut by the hyperplane is same as the probability that hyperplane splits $y_i$, and $y_j$. 
+Now consider just simply the $2D$ plane containing $y_i, y_j$. Since the hyperplane was chosen from a rotationally symmetric distribution, the probability that it cuts these two vectors is same as that a random diameter in the circle containing $y_i, y_j$, lies in between the angle $\theta$ of these two vectors.
+
+Thus, 
+\al{
+\Pb[(i, j) \mbox{ gets cut} ] &= \frac{\theta}{\pi} \\
+&=\frac{{\rm cos\inv}\lrb{y_i \cdot y_j}}{\pi}\\
+&=\frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}\\
+\Ex[\mbox{cut val}] &= \sum_{(i, j) \in E}w_{ij} \frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}
+}
+Now recall that 
+\al{
+\mbox{SDPOpt} = \sum_{(i, j) \in E} w_{ij} \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \geq \mbox{Opt}.
+}
+So, if we find $\alpha$ such that 
+\al{
+\frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi} = \alpha\ \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \fa \Si_{ij} \in [-1, 1]
+}
+then we can conclude 
+\al{
+\Ex[\mbox{cut val}]\geq \alpha \mbox{SDPOpt} \geq \alpha \mbox{Opt}
+}
+Plotting the above, ...........
+we see that $\alpha = 0.87856...$ works.
+\begin{remark}
+$\Ex[\mbox{Goemans Williamson Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
+\end{remark} 
+\end{example}
  
+\begin{definition}{\bf Gaussian Rounding}\\
+We can $\lrb{1-O\lrb{\sqrt{\epsilon \log q}}, 1-\epsilon}$-approximate $UG_q$ by SDP Rounding \cite{cmm06}. We can do the following :
+\iit{
+\item Solve the canonical SDP relaxation to get a collection of jointly Gaussian pseudo-indicators $\{G_v(\ell) \}_{v \in V, \ell \in D}$
+\item Draw once from them to obtain numbers $(g_v[0], \ldots, g_v[q-1])_{v \in V}$.
+\item Output the assignment $F(v) = \mbox{argmax} \{g_v(\ell)\}$.
+}
+Note that this is a randomized algorithm.
+\end{definition}
+\begin{remark}
+If $\mbox{SDPOpt}(\C) \geq 1- \epsilon$, then 
+\al{
+\Ex_{F} \lrbb{\mbox{Val}_C(F)} \geq 1 - O \lrb{\sqrt{\epsilon \log q}}
+}
+\end{remark}
 %\end{document}

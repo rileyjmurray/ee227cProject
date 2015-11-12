@@ -1,11 +1,26 @@
 % Shortcuts:
 
 %Theorems
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{prop}{Proposition}
-\newtheorem{remark}{Remark}
-\newtheorem{example}{Example}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{prop}{Proposition}
+%\newtheorem{remark}{Remark}
+%\newtheorem{example}{Example}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{fullpage}
+\usepackage[]{mathtools}
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[]{bbm}
+\declaretheoremstyle[bodyfont=\normalfont, spaceabove=0.5cm]{noItalics}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{remark}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{lemma}
+\declaretheorem[numberwithin=section, style=noItalics, shaded]{theorem}
+%\declaretheorem[numberwithin=section,  style=noItalics, shaded]{definition}
+\declaretheorem[numberwithin=section, style=noItalics]{discussion}
+\declaretheorem[numberwithin=section, style=noItalics]{example}
+
+
 %
 %Environments
 \newcommand{\be}[1]{\begin{eqnarray}#1\end{eqnarray}}
@@ -24,6 +39,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathcal{N}}
 \newcommand{\C}{\mathcal{C}}
+\newcommand{\Lm}{\mathcal{L}}
 \newcommand{\Sm}{\mathcal{S}}
 \newcommand{\Ra}{\mathcal{R}}
 \newcommand{\D}{\Delta}
