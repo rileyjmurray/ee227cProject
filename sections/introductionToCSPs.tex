@@ -39,82 +39,9 @@
 %\parindent 0pt
 %\parskip 8pt
 
-\section*{Preliminaries}
-The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
+\section{Introduction to Constraint Satisfaction Problems}
 
-It is assumed that the reader has some familiarity fundamentals of algorithmic complexity, including big-Oh notation for algorithm runtime, as well as NP-hardness and NP-completeness. 
-For the reader's convenience, we define some key terms in complexity theory below.
-
-A reader with some knowledge of ``approximation algorithms" is likely to better appreciate the material in this report, but strictly speaking, the prior knowledge is not necessary. 
-We provide a very brief introduction to approximation algorithms below. 
-Those experienced in the field should pay special attention to Definition \ref{def:twoParamApproxAlg}, which has seen only limited use.
-
-The focus of this report will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
-
-\subsection*{NP-Hardness and NP-Completeness}
-\begin{ILdefinition}
-A \textbf{decision problem} is an algorithmic question.
-Given some input data, and a set of rules, does the input data satisfy the rules?
-\end{ILdefinition}
-It is implied that sufficient data is provided to definitively answer ``yes" or ``no", even if determining the answer might take a prohibitively long amount of time.
-\begin{ILdefinition}
-\textbf{NP} is a collection of decision problems. A decision problem is in \textbf{NP} if for every ``yes" answer, there is an efficient procedure to verify that the answer is in fact ``yes." 
-There are no requirements for ``no" answers.
-\end{ILdefinition}
-\begin{ILdefinition}
-A decision problem $\mathcal{P}$ is said to be \textbf{NP-Complete} if (1)
-$\mathcal{P} \in $ NP, and (2) any other problem $\mathcal{Q} \in$ NP can be stated ``succinctly" in terms of $\mathcal{P}$ .
-\end{ILdefinition}
-By ``succinctly", we mean that the transformation from $\mathcal{Q}$ to the equivalent problem in the terms of $\mathcal{P}$ can be done in both polynomial time and space.\footnote{This process of carrying out this transformation is usually called a ``reduction."}
-\begin{ILdefinition}
-A problem $\mathcal{P}$ (which may or may not be a decision problem) is said to be \textbf{NP-Hard} if every problem in NP can be stated succinctly in terms of $\mathcal{P}$.
-\end{ILdefinition}
-
-\subsection*{Approximation Algorithms for Optimization Problems}\label{subsec:intractProbCope}
-
-Although ``problems" are said to be intractable, we actually only solve problem \textit{instances}. 
-In a variety of circumstances, it is reasonable to solve an instance of an intractable problem with an exact but exponential algorithm.
-
-For example, there is billions of dollars of capital involved in coordinating the movements of even a handful of trans-oceanic shipping vessels. 
-Although not necessarily the case, it is very likely that such a logistics problem would be NP-Hard.
-Nevertheless, if there are a sufficiently small number of decisions to be made in this planning process, it could make perfect sense to solve the planning problem with an exact algorithm.
-
-The situation changes slightly when deadlines are involved, since getting \textit{some} solution by a deadline is often more important than getting the \textit{best} solution after that time. 
-The presence of imminent deadlines does not completely rule out the use of exact algorithms; high powered computers with sophisticated (but still exponential) algorithms are often used under these circumstances. 
-Logistics for airlines is one prominent example.
-
-But when an intractable problem has thousands of variables, exact methods are typically worthless. 
-For those facing intractable problems of this scale, algorithms which provide solutions within a reasonable amount of time are of paramount importance.  
-When the algorithm \textit{does} have a performance guarantee, it is referred to as an ``approximation algorithm."
-We give a definition below in the case where the objective is to maximize some function. 
-
-\begin{definition}
-\textbf{($\alpha$)-Approximation Algorithm} \\
-Let $\Omega$ denote the set of all possible instances of a given maximization problem. 
-Let $A$ denote an efficient algorithm which returns a feasible but potentially sub-optimal solution for any $I \in \Omega$. 
-Denote the value of the solution returned by $A$ on $I$ as $A(I)$, and denote the value of the optimal solution for $I$ by $OPT(I)$. We call $A$ an $\alpha$-approximation if
-\begin{equation*}
-\frac{OPT(I)}{A(I)} \leq \alpha ~ \forall I \in \Omega
-\end{equation*}
-\label{def:commonApproxAlg}
-\end{definition}
-
-Definition \ref{def:commonApproxAlg} is the most common definition of an approximation algorithm, and is suitable for many applications. It can be useful, however, to describe how performance guarantees relate to the optimal objective value. 
-\begin{definition}
-\textbf{$(\alpha,\beta)$-Approximation Algorithm } \\
-Let $\Omega$, $I$, and $A$ be as before. 
-Define $\Omega_\beta$ as the set of all problem instances with $OPT(I) \geq \beta \forall I \in \Omega_\beta$.
-We call $A$ an $(\alpha,\beta)$ approximation if 
-\begin{equation*}
-\frac{OPT(I)}{A(I)} \leq \alpha ~ \forall I \in \Omega_{\beta}
-\end{equation*}
-\label{def:twoParamApproxAlg}
-\end{definition}
-\newpage
-
-\section{Introduction}
-
-\subsection{Getting Oriented with Constraint Satisfaction Problems}
+\subsection{Getting Oriented with CSP's}
 
 There is a great deal of research going into the approximabilty of constraint satisfaction problems, and some claims regarding CSP's can seem quite sensational. 
 The list of points below gives some facts relating to CSP's to help orient the reader.
