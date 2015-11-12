@@ -12,7 +12,7 @@ Then, a CSP can be denoted as the following integer program.
 	& z_{C_i} \in \{0,1\} & \quad {C_i} \in \mathcal{C} \nonumber\\
 	&	\mu_v^t \in \{0,1\}	& \quad v \in  V \nonumber
 \end{alignat}
-where $\mu_{S_i}$ are the variables corresponding to the CSP variables $x_{S_i}$ in the scope of constraint ${C_i} \in \mathcal{C}$ and $R_i$ is a linear formulation of the operator $R_i \in \Gamma$ corresponding to constraint $C_i$. 
+where $\mu_{S_i}$ are the variables corresponding to the CSP variables $x_{S_i}$ in the scope of constraint ${C_i} \in \mathcal{C}$ and $R_i$ is a linear formulation\footnote{Assuming that such a formulation is indeed possible.} of the operator $R_i \in \Gamma$ corresponding to constraint $C_i$. 
 That is $R_i$ evaluates to $1$ if the constraint is satisfied and $0$ otherwise. 
 Note that if the constraint ${C_i}$ is satisfied, then $z_{C_i} = 1$ and $w_{C_i}$ is contributed to the objective function, and if the constraint is not satisfied, then $z_{C_i}$ is forced to be zero. 
 
@@ -44,17 +44,18 @@ Let us consider the canonical LP relaxation used in the literature.
 In addition to a probability distribution over the possible value each variable can take, the formulation contains a probability distribution over the possible assignments for each constraint.
 This allows us to impose the constraint that the marginal probability for each variable matches the probability that it occurs in an assignment with the same value.
 
-Again we use $\mu_v^t$ to denote the probability that $\mu_v$ takes value $t \in D$. 
-Since these variables should form a probability distribution for a fixed $v \in V$, we require that the sum over $t \in D$ is equal to $1$ and that the $\mu_v^t$ are non-negative.
+We use $\mu_v(\ell)$ to denote the probability that variable $x_v$ takes value $\ell \in D$.
+Since these variables should form a probability distribution for a fixed $v \in V$, we require that the sum over $\ell \in D$ is equal to $1$ and that the $\mu_v(\ell)$ are non-negative.
 Similarly, for constraint $C_i = (R_i, S_i) \in \mathcal{C}$ we introduce a probability distribution over all possible local assignments.
-Let $\lambda_{C_i}$ be a probability distribution over $D^{|S_i|}$, all possible input values.
+Let $\lambda_{C_i}$ be a probability distribution over  $\mathcal{L}_{C_i} = D^{|S_i|}$, all possible input values.
+Then, the local assignment $L \in \mathcal{L}_{C_i}$ is selected with probability $\lambda_{C_i}[L]$.
 For example, suppose $D = \{0,1\}$ and $S_i = (x_2,x_3)$. 
 Then, the corresponding variables are $\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1]$. Again, we require that the variables corresponding to a given constraint $C_i \in \mathcal{C}$ sum up to 1 and are non-negative.
 
-The objective is to maximize the probability, denoted as the expectation of an indicator, that the constraint $C_i$ is satisfied by a local assignment $\lambda_{C_i}[\cdot]$ where $C_i \in \mathcal{C}$ is randomly drawn with weight $w_{C_i}$ and local assignment $(\bar{x}_{S_{C_i}})$ is randomly drawn with probability $\lambda_{C_i}[\bar{x}_{S_{C_i}}]$. 
+The objective is to maximize the probability, denoted as the expectation of an indicator, that the constraint $C_i$ is satisfied by a local assignment $\lambda_{C_i}[\cdot]$ where $C_i \in \mathcal{C}$ is randomly drawn from distribution $W$ and local assignment $L$ is randomly drawn with probability $\lambda_{C_i}[L]$. 
 Mathematically, this can be written as:
 \[
-	OPT_{LP} = \underset{C_i \in \mathcal{C}}{\Ex} \left[ \underset{L \sim \lambda_{C_i}}{\Ex} \left[ R_i( L (S_i )) \right] \right]
+	OPT_{LP} = \max_{\lambda_{\mathcal{C}}} \underset{C_i \sim W}{\Ex} \left[ \underset{L \sim \lambda_{C_i}}{\Ex} \left[ R_i( L (S_i )) \right] \right]
 \]
 where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
 
@@ -63,31 +64,31 @@ The problem is that $\lambda_C$ variables are not coupled across constraints in 
 This allows us to separately select a satisfying assignment for each of the constraints. 
 Hence, $OPT_{LP} = 1$ regardless of the particular instance. 
 As eluded upon, this can be addressed by coupling the marginal probabilities for a variable $x_v$ based on the assignment probabilities $\lambda_C$ variables with $x_v$ in its scope and the corresponding $\mu_v$ variables.
-For each constraint $C_i \in \mathcal{C}$, each variable $v \in V$, and for each $ t \in D$, we require that:
+For each constraint $C_i \in \mathcal{C}$, each variable $v \in V$, and for each $ \ell \in D$, we require that:
 \[
-	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = t] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = t]
+	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
 \]
 We refer to these constraints as first-order consistency constraints.
 It remains to show that these constraints are indeed linear.
-If $T_{C_i}(v)$ is the set of local assignments for constraint $C_i \in \mathcal{C}$ that assigns variable $x_v$  the value $t \in D$, then the corresponding constraint can be written as:
+If $T_{C_i}(v)$ is the set of local assignments for constraint $C_i \in \mathcal{C}$ that assigns variable $x_v$  the value $\ell \in D$, then the corresponding constraint can be written as:
 \[
-	\sum_{y \in T_{C_i}(v)} \lambda_{C_i}[y] = \mu_v^t
+	\sum_{\substack{L \in \mathcal{L}_{C_i}\\ L(v) = \ell}} \lambda_{C_i}[L] = \mu_v(\ell)
 \]
-For the example given above with scope $(x_2,x_3)$, $D = \{0,1\}$, variable $v = 3$, and $ t = 1$, the constraint can be written as:
+For the example given above with scope $(x_2,x_3)$, $D = \{0,1\}$, variable $v = 3$, and $ \ell = 1$, the constraint can be written as:
 \[
 	\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1] + \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1] = \mu_3^1
 \]
 
 The complete formulation is then:
 \begin{alignat}{3}
-\max \quad & \sum_{C_i \in \mathcal{C}} w_{C_i} \sum_{ y \in Y }  \lambda_{C_i}[y] \  R_i(L(S_i))) \label{eq:lp_strong}\\
-\text{s.t.} \quad & 	\sum_{y \in T_{C_i}(v)} \lambda_{C_i}[y] = \mu_v^t & \quad C_i \in \mathcal{C}, v \in V, t \in D \nonumber \\
-& \sum_{y \in Y} \lambda_{C_i}[ y ] = 1 & \quad  C_i \in \mathcal{C} \nonumber\\
-& \sum_{t \in D} \mu_v^t = 1 & \quad v \in V \nonumber\\
-& \lambda_{C_i}[ y ] \ge 0 & \quad C_i \in \mathcal{C}, y \in Y \nonumber\\
-&	\mu_v^t \ge 0	& \quad v \in  V, t \in D \nonumber
+\max \quad & \sum_{C_i \in \mathcal{C}} w_{C_i} \sum_{ L \in \mathcal{L}_{C_i} }  \lambda_{C_i}[L] \  R_i(L(S_i))) \label{eq:lp_strong}\\
+\text{s.t.} \quad & 	\sum_{\substack{L \in \mathcal{L}_{C_i}\\ L(v) = \ell }} \lambda_{C_i}[L] = \mu_v(\ell) & \quad C_i \in \mathcal{C}, v \in V, \ell \in D \nonumber \\
+& \sum_{L \in \mathcal{L}_{C_i}} \lambda_{C_i}[ L ] = 1 & \quad  C_i \in \mathcal{C} \nonumber\\
+& \sum_{\ell \in D} \mu_v(\ell) = 1 & \quad v \in V \nonumber\\
+& \lambda_{C_i}[ L ] \ge 0 & \quad C_i \in \mathcal{C}, L \in \mathcal{L}_{C_i} \nonumber\\
+&	\mu_v(\ell) \ge 0	& \quad v \in  V, \ell \in D \nonumber
 \end{alignat}
-where $Y$ is the set of all possible local input assignments for the variables in scope $S_i$, and $T_{C_i}(v)$ is the set of input assignments for $C_i \in \mathcal{C}$ that have $x_v = t$.
+where $\mathcal{L}_{C_i}$ is the set of all possible local input assignments for the variables in scope $S_i$.
 
 Observe that this formulation couples the local assignments for different constraints through the variables $\mu$. 
 Stronger relaxations are possible by requiring that all pairwise marginals are preserved. For example, for all sets of two variables. 
@@ -113,23 +114,23 @@ This technique uses the information available from the LP, typically by using th
 To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT.
 
 \subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}
-For each variable $v \in V$, let the random solution be given by:
+For each variable $v \in V$, let the random variable denoting the full assignment be given by:
 \[
 	F(v) = \begin{cases}
-	1 & \text{with probability } \mu_v^1\\
-	0 & \text{with probability } \mu_v^0
+	1 & \text{with probability } \mu_v(1)\\
+	0 & \text{with probability } \mu_v(0)
 	\end{cases}
 \]
-Since the sum over $t \in D = \{0,1\}$ of  $\mu_v^t$ is $1$, and since $\mu_v^t$ is non-negative, the above is a valid definition for a random variable. 
+Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v[\ell]$ is $1$, and since $\mu_v[\ell]$ is non-negative, the above is a valid definition for a random variable. 
 Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
 
 The expected objective value of this randomized assignment is given by:
 \[
-	\underset{F}{\Ex}\left[ \underset{C_i \in \mathcal{C}}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+	\underset{F}{\Ex}\left[ \underset{C_i \sim W}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
 \]
 Since we can swap the order of expectation (where $\mathbb{P}$ is an expectation over an indicator), this is equivalent to
 \[
-\underset{C_i \in \mathcal{C}}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+\underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
 \]
 This swap allows us to consider each $C_i \in \mathcal{C}$ separately. 
 Therefore, a single constraint $C_i \in \mathcal{C}$ can be considered.
@@ -139,7 +140,7 @@ In other words, there is a unique ``bad'' assignment $b_{C_i}$ that makes constr
 For example, if $C_i = x_1 \vee x_2 \vee \bar{x}_3$, then the unique ```bad'' assignment is given by $x_1 = 0$, $x_2 = 0$, and $x_3 = 1$. 
 Considering the definition of $F(v)$ and the independence of $F(i)$ and $F(j)$ for $i \neq j$, it then follows that 
 \[
-	\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v^{b_{C_i}(v)}
+	\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))
 \]
 where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the ``bad'' assignment.
 
