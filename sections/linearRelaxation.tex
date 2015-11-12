@@ -89,8 +89,61 @@ The complete formulation is then:
 \end{alignat}
 where $Y$ is the set of all possible local input assignments for the variables in scope $S_i$, and $T_{C_i}(v)$ is the set of input assignments for $C_i \in \mathcal{C}$ that have $x_v = t$.
 
-Observe that this formulation couples the local assignments for different constraints through the variables $\mu$. Stronger relaxations are possible by requiring that all pairwise marginals are preserved. For example, for all sets of two variables. However, this results in a semi-infinite LP with an exponential number of constraints. 
+Observe that this formulation couples the local assignments for different constraints through the variables $\mu$. 
+Stronger relaxations are possible by requiring that all pairwise marginals are preserved. For example, for all sets of two variables. 
+However, this results in a semi-infinite LP with an exponential number of constraints. 
 
+\begin{thm}
+	The LP given in \eqref{eq:lp_strong} is a relaxation for the problem CSP$(\Gamma)$
+\end{thm}
+\begin{proof}
+	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v^t$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
+	Furthermore, for each $C_i \in \mathcal{C}$ set $\lambda_{C_i}[y]$ equal to $1$ if $y$ is the local assignment for the scope $S_i$ corresponding to the optimal solution to the CSP and $0$ otherwise. 
+	It follows that this is a feasible LP solution. 
+	Hence, $OPT(\mathcal{C}) \le OPT_{LP}(\mathcal{C})$.
+\end{proof}
 
+Having obtained a valid LP relaxation for any CSP problem, the question is now how to use this relaxation to generate good feasible solutions to the CSP. 
+A key technique to generate CSP solutions is rounding the LP solution.
 
-\subsection{Rounding schemes for LP}
+\subsection{Rounding schemes for LP relaxations}
+Various techniques have been developed to extract good CSP solutions from the LP relaxation in \eqref{eq:lp_strong}\improvement{give references}.
+A common technique to generate CSP solutions with a performance guarantee is randomized rounding.
+This technique uses the information available from the LP, typically by using the optimal solution as a probability distribution, to randomly round the each variable to a value in its domain $D$.
+To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT.
+
+\subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}
+For each variable $v \in V$, let the random solution be given by:
+\[
+	F(v) = \begin{cases}
+	1 & \text{with probability } \mu_v^1\\
+	0 & \text{with probability } \mu_v^0
+	\end{cases}
+\]
+Since the sum over $t \in D = \{0,1\}$ of  $\mu_v^t$ is $1$, and since $\mu_v^t$ is non-negative, the above is a valid definition for a random variable. 
+Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
+
+The expected objective value of this randomized assignment is given by:
+\[
+	\underset{F}{\Ex}\left[ \underset{C_i \in \mathcal{C}}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+\]
+Since we can swap the order of expectation (where $\mathbb{P}$ is an expectation over an indicator), this is equivalent to
+\[
+\underset{C_i \in \mathcal{C}}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+\]
+This swap allows us to consider each $C_i \in \mathcal{C}$ separately. 
+Therefore, a single constraint $C_i \in \mathcal{C}$ can be considered.
+
+Observe that since the constraints are in disjunctive form, each variable needs to evaluate to false for the constraint to be false. 
+In other words, there is a unique ``bad'' assignment $b_{C_i}$ that makes constraint $C_i$ false. 
+For example, if $C_i = x_1 \vee x_2 \vee \bar{x}_3$, then the unique ```bad'' assignment is given by $x_1 = 0$, $x_2 = 0$, and $x_3 = 1$. 
+Considering the definition of $F(v)$ and the independence of $F(i)$ and $F(j)$ for $i \neq j$, it then follows that 
+\[
+	\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v^{b_{C_i}(v)}
+\]
+where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the ``bad'' assignment.
+
+Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. This can be done, by relating $F$ to the distribution over local assignments.
+\begin{align*}
+	p_{C_i}
+\end{align*}
