@@ -47,9 +47,9 @@ There is a great deal of research going into the approximabilty of constraint sa
 The list of points below gives some facts relating to CSP's to help orient the reader.
 
 \begin{itemize}
-\item The CSP framework can be applied to both optimization problems (such as Max-Cut) and decision problems (such as 3-SAT)
+\item At their core, CSP's are \textit{optimization} problems. But as we will see, CSP's can be used to approach \textit{decision} problems.
+\item The objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables must be in some simple, discrete domain.
 \item Most CSP's are NP-Hard to solve optimally. Because of this, discussion of CSP's centers on developing approximate solutions to these problems.
-\item In CSP approximation, the objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables must be in some simple, discrete domain.
 \item Semidefinite Programming is the primary technique for CSP approximation.
 \item The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
 \end{itemize}
@@ -70,10 +70,13 @@ We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serv
 
 \textbf{Examples}
 \begin{itemize}
-\item Cut : The Cut problem seeks a partition of a graph into two disjoint sets.  $D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
-\item $q-$Coloring : Color the nodes of a graph using at most $q$ colors. Our domain is $D = \{0,1,\ldots,q-1\}$, and $\Gamma$ is again $\{\neq\}$. Note that $q-$coloring extends the Cut problem to support $q \geq 2$ disjoint sets.
-\item E3-SAT : Here, the domain is $D = \{0,1\}$, and our constraint types (elements of $\Gamma$) are of the form $(x_j \vee x_j \vee x_k)$, $(x_i\vee \bar{x}_j \vee x_k)$, $(\bar{x}_i \vee \bar{x}_j \vee x_k)$, $\ldots$ - all disjunctions on \textit{`E'xactly} $3$ literals. 
-\item $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of \textit{up to} $k$ literals.
+\item Max-Cut : For a given graph, label each vertex either ``$0$" or ``$1$" to maximize the number of edges connecting verticies with different labels.   
+$D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
+\item $q-$Coloring : Find an a as-consistent-as-possible coloring for a graph using at most $q$ colors. 
+Our domain is $D = \{0,1,\ldots,q-1\}$, and $\Gamma$ is again $\{\neq\}$. 
+Note that Max-Cut is equivalent to $q-$coloring with $q = 2$.
+\item Max E3-SAT : Here, the domain is $D = \{0,1\}$, and our constraint types (elements of $\Gamma$) are of the form $(x_j \vee x_j \vee x_k)$, $(x_i\vee \bar{x}_j \vee x_k)$, $(\bar{x}_i \vee \bar{x}_j \vee x_k)$, $\ldots$ - all disjunctions on \textit{`E'xactly} $3$ literals. 
+\item Max $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of \textit{up to} $k$ literals.
 \item $3-$CSP : $D = \{0,1\}$, $\Gamma$ is all relations on up to three binary variables.
 \end{itemize}
 
@@ -109,12 +112,12 @@ One of the most surprising results in CSP's and approximation algorithms is the 
 
 Take 3-SAT for example. 
 It is well known that it is NP-Hard to find a satisfiable assignment to a 3-SAT instance even \textit{given} that it is satisfiable. 
-It is equivalent to say that it is NP-Hard to $(1,1)$ approximate 3-SAT. 
-But if we consider 3-SAT as a CSP where the \textit{objective} is to satisfy as many constraints as possible, there exists a well known $(\frac{7}{8}\beta,\beta)$ polynomial time approximation algorithm - for all $ \beta \leq 1$! 
-From this we might expect that approximating an optimization problem (such as a CSP) is easier than solving the original decision problem. 
-Alas, this is not the case. 
+It is equivalent to say that it is NP-Hard to $(1,1)$ approximate ``Max 3-SAT." 
+In spite of this, Max 3-SAT has a well known $(\frac{7}{8}\beta,\beta)$ polynomial time approximation algorithm - for all $ \beta \leq 1$! 
+From this we might expect that approximating an optimization problem (Max 3-SAT) is easier than solving the corresponding decision problem (3-SAT). 
+Alas, this is not always the case. 
 
-For example, the 2-SAT decision problem can be solved in polynomial time, but the 2-SAT CSP problem is NP-Hard to approximate by better than 0.955. 
+For example, the 2-SAT decision problem can be solved in polynomial time, but Max 2-SAT is NP-Hard to approximate by better than 0.955. 
 The Max-Cut problem is yet another example of this phenomenon. 
 There is a polynomial time algorithm for determining whether or not a Max-Cut instance is satisfyable\footnote{one need only check whether the graph is bipartite}, 
 but the best approximation algorithm for Max-Cut in the general case is a $(0.878\beta,\beta)$ approximation. 

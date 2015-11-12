@@ -1,18 +1,24 @@
 \section{Preliminaries}
-The study of Constraint Satisfaction Problems is of significant interest precisely because many practical problems are intractable.  
+This section provides a brief overview of the material that is necessary to understand this report. There are three main requirements
+\begin{itemize}
+\item Some familiarity with the fundamentals of algorithmic complexity.
+\item Exposure to semidefinite and linear programming.
+\item Proficiency in linear algebra and probability.
+\end{itemize}
 
-It is assumed that the reader has some familiarity fundamentals of algorithmic complexity, including big-Oh notation for algorithm runtime, as well as NP-hardness and NP-completeness. 
-For the reader's convenience, we define some key terms in complexity theory below.
+With regards to algorithmic complexity, we assume the reader is comfortable with big-O notation for algorithm runtime, as well as NP-Completeness and NP-Hardness. 
+Although it is expected that the reader be comfortable with these topics, key terms in complexity theory are defined below for convenience.
+
+Linear algebra is not required to understand the notion of a Constraint Satisfaction Problem, but will be necessary to understand the semidefinite programming approaches that are used to approximate CSP's. 
+Probability also plays a key role in these semidefinite programming approaches.
 
 A reader with some knowledge of ``approximation algorithms" is likely to better appreciate the material in this report, but strictly speaking, the prior knowledge is not necessary. 
 We provide a very brief introduction to approximation algorithms below. 
 Those experienced in the field should pay special attention to Definition \ref{def:twoParamApproxAlg}, which has seen only limited use.
 
-The focus of this report will be the use of Semidefinite Programming for CSP's. As such, the reader is expected to be proficient in linear algebra and to have some exposure to mathematical programming (linear programming at minimum).
-
 \subsection{NP-Hardness and NP-Completeness}
 \begin{ILdefinition}
-A \textbf{decision problem} is an algorithmic question.
+A \textbf{decision problem} is a yes-no question.
 Given some input data, and a set of rules, does the input data satisfy the rules?
 \end{ILdefinition}
 It is implied that sufficient data is provided to definitively answer ``yes" or ``no", even if determining the answer might take a prohibitively long amount of time.
