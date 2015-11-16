@@ -114,14 +114,15 @@ This technique uses the information available from the LP, typically by using th
 To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT.
 
 \subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}
-For each variable $v \in V$, let the random variable denoting the full assignment be given by:
+Consider the full assignment $F$ as a vector of random variables. For each variable $v \in V$, let the random variable be given by:
 \[
 	F(v) = \begin{cases}
-	1 & \text{with probability } \mu_v(1)\\
-	0 & \text{with probability } \mu_v(0)
+	1 & \text{with probability } \mu^*_v(1)\\
+	0 & \text{with probability } \mu^*_v(0)
 	\end{cases}
 \]
-Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v[\ell]$ is $1$, and since $\mu_v[\ell]$ is non-negative, the above is a valid definition for a random variable. 
+where $\mu^*_v(\ell)$ is the value of variable $\mu_v(\ell)$ in an optimal solution to the LP.
+Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v(\ell)$ is $1$, and since $\mu_v(\ell)$ is non-negative, the above is a valid definition for a random variable. 
 Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
 
 The expected objective value of this randomized assignment is given by:
@@ -135,16 +136,46 @@ Since we can swap the order of expectation (where $\mathbb{P}$ is an expectation
 This swap allows us to consider each $C_i \in \mathcal{C}$ separately. 
 Therefore, a single constraint $C_i \in \mathcal{C}$ can be considered.
 
-Observe that since the constraints are in disjunctive form, each variable needs to evaluate to false for the constraint to be false. 
-In other words, there is a unique ``bad'' assignment $b_{C_i}$ that makes constraint $C_i$ false. 
-For example, if $C_i = x_1 \vee x_2 \vee \bar{x}_3$, then the unique ```bad'' assignment is given by $x_1 = 0$, $x_2 = 0$, and $x_3 = 1$. 
+Observe that since the constraints are in disjunctive form, each literal needs to evaluate to false for the constraint to be false. 
+In other words, there is a unique falsifying assignment $b_{C_i}$ that makes constraint $C_i$ false. 
+For example, if $C_i = x_1 \vee x_2 \vee \bar{x}_3$, then the unique falsifying assignment is given by $x_1 = 0$, $x_2 = 0$, and $x_3 = 1$. 
 Considering the definition of $F(v)$ and the independence of $F(i)$ and $F(j)$ for $i \neq j$, it then follows that 
-\[
-	\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))
-\]
-where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the ``bad'' assignment.
+\begin{equation}
+		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v)) \label{eq:objectiveRounding}
+\end{equation}
+where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the falsifying assignment. In particular, the probability of not satisfying the constraint in the above example is $ 1- \mu_1^*(0) \mu_2^*(0) \mu_3^*(1)$.
 
 Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. This can be done, by relating $F$ to the distribution over local assignments.
+\begin{align}
+	p_{C_i} &:= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
+			&=  \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
+			&\le \sum_{v \in  S } \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} \left[  \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
+			&= \sum_{v \in S} \left( 1 - \mu_v^*(b_{C_i}(v)) \right) \label{eq:objectiveLP}
+\end{align}
+This last step follows from the first-order consistency constraints:
+\[
+	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
+\]
+
+It remains to relate the LP objective value to the expected objective of the rounding procedure. Note that the former (see \eqref{eq:objectiveLP}) is an arithmetic mean (AM) whereas the latter (see \eqref{eq:objectiveRounding}) is an geometric mean (GM). This suggests the use of the inequality of arithmetic and geometric means.
 \begin{align*}
-	p_{C_i}
+		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] &= 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))\\
+		&= 1 - \underset{v \in S}{GM}(\mu_{v}^*(b_c(v)))^{|S|}\\
+		&\ge 1 - \underset{v \in S}{AM}(\mu_{v}^*(b_c(v)))^{|S|}\\
+		&= 1 - \left( 1  - \underset{v \in S}{AM}(1 -\mu_{v}^*(b_c(v))) \right)^{|S|}\\
+		&\ge 1 - \left( 1  - \frac{p_{C_i}}{|S|}\right)^{|S|}\\
 \end{align*}
+
+If $|S| \leftarrow \infty$, then the ratio approaches $1 - \frac{1}{e}$. Therefore, the objective value of the rounding scheme
+\begin{align*}
+	\underset{F}{\Ex} \left[ \text{Val}_{\mathcal{C}}[F]\right] &= \underset{F}{\Ex}\left[ \underset{C_i \sim W}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
+	&=  \underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
+	&\ge \left( 1 - \frac{1}{e} \right) \underset{C_i \sim W}{\Ex} [ p_{C_i} ]\\
+	&= \left( 1 - \frac{1}{e} \right) \text{OPT}_{LP}(\mathcal{C})\\
+	&\ge \left( 1 - \frac{1}{e} \right) \text{OPT}(\mathcal{C})\\
+\end{align*}
+
+Hence, we conclude with the following theorem:
+\begin{thm}
+	Randomized rounding is a $\left( ( 1 - 1/e)\beta, \beta \right)$-approximation for Max-SAT for any $\beta$.
+\end{thm}
