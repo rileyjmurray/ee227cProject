@@ -1,0 +1,76 @@
+\section{Rounding Schemes}
+\subsection{Intuition for Rounding}
+Next question that comes to our mind is - 
+\textit{``How do we get a near optimal assignment from the solution of the relaxed problem"}. 
+Note that the solution of the relaxed problem gives us a PSD matrix and probability distributions over constraints. 
+Next challenge is to make a ``consistent draw" from this distribution and analyzing the expected value of CSP resulting from such draws, 
+however we have already understood the intuition behind various terms and hence it is merely a computational task now.  
+
+We concretely summarize various angles, that we discussed briefly before, to look at canonical SDP relaxations for a CSP :
+\iit{
+
+\item Pseudo-indicator random variables which satisfy the first and second moment consistency constraints. 
+This perspective is arguably the best for understanding the SDP. 
+
+\item Pseudo-indicator random variables which satisfy the second moment constraints. 
+This perspective is arguably the best when constructing SDP solutions by hand.
+
+\item Vectors $\{ y_{v, \ell} \}$ satisfying the first and second moment consistency constraints.  
+This perspective is the one that's actually used computationally, on a computer. 
+
+\item Jointly Gaussian Pseudo-indicator random variables which satisfy the consistent first and second moment constraints. 
+This perspective is suited for developing``SDP Rounding algortihms". 
+}
+Let's discuss a classical rounding scheme for MAX-CUT and then introduce a more general rounding scheme - 
+\begin{example}{\bf Randomized Rounding [GW Rounding]}\\
+By now, we know how to relax MAX-CUT to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
+We will borrow notation and variables from Example \ref{maxcut}.
+
+We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
+We do this by choosing a vector $\hat{n} \in \R^n$ (where $\hat{n}$ denotes the normal to the hyperplane) from any rotationally symmetric distribution. Then set, $x_i = \sgn{\hat{n} \cdot y_i} \in \{-1, 1 \}$.
+
+{\bf Analysis of the Rounding} 
+For a given graph $G = (V, E)$, with $V =\{1, \ldots, n\}$, and $E$ the set of edges, fix $(i, j) \in E$. Then the probability that the edge $(i, j)$ is cut by the hyperplane is same as the probability that hyperplane splits $y_i$, and $y_j$. 
+Now consider just simply the $2D$ plane containing $y_i, y_j$. Since the hyperplane was chosen from a rotationally symmetric distribution, the probability that it cuts these two vectors is same as that a random diameter in the circle containing $y_i, y_j$, lies in between the angle $\theta$ of these two vectors.
+
+Thus, 
+\al{
+\Pb[(i, j) \mbox{ gets cut} ] &= \frac{\theta}{\pi} \\
+&=\frac{{\rm cos\inv}\lrb{y_i \cdot y_j}}{\pi}\\
+&=\frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}\\
+\Ex[\mbox{Weight of edges cut}] &= \sum_{(i, j) \in E}w_{ij} \frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}
+}
+Now recall that 
+\al{
+\mbox{SDPOpt} = \sum_{(i, j) \in E} w_{ij} \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \geq \mbox{Opt}.
+}
+So, if we find $\alpha$ such that 
+\al{
+\frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi} = \alpha\ \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \fa \Si_{ij} \in [-1, 1]
+}
+then we can conclude 
+\al{
+\Ex[\mbox{cut val}]\geq \alpha \mbox{SDPOpt} \geq \alpha \mbox{Opt}
+}
+Solving it numerically we get that $\alpha = 0.87856$ works.
+\begin{remark}
+$\Ex[\mbox{Goemans Williamson Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
+\end{remark} 
+\end{example}
+ 
+\begin{definition}{\bf Gaussian Rounding}\\
+We can $\lrb{1-O\lrb{\sqrt{\epsilon \log q}}, 1-\epsilon}$-approximate $UG_q$ by SDP Rounding \cite{cmm06}. We can do the following :
+\iit{
+\item Solve the canonical SDP relaxation to get a collection of jointly Gaussian pseudo-indicators $\{G_v(\ell) \}_{v \in V, \ell \in D}$
+\item Draw once from them to obtain numbers $(g_v[0], \ldots, g_v[q-1])_{v \in V}$.
+\item Output the assignment $F(v) = \mbox{argmax} \{g_v(\ell)\}$.
+}
+Note that this is a randomized algorithm.
+\end{definition}
+\begin{remark}
+If $\mbox{SDPOpt}(\C) \geq 1- \epsilon$, then 
+\al{
+\Ex_{F} \lrbb{\mbox{Val}_C(F)} \geq 1 - O \lrb{\sqrt{\epsilon \log q}}
+}
+\end{remark}
