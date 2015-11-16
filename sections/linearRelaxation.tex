@@ -143,9 +143,11 @@ Considering the definition of $F(v)$ and the independence of $F(i)$ and $F(j)$ f
 \begin{equation}
 		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v)) \label{eq:objectiveRounding}
 \end{equation}
-where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the falsifying assignment. In particular, the probability of not satisfying the constraint in the above example is $ 1- \mu_1^*(0) \mu_2^*(0) \mu_3^*(1)$.
+where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the falsifying assignment. 
+In particular, the probability of not satisfying the constraint in the above example is $ 1- \mu_1^*(0) \mu_2^*(0) \mu_3^*(1)$.
 
-Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. This can be done, by relating $F$ to the distribution over local assignments.
+Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. 
+This can be done, by relating $F$ to the distribution over local assignments.
 \begin{align}
 	p_{C_i} &:= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
 			&=  \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
@@ -157,7 +159,9 @@ This last step follows from the first-order consistency constraints:
 	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
 \]
 
-It remains to relate the LP objective value to the expected objective of the rounding procedure. Note that the former (see \eqref{eq:objectiveLP}) is an arithmetic mean (AM) whereas the latter (see \eqref{eq:objectiveRounding}) is an geometric mean (GM). This suggests the use of the inequality of arithmetic and geometric means.
+It remains to relate the LP objective value to the expected objective of the rounding procedure. 
+Note that the former (see \eqref{eq:objectiveLP}) is an arithmetic mean (AM) whereas the latter (see \eqref{eq:objectiveRounding}) is an geometric mean (GM). 
+This suggests the use of the inequality of arithmetic and geometric means.
 \begin{align*}
 		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] &= 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))\\
 		&= 1 - \underset{v \in S}{GM}(\mu_{v}^*(b_c(v)))^{|S|}\\
@@ -166,7 +170,8 @@ It remains to relate the LP objective value to the expected objective of the rou
 		&\ge 1 - \left( 1  - \frac{p_{C_i}}{|S|}\right)^{|S|}\\
 \end{align*}
 
-If $|S| \leftarrow \infty$, then the ratio approaches $1 - \frac{1}{e}$. Therefore, the objective value of the rounding scheme
+If $|S| \leftarrow \infty$, then the ratio approaches $1 - \frac{1}{e}$. 
+Therefore, the objective value of the rounding scheme
 \begin{align*}
 	\underset{F}{\Ex} \left[ \text{Val}_{\mathcal{C}}[F]\right] &= \underset{F}{\Ex}\left[ \underset{C_i \sim W}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
 	&=  \underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
