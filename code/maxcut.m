@@ -34,7 +34,9 @@ for i=1:e
     C{i} = Constraint(E(i,:), @(x) r(x)); 
 end
 
-% A random assignment - each variable taking value 0 or 1 independently.
+% A random assignment - each variable taking value 0 or 1 independently
+% with probability half.
+
 assignment = (rand(n,1) >=0.5); 
 
 maxCutProblem = CSP(w, C); 
