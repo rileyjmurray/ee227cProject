@@ -15,8 +15,13 @@ classdef CSP < handle
             if obj.numConstraints ~= length( weights )
                 error('Invalid CSP: number of weights should equal the number of constraints')
             end
-            if sum( weights ) ~= 1
-                error('Invalid CSP: weights should sum to 1')
+            if weights <= 0
+                sum(weights)
+                error('Invalid CSP: weights are not strictly positive')
+            end
+            if sum(weights) ~= 1
+                disp(['normalizing weight']);
+                weights= weights/sum(weights); 
             end
             obj.weights = weights;
             
