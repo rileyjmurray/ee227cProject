@@ -13,7 +13,7 @@ for i=1:e
     first = randi(n); 
     second = randi(n-1); 
     second = rnd2(first, second, n);
-    E(i) = [first, second];  
+    E(i,:) = [first, second];  
 end
 
 %{
@@ -39,10 +39,3 @@ assignment = (rand(n,1) >=0.5);
 
 maxCutProblem = CSP(w, C); 
 maxCutProblem.evaluateObjective(assignment)
-
-function a = aver(v)
-a = sum(v)/len(v); 
-end
-%{     
-
-%}
