@@ -53,7 +53,7 @@ MAX CUT problem can be formulated as the following integer quadratic program :
 Clearly $x_i^2=1$, and $x_i=x_j\rr x_ix_j=1$ and thus contribution of that term to the sum is zero. 
 Also, $x_i \neq x_j \rr x_ix_j=-1$, and thus that weight contributes to the sum. 
 We can see that by associating each vertex $i$ with the variable $x_i$, we have that if an edge has both end points with same $x$-value, it is ignored in the sum, and all the edges with end points in different groups contribute weight to the sum. 
-\cite{Delorme - Poljak '90} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
+\cite{DelormePoljak90} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
 \[ \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-y_i\trans y_j) ~:~ y_i\trans y_i = 1 {\mbox {\ i.e.\ }} y_i \in S^{n-1} \]
 If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then one can easily see that for $$Y = (y_1, \cdots, y_n) \rr \Sigma = Y\trans Y \succeq 0,$$ and our program reduces to 
 \[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]

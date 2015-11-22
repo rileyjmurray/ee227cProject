@@ -31,3 +31,90 @@
 	year={2009},
 	organization={IEEE}
 }
+
+@article{gwFirstMaxCutSDP,
+abstract = {We present randomized approximation algorithms for the maximum cut (MAX CUT) and maximum 2-satisfiability (MAX 2SAT) problems that always deliver solutions of expected value at least .87856 times the optimal value. These algorithms use a simple and elegant technique that randomly rounds the solution to a nonlinear programming relaxation. This relaxation can be interpreted both as a semidefinite program and as an eigenvalue minimization problem. The best previously known approximation algorithms for these problems had performance guarantees of 1/2 for MAX CUT and 3/4 for MAX 2SAT. Slight extensions of our analysis lead to a .79607-approximation algorithm for the maximum directed cut problem (MAX DICUT) and a .758-approximation algorithm for MAX SAT, where the best previously known approximation algorithms had performance guarantees of 1/4 and 3/4, respectively. Our algorithm gives the first substantial progress in approximating MAX CUT in nearly twenty years, and represents the first use of semidefinite programming in the design of approximation algorithms.},
+author = {Goemans, M X and Williamson, D P},
+doi = {10.1145/227683.227684},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/goemans williamson paper.pdf:pdf},
+issn = {00045411},
+journal = {Journal Of The Acm},
+number = {6},
+pages = {1115--1145},
+title = {{Improved approximation algorithms for maximum cut and satisfiability problems using semidefinite programming}},
+url = {papers2://publication/uuid/0892EDC7-FD65-421F-AE12-FB02C133ABEA},
+volume = {42},
+year = {1995}
+}
+
+@article{AsanoAndWilliamson2002,
+abstract = {MAX SAT (the maximum satisfiability problem) is stated as follows: given a set of clauses with weights, find a truth assignment that maximizes the sum of the weights of the satisfied clauses. In this paper, we consider approximation algo- rithms for MAX SAT proposed by Goemans and Williamson and present a sharp- ened analysis of their performance guarantees. We also show that these algorithms, combined with recent approximation algorithms for MAX 2SAT, MAX 3SAT, and MAX SAT due to Feige and Goemans, Karloff and Zwick, and Zwick, respectively, lead to an improved approximation algorithm for MAX SAT. By using the MAX 2SAT and 3SAT algorithms, we obtain a performance guarantee of 0.7846, and by using Zwick’s algorithm, we obtain a performance guarantee of 0.8331, which improves upon the performance guarantee of 0.7977 based on Zwick’s conjecture. The best previous result for MAX SAT without assuming Zwick’s conjecture is a 0.770-approximation algorithm of Asano. Our best algorithm requires a new fam- ily of 3 4 -approximation algorithms that generalize a previous algorithm of Goemans and Williamson. ©},
+archivePrefix = {arXiv},
+arxivId = {arXiv:1505.01439v1},
+author = {Asano, Takao and Williamson, David P.},
+doi = {10.1016/j.orl.2009.01.011},
+eprint = {arXiv:1505.01439v1},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/resource for citing SAT approximability.pdf:pdf},
+issn = {01966774},
+journal = {Journal of Algorithms},
+pages = {173--201},
+title = {{Improved Approximation Algorithms for Maximum Satisfiability}},
+year = {2002}
+}
+
+@article{Trevisan2000,
+abstract = {We present a linear programming-based method for finding "gadgets," i.e., combinatorial structures reducing constraints of one optimization problem to constraints of another. A key step in this method is a simple observation which limits the search space to a finite one. Using this new method we present a number of new, computer-constructed gadgets for several different reductions. This method also answers a question posed by Bellare, Goldreich, and Sudan [SIAM J. Comput., 27 (1998), pp. 804--915] of how to prove the optimality of gadgets: linear programming duality gives such proofs. The new gadgets, when combined with recent results of H\aa stad [ Proceedings of the 29th ACM Symposium on Theory of Computing, 1997, pp. 1--10], improve the known inapproximability results for MAX CUT and MAX DICUT, showing that approximating these problems to within factors of \$16/17 + \backslash epsilon\$ and \$12/13+ \backslash epsilon,\$ respectively, is NP-hard for every \$\backslash epsilon > 0\$. Prior to this work, the best-known inapproximability thresholds for both problems were 71/72 (M. Bellare, O. Goldreich, and M. Sudan [ SIAM J. Comput., 27 (1998), pp. 804--915]). Without using the gadgets from this paper, the best possible hardness that would follow from Bellare, Goldreich, and Sudan and H\aa\{s\}tad is \$18/19\$. We also use the gadgets to obtain an improved approximation algorithm for MAX3 SAT which guarantees an approximation ratio of .801. This improves upon the previous best bound (implicit from M. X. Goemans and D. P. Williamson [ J. ACM, 42 (1995), pp. 1115--1145]; U. Feige and M. X. Goemans [ Proceedings of the Third Israel Symposium on Theory of Computing and Systems, 1995, pp. 182--189]) of .7704.},
+author = {Trevisan, Luca and Sorkin, Gregory B. and Sudan, Madhu and Williamson, David P.},
+doi = {10.1137/S0097539797328847},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/hardness of approximation for 3SAT.pdf:pdf},
+isbn = {10.1137/S0097539797328847},
+issn = {0097-5397},
+journal = {SIAM Journal on Computing},
+keywords = {68Q15,NP-completeness,approximation algorithms,combinatorial optimization,intractability,probabilistic proof systems,reductions},
+number = {6},
+pages = {2074--2097},
+title = {{Gadgets, approximation, and linear programming}},
+volume = {29},
+year = {2000}
+}
+
+@article{Hastad2001,
+abstract = {We prove optimal, up to an arbitrary epsilon > 0, inapproximability results for Max-Ek-Sat for k greater than or equal to 3, maximizing the number of satisfied linear equations in an over-determined system of linear equations modulo a prime p and Set Splitting. As a consequence of these results we get improved lower bounds for the efficient approximability of many optimization problems studied previously. In particular, for Max-E2-Sat, Max-Cut, Max-di-Cut, and Vertex cover.},
+author = {H\aa stad, Johan},
+doi = {10.1145/502090.502098},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/max 2 sat complexity.pdf:pdf},
+isbn = {0004-5411},
+issn = {00045411},
+journal = {Journal of the ACM},
+number = {4},
+pages = {798--859},
+title = {{Some optimal inapproximability results}},
+volume = {48},
+year = {2001}
+}
+
+@article{Zwick1997,
+author = {Karloff, Howard and Zwick, Uri},
+journal = {Proc. 38th Annual Symposium on Foundations of Computer Science},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/78ths approx for 3sat when is satisfiable.pdf:pdf},
+pages = {406--415},
+title = {{A 7/8-Approximation Algorithm for MAX 3SAT?}},
+year = {1997}
+}
+
+@article{Khot,
+abstract = {A 2-prover game is called unique if the answer of one prover$\backslash$nuniquely determines the answer of the second prover and vice versa (we$\backslash$nimplicitly assume games to be one round games). The value of a 2-prover$\backslash$ngame is the maximum acceptance probability of the verifier over all the$\backslash$nprover strategies. We make a conjecture regarding the power of unique$\backslash$n2-prover games, which we call the Unique Games Conjecture},
+author = {Khot, S.},
+doi = {10.1109/CCC.2002.1004334},
+file = {:Users/RJMurray/Documents/Classes/EE227B/project/original UGC paper.pdf:pdf},
+isbn = {0-7695-1468-5},
+issn = {1093-0159},
+journal = {Proceedings 17th IEEE Annual Conference on Computational Complexity},
+pages = {767--775},
+title = {{On the power of unique 2-prover 1-round games}},
+year = {2002}
+}
+
+
+
+

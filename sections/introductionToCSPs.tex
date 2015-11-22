@@ -47,7 +47,7 @@ There is a great deal of research going into the approximabilty of constraint sa
 The list of points below gives some facts relating to CSP's to help orient the reader.
 
 \begin{itemize}
-\item At their core, CSP's are \textit{optimization} problems. But as we will see, CSP's can be used to approach \textit{decision} problems.
+\item At their core, CSP's are \textit{optimization} problems. But as we will see, CSP's can be used to approach \textit{decision} problems. The reader is advised that some literature on CSP's conflate these two problem types.
 \item The objective of a CSP is to satisfy as many constraints as possible; there is only one constraint that is ``safe" from violation: all variables must be in some simple, discrete domain.
 \item Most CSP's are NP-Hard to solve optimally. Because of this, discussion of CSP's centers on developing approximate solutions to these problems.
 \item Semidefinite Programming is the primary technique for CSP approximation.
@@ -70,9 +70,9 @@ We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serv
 
 \textbf{Examples}
 \begin{itemize}
-\item Max-Cut : For a given graph, label each vertex either ``$0$" or ``$1$" to maximize the number of edges connecting verticies with different labels.   
-$D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
-\item $q-$Coloring : Find an a as-consistent-as-possible coloring for a graph using at most $q$ colors. 
+\item Max-Cut : For a graph $G = (V,E)$, label each vertex either ``$0$" or ``$1$" to maximize the number of edges connecting verticies with different labels.   
+Here $D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
+\item $q-$Coloring : Find an as-consistent-as-possible coloring for a graph using at most $q$ colors. 
 Our domain is $D = \{0,1,\ldots,q-1\}$, and $\Gamma$ is again $\{\neq\}$. 
 Note that Max-Cut is equivalent to $q-$coloring with $q = 2$.
 \item Max E3-SAT : Here, the domain is $D = \{0,1\}$, and our constraint types (elements of $\Gamma$) are of the form $(x_j \vee x_j \vee x_k)$, $(x_i\vee \bar{x}_j \vee x_k)$, $(\bar{x}_i \vee \bar{x}_j \vee x_k)$, $\ldots$ - all disjunctions on \textit{`E'xactly} $3$ literals. 
@@ -113,23 +113,23 @@ One of the most surprising results in CSP's and approximation algorithms is the 
 Take 3-SAT for example. 
 It is well known that it is NP-Hard to find a satisfiable assignment to a 3-SAT instance even \textit{given} that it is satisfiable. 
 It is equivalent to say that it is NP-Hard to $(1,1)$ approximate ``Max 3-SAT." 
-In spite of this, Max 3-SAT has a well known $(\frac{7}{8}\beta,\beta)$ polynomial time approximation algorithm - for all $ \beta \leq 1$! 
+In spite of this, Max 3-SAT has a $(7/8,1)$ polynomial time approximation algorithm \cite{Zwick1997}, and a $(0.784\beta,\beta)$ approximation algorithm \cite{AsanoAndWilliamson2002}.
 From this we might expect that approximating an optimization problem (Max 3-SAT) is easier than solving the corresponding decision problem (3-SAT). 
 Alas, this is not always the case. 
 
-For example, the 2-SAT decision problem can be solved in polynomial time, but Max 2-SAT is NP-Hard to approximate by better than 0.955. 
+For example, the 2-SAT decision problem can be solved in polynomial time, but Max 2-SAT is NP-Hard to approximate by better than 0.955. \cite{Hastad2001}
 The Max-Cut problem is yet another example of this phenomenon. 
 There is a polynomial time algorithm for determining whether or not a Max-Cut instance is satisfyable\footnote{one need only check whether the graph is bipartite}, 
-but the best approximation algorithm for Max-Cut in the general case is a $(0.878\beta,\beta)$ approximation. 
-It has been proven that it is NP-Hard to approximate Max-Cut by a factor better than 0.942, 
+but the best known approximation algorithm for Max-Cut in the general case is a $(0.878\beta,\beta)$ approximation \cite{gwFirstMaxCutSDP}. 
+It has been proven that it is NP-Hard to approximate Max-Cut by a factor better than 0.942 \cite{Trevisan2000}, 
 but it may yet be NP-Hard to do better than 0.878! 
 
 Whether existing approximation algorithms can be improved for a huge swath of combinatorial problems (including Max-Cut), depends heavily on the truth of the Unique Games Conjecture. 
 We address this next.
 
 \subsection{Hardness of Approximation: The Unique Games Conjecture} 
-In 2002, Subhash Khot published a paper entitled \textit{On the Power of Unique 2-Prover 1-Round Games}. 
-In his paper, Khot put forward the Unique Games Conjecture- currently of the most important open problems in theoretical computer science.
+In 2002, Subhash Khot published a paper entitled \textit{On the Power of Unique 2-Prover 1-Round Games} \cite{Khot}. 
+In his paper, Khot put forward the Unique Games Conjecture- currently one of the most important open problems in theoretical computer science.
 
 It can be difficult to get a handle on what the Unique Games Conjecture claims. 
 The purpose of this section is to provide the reader with the background necessary to understand how the Unique Games Conjecture relates to CSP approximation. 
