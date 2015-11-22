@@ -1,0 +1,24 @@
+\section{``Efficient" One-Size-Fits-All Optimal Algorithms}
+In 2008, Prasad Raghavendra published a paper entitled \textit{Optimal Algorithms and Inapproximability Results for Every CSP?}. We highlight the important characteristics below:
+
+\begin{itemize}
+\item Raghavendra proposed an SDP-based rounding scheme for use on \textit{any} CSP.
+\item The performance guarantees cannot be stated in the usual ``$\alpha$-approximation," or even ``$(\alpha,\beta)$-approximation" sense.  These guarantees are called \textit{non-explicit}.
+\item If the Unique Games Conjecture were true, then the proposed algorithm would be \textit{optimal} in that no polynomial time algorithm could provide stronger performance guarantees.
+\item The proof is unusual in that if the UGC does not hold, then performance guarantees \textit{disappear} for CSP's with arity greater than 2.
+\item The algorithm does have some performance guarantees for 2-CSP's irrespective of the truth of the UGC.
+\end{itemize}
+
+The second of the points above seems truly profound. It suggests that even purpose-built approximation algorithms could have asymptotically inferior performance to Raghavendra's generic algorithm. Indeed, many using optimization in practice would want to know: is Raghavendra's generic algorithm more computationally expensive than some purpose-built algorithms? Does Raghavendra's algorithm outperform purpose-built algorithms in practice? 
+
+To add to these questions, Raghavendra and Steurer proposed yet another rounding scheme in their 2009 paper \textit{How to Round Any CSP}. Again, we highlight the important characteristics:
+
+\begin{itemize}
+\item They propose a generic SDP-based rounding scheme for use on any CSP, with accompanying performance guarantees that are independent of the truth of the UGC.
+\item As before, the performance guarantees of the proposed algorithm are non-explicit
+\item Their algorithm is ``polynomial time" and yet ``runs in time $\exp{(\exp{(\text{poly}(kq/\epsilon)}))}$".
+\end{itemize}
+
+The first point is at first very exciting, but the third is somewhat baffling. Where do these double-exponentials come from, and how is it that this algorithm could possibly be ``polynomial time?"
+
+The remainder of this section is devoted to clearly communicating how these two algorithms would work if they where in fact implemented. Along the way, we will see the extent to which implementation is even possible.
