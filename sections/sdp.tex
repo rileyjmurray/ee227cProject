@@ -2,7 +2,7 @@
 
 \subsection{Motivation}
 
-We recall the relaxations and try to motivate our way through the various relaxations -
+We recall the relaxations and try to motivate our way through the various relaxations (see \cite{Ryan}) -
 \begin{discussion}{\bf Integer Programming formulation of the CSP}\\
 Introduce $D$ slack variables, namely $\mu_v(\ell) \in \{ 0, 1 \}, \fa \ell \in D$ for each variable $v \in V$, call them \textit{variable indicators}. 
 Next, for each $C_i=(R_i,S_i)\in \C$, denote by $\Lm_{C_i}$, the set of all possible assignments $L : S \rightarrow D$. 
@@ -53,7 +53,7 @@ MAX CUT problem can be formulated as the following integer quadratic program :
 Clearly $x_i^2=1$, and $x_i=x_j\rr x_ix_j=1$ and thus contribution of that term to the sum is zero. 
 Also, $x_i \neq x_j \rr x_ix_j=-1$, and thus that weight contributes to the sum. 
 We can see that by associating each vertex $i$ with the variable $x_i$, we have that if an edge has both end points with same $x$-value, it is ignored in the sum, and all the edges with end points in different groups contribute weight to the sum. 
-\cite{DelormePoljak90} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
+\cite{delormecombinatorial} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
 \[ \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-y_i\trans y_j) ~:~ y_i\trans y_i = 1 {\mbox {\ i.e.\ }} y_i \in S^{n-1} \]
 If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then one can easily see that for $$Y = (y_1, \cdots, y_n) \rr \Sigma = Y\trans Y \succeq 0,$$ and our program reduces to 
 \[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]
@@ -85,8 +85,8 @@ We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell
 We will also have constraints which cause these random variables to hang together with the $\la_{C_i}$'s in a gentlemanly fashion. 
 These joint random variables $I_v(\ell)$ will be called as \textit{pseduoindicator random variables}. 
 We emphasize that they are jointly distributed. 
-One can think of them as follows: 
-\textit{``There is a box, when you press a button on one side of the box i.e., when you make a draw, out comes value for each of the $|V| \cdot |D|$ random variables."}
+%One can think of them as follows: 
+%\textit{``There is a box, when you press a button on one side of the box i.e., when you make a draw, out comes value for each of the $|V| \cdot |D|$ random variables."}
 
 We are ready to properly define the SDP relaxation using this random variable representation and its covariance structure.  
 We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the constraint $R_i$. This also gives: 
