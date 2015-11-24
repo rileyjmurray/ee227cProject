@@ -19,7 +19,7 @@ RLS = zeros(num_c,M ); % RLS is consistent with R_i(L(S_i))
 % couldn't figure out a smarter way.
 
 ML = false(num_c, M, V, D); % ML stands for mu locations
-% indexed by i, j, v, l 
+% indexed by i, j, v, l
 % For each constraint "i", for each local assignment "j", for each variable
 % "v", for each l=0,..., D-1; assign ML(i, j, v, l+1) = true if "j"th
 % local assignment assigns variable "v", the value "l". Will come in handy
@@ -27,9 +27,9 @@ ML = false(num_c, M, V, D); % ML stands for mu locations
 
 % Now evaluate the satisfiability of all local assignments. That is
 % evaluate RLS matrix (num_c constraints, M (max) possible local
-% assignments). 
+% assignments).
 
-for i=1:num_c 
+for i=1:num_c
     constraint_i = constraints{i}; % loading the "i"th constraint
     scope_i = constraint_i.scope; % the variable indices for the constraint
     num_scope_i = length(scope_i); % cardinality of scope
@@ -39,7 +39,7 @@ for i=1:num_c
     %entries for the "i"th constraint. Rest "M-n" will be set to zero so
     %that they don't contribute to the objective and will be zero at
     %optimum as at optimal there is no point putting weights on constraints
-    %with RLS entry zero. 
+    %with RLS entry zero.
     for j=1:num_local_assgn_Ci
         
         x = zeros(V, 1); %Total Assignment(we can use simply local as well)
@@ -52,10 +52,10 @@ for i=1:num_c
         % scope x2 x3 x4, we convert 3 to binary we will get 11, so we
         % append a zero in front and get 011. This is a string so we
         % convert it to number term by term and assign to corresponding
-        % index in x. 
+        % index in x.
         % That is if scope = [2 3 4], then s=011; and now we assign
         % x(scope(1)) = str2double(s(1)) and this is equivalent to
-        % assigning x(2) = 0. 
+        % assigning x(2) = 0.
         % Also, we need to set the corresponding indicator in ML as true.
         % Corresponding entry will have index as "i" for constraint, "j"
         % for the assignment, scope_i(k) for the variable and the
@@ -81,47 +81,50 @@ W = diag(problem.weights); % weight for constraints num_c \times num_c
 % function using the varibles RLS, W and the LP variable Lambda that we
 % will define in the next section.
 %
-% The objective can be expressed as 
-% \sum_{i} weights_i \sum_{j} \lambda_{ij} RLS_{ij} which is same as 
+% The objective can be expressed as
+% \sum_{i} weights_i \sum_{j} \lambda_{ij} RLS_{ij} which is same as
 % \sum_i \sum_j \lambda_{ij} (weights_i*RLS_{ij})
 
 % Now if we define W = diag(weights), then for WRLS = W \times RLS, we have
-% WRLS_{ij} = weights_i * RLS_{ij}.  And thus the objective becomes 
+% WRLS_{ij} = weights_i * RLS_{ij}.  And thus the objective becomes
 % \sum_i \sum_j \lambda_{ij} WRLS_{ij}.
 
 % Tr(A'*B)  = \sum_{j} (A'*B)_{jj} = \sum_{j} \sum_{i} A'_{ji} B_{ij}
-%           = \sum_{j} \sum_{i} A_{ij} B_{ij} 
+%           = \sum_{j} \sum_{i} A_{ij} B_{ij}
 
 % Thus our objective is same as Tr(\lambda' * WRLS)=Tr(\lambda' * W * RLS).
 
-%% CVX Code for Optimization 
+%% CVX Code for Optimization
 
-% Lambda represents the dummy variable for all possible (M) local 
+% Lambda represents the dummy variable for all possible (M) local
 % assignments to the (num_c) constraints.
 
 echo on
 
 cvx_begin
-    
+
     variable lambda(num_c, M)
-    variable sigmaVar( V * D, V * D ) semidefinite % sigma first ranges over v then over D
+    variable sigmaVar( V * D, V * D ) semidefinite % rows / cols are  indexed like (v_1,l_1),(v_1,l_2),...,(v_1,l_D),(v_2,l_1)....
     maximize ( trace(lambda' * W * RLS ));
     subject to
-        0<= lambda <=1;
-        0<= sigmaVar <=1;
-   
-        for c_i=1:num_c
-            sum(lambda(c_i, :)) == 1;
-            for v=1:V
+    0<= lambda <=1;
+    0<= sigmaVar <=1;
+
+    for c_i=1:num_c
+        sum(lambda(c_i, :)) == 1;
+        for v=1:V
+            for l=1:D
                 for v2 = 1 : V
-                    for l=1:D
-                        for l2 = 1 : D
-                            sum(lambda(c_i,  ML(c_i, :, v, l) & ML(c_i, :, v2, l2) )) == sigmaVar( (  l - 1) * V + v, ( l2 - 1 ) * V + v2 );
+                    for l2 = 1 : D
+                        sum(lambda(c_i,  ML(c_i, :, v, l) & ML(c_i, :, v2, l2) )) == sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 );
+                        if v == v2 && l ~= l2
+                            sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 ) == 0;
                         end
                     end
                 end
-            end     
-        end     
+            end
+        end
+    end
 cvx_end
 
 echo off
