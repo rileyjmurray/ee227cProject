@@ -129,3 +129,15 @@ cvx_end
 
 echo off
 
+% get eigenvalues to check if matrix is PSD. Note that lambda is a diag
+% matrix with eigenvalues in increasing order
+[ eigVec, lambda ] = eig( sigmaVar );
+
+for i = 1 : V * D
+   if lambda(i,i) >= 0 
+       break;
+   end
+   sigmaVar = sigmaVar - 2 * lambda( i, i ) * eigVec(:,i) * eigVec(:,i)';   
+end
+
+U = chol( sigmaVar );
