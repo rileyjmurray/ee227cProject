@@ -19,14 +19,15 @@ This perspective is arguably the best when constructing SDP solutions by hand.
 This perspective is the one that's actually used computationally, on a computer. 
 
 \item Jointly Gaussian Pseudo-indicator random variables which satisfy the consistent first and second moment constraints. 
-This perspective is suited for developing``SDP Rounding algortihms". 
+This perspective is suited for developing``SDP Rounding algorithms". 
 }
 Let's discuss a classical rounding scheme for MAX-CUT and then introduce a more general rounding scheme - 
-\begin{example}{\bf Randomized Rounding [GW Rounding]}\\
+\begin{example}{\bf Randomized Rounding \cite{gwFirstMaxCutSDP}}\\
 By now, we know how to relax MAX-CUT to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
-We will borrow notation and variables from Example \ref{maxcut}.
 
-We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+We will borrow notation and variables from Example \ref{maxcut}.We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. 
+
 We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
 We do this by choosing a vector $\hat{n} \in \R^n$ (where $\hat{n}$ denotes the normal to the hyperplane) from any rotationally symmetric distribution. Then set, $x_i = \sgn{\hat{n} \cdot y_i} \in \{-1, 1 \}$.
 
@@ -55,7 +56,7 @@ then we can conclude
 }
 Solving it numerically we get that $\alpha = 0.87856$ works.
 \begin{remark}
-$\Ex[\mbox{Goemans Williamson Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
+$\Ex[\mbox{Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
 \end{remark} 
 \end{example}
  
