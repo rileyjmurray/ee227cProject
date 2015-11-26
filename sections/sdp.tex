@@ -101,14 +101,16 @@ We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the 
 }
 %\footnotetext{A more general objective function can be defined with respect to payoff  functions $\phi_C$ associated with each constraint: $$\max_{\la_C, C\in \mathcal{C}} \sum_{C=(R,S) \in \mathcal{C}} w_C \Ex_{L \sim \la_C} \phi_C(L) = \sum_{C \in \mathcal{C}} \sum_{L \in \mathcal{L}_C} \la_C(L) \lrb{w_C\phi_C(L)}  $$}
 
-subject to $\fa C_i = (R_i, S_i) \in \mathcal{C},\fa v, v' \in S, \fa \ell, \ell' \in D $
+subject to the constraint $\fa C_i = (R_i, S_i) \in \mathcal{C},\fa v, v' \in S, \fa \ell, \ell' \in D $
 \al{
-\Pb_{L \sim \la_{C_i}} (L(v) = \ell \wedge L(v') = \ell') & \os{\lrb{\ref{eq0}}}= \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \Ex \lrbb{I_v(\ell) \cdot I_v(\ell')} \label{csm}
+\Pb_{L \sim \la_{C_i}} (L(v) = \ell, L(v') = \ell')  &\os{\lrb{\ref{eq0}}}= \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \Ex \lrbb{I_v(\ell) \cdot I_v(\ell')} \label{csm}\\
+\Si &\succeq 0.
 }
-And we also impose the conditions for valid probability distribution : 
+And we also impose the constraints for valid probability distribution : 
 \al{
-\Pb_{L \sim \la_{C_i}} (L(v) = \ell \wedge L(v) = \ell') &= 0, \fa \ell \neq \ell' \label{eq1}\\
-\sum_{\ell \in D}\Pb_{L \sim \la_{C_i}} (L(v) = \ell) &= 1 \label{eq2}
+\sum_{L \in \Lm_i} \la_{C_i}(L) &= 1, \fa C_i \in \C\\
+\sum_{\ell \in D}\Pb_{L \sim \la_{C_i}} (L(v) = \ell) &= 1, \fa v\in V, \fa C_i \in \C \label{eq2}\\
+\Pb_{L \sim \la_{C_i}} (L(v) = \ell, L(v) = \ell') &= 0, \fa \ell \neq \ell', \fa v\in V, \fa C_i \in \C \label{eq1}
 }
 We also define the following constraint:\footnote{This condition is deemed redundant by Remark \ref{remark01}, but explicitly assuming it here makes our life easy.} 
 \al{
@@ -145,11 +147,11 @@ It is trivial to see that the last constraint is also linear:
 &&\Pb_{L \sim \la_{C_i}} (L(v) = \ell ) &= \Ex[I_v(\ell)] = A_{v, \ell} \\
 &\lrr   &\sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell }}\la_{C_i}(L) &= A_{v, \ell} 
 }
-Last but not the least, the way we have defined $\Si$, we have the equivalent constraint:
+Last but not the least, we also have, 
 \al{
 \Si \succeq 0
 }
-Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
+which is a linear matrix inequality. Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
 
 \subsection{Some Analysis}
 \begin{remark}\label{remark01}
