@@ -1,3 +1,56 @@
+%\documentclass[letterpaper, 12pt]{article}
+%
+%\usepackage[margin=2.5cm]{geometry}
+%\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[]{mathtools}
+%\usepackage[]{bbm}
+%
+%\numberwithin{equation}{section}
+%
+%% --to donotes
+%\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+%\usepackage[dvipsnames]{xcolor}
+%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+%\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+%\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+%\newcommandx{\maybeinclude}[2][1=]{\todo[linecolor=Orange,backgroundcolor=Orange!25,bordercolor=Orange,#1]{#2}}
+%\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+%
+%\usepackage[]{thmtools}
+%\usepackage[dvipsnames]{xcolor}
+%\declaretheoremstyle[
+%	bodyfont=\normalfont, 
+%	spaceabove=0.5cm]{defFormat}
+%\declaretheoremstyle[
+%	postheadspace=1cm,
+%	bodyfont=\normalfont, 
+%	spaceabove=0.5cm]{inLineDefFormat}
+%\declaretheoremstyle[
+%	spaceabove=0.5cm, 
+%	spacebelow=0.5cm,
+%	postheadspace=1cm]{namedTheorem}
+%\declaretheorem[
+%	numberwithin=section, 
+%	style=defFormat, 
+%	shaded]{definition}
+%\declaretheorem[
+%	numbered=no, 
+%	style=defFormat, 
+%	shaded]{algorithm}
+%\declaretheorem[
+%	style=inLineDefFormat, 
+%	sibling=definition,
+%	shaded,
+%	name=Definition]{ILdefinition}
+%\declaretheorem[
+%	numbered=no, 
+%	style=namedTheorem, 
+%	shaded, 
+%	name=The Unique Games Conjecture]{ugc}
+%\newtheorem{thm}{Theorem}
+%\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
+%\begin{document}
 \section{``Efficient" One-Size-Fits-All Optimal Algorithms}
 In 2008, Prasad Raghavendra published a paper entitled \textit{Optimal Algorithms and Inapproximability Results for Every CSP?}. We highlight the important characteristics below:
 
@@ -22,3 +75,75 @@ To add to these questions, Raghavendra and Steurer proposed yet another rounding
 The first point is at first very exciting, but the third is somewhat baffling. Where do these double-exponentials come from, and how is it that this algorithm could possibly be ``polynomial time?"
 
 The remainder of this section is devoted to clearly communicating how these two algorithms would work if they where in fact implemented. Along the way, we will see the extent to which implementation is even possible.
+\subsection{Constructing $\text{SDP}_{\text{gen}}$ (used in both papers)}
+In \textit{Optimal Algorithms ... for Every CSP?}, the following SDP was called SDP(III). In subsequent work (\textit{How to Round Any CSP}) the following SDP was called $\text{SDP}_{\text{gen}}$. We use the newer term here to prevent the misconception that these SDP's are different.
+
+\subsection{Optimal Algorithms ... for Every CSP? (2008)}
+The reader is advised that this section is organized in a very deliberate way. We present the algorithm at a high level, and then we address each bullet point in detail. We intentionally explain the steps of the algorithm in \textit{increasing order of technical difficulty}, rather than in the order that they would be executed during runtime. Once all this is presented, we have a brief discussion of time complexity and performance guarantees.
+
+This established, we move on to the algorithm itself. In the original paper, the following algorithm is only known as ``Round." We give it a proper\footnote{although not necessarily \textit{good}} name out of necessity.
+
+\begin{algorithm} \textbf{UGDFS} : \textbf{U}nique \textbf{G}ames \textbf{D}ependant \textbf{F}unction \textbf{S}earch \\
+
+\textit{Input: } An instance $\mathcal{C}$ of $\text{CSP}(\Gamma)$, as well as parameters $\kappa$ and $K$.
+
+\textit{Output: } An assignment $F$ of variables $V \in \mathcal{C}$.
+\begin{itemize}
+\item Build an SDP $\text{SDP}_{\text{gen}}(\mathcal{C})$.
+\item Solve $X \leftarrow \text{SDP}_{\text{gen}}(\mathcal{C}).\text{solve}$.
+\item Smooth the SDP solution $X \leftarrow \text{Smooth}(X)$
+\item Discretize a certain space of functions ``$\mathcal{S}$" to form $\mathcal{S}_{\kappa}$.
+\item For every function $\mathcal{F} \in \mathcal{S}_{\kappa}$, run a subroutine called ``$\text{Round}_{\mathcal{F}}(X)$" to get an assignment $F$ of the variables in $\mathcal{C}$. 
+\item Return the best assignment generated over all of these $\mathcal{F} \in \mathcal{S}_{\kappa}$.
+\end{itemize}
+\end{algorithm}
+
+\subsubsection{Discretizing $\Omega$}
+
+\subsubsection{The $\text{Round}_{\mathcal{F}}$ Subroutine}
+
+\subsubsection{Smoothing an SDP Solution}
+
+\subsubsection{Time Complexity of UGDFS}
+
+\subsubsection{Performance Guarantees of UGDFS}
+
+\subsection{How to Round Any CSP (2009)}
+As before, we present the algorithm at a high level and then address each bullet point in detail. Unlike the previous section, we explain the steps in the order that they would be executed by the algorithm. The reader is welcome to read these explanatory sub-sections in any order. 
+
+Discussion of runtime and performance guarantees follows the step explanations.
+
+
+\begin{algorithm} \textbf{The Variable Folding Method} \\
+
+\textit{Input: } An instance $\mathcal{C}$ of $\text{CSP}(\Gamma)$, as well as parameters $\epsilon$, THINGS.
+
+\textit{Output: } An assignment $F$ of variables $V \in \mathcal{C}$.
+\begin{itemize}
+\item Build $\text{SDP}_{\text{gen}}(\mathcal{C})$.
+\item Solve $X \leftarrow \text{SDPgen}(\mathcal{C}).\text{solve}$.
+\item SMOOTHING???
+\item Identify a set of ``bad" constraints $B_{\epsilon} = \text{ConstraintAssesor}(\mathcal{C},X)$.
+\item Define a new CSP, $\mathcal{C}'$ with constraint set $\{C_i \in \mathcal{C} : C_i \not \in B_{\epsilon}\}$.
+\item Define yet another CSP, ``$\mathcal{C}'/\phi$" $ \leftarrow \text{Folding}(\mathcal{C}')$.
+\item Find an \textit{\textbf{optimal}} variable assignment $F^*$ for $\mathcal{C}'/\phi$ with any \textit{\textbf{exact}} algorithm.
+\item Construct $F^{**} = \text{Unfolding}(F^*, \mathcal{C}'/\phi)$ - a variable assignment for $\mathcal{C}'$
+\item Use $F^{**}$ as an assignment of variables for $\mathcal{C}$.
+\end{itemize}
+\end{algorithm}
+
+\subsubsection{Smoothing an SDP Solution (revisited)}
+
+\subsubsection{Identifying ``Bad" Constraints}
+
+\subsubsection{Constructing $\mathcal{C}'/\phi$ by ``Folding"}
+
+\subsubsection{Computing an Optimal Variable Assignment for $\mathcal{C}'/\phi$}
+
+\subsubsection{Unfolding the Variable Assignment $F^*$}
+
+\subsubsection{Time Complexity of The Variable Folding Method}
+
+\subsubsection{Performance Guarantees of The Variable Folding Method}
+
+%\end{document}

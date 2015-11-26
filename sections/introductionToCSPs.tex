@@ -107,6 +107,8 @@ Are CSP's then accurately understood as unconstrained optimization?
 Not quite. 
 The CSP Framework has one and only one inviolable constraint (and that constraint is precisely what makes them difficult): each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
 
+As this is the most common convention, we use the term ``constraint" throughout this report to refer to some $C_i = (R_i, S_i) \in \mathcal{C}$. The reader is advised that some papers (most notably \cite{RagSte09}) use the term ``payoff" for some $C_i = (R_i,S_i) \in \mathcal{C}$. Besides the obvious usefulness of removing confusion of whether or not CSP constraints are violable, a payoff function is used in the context of \textit{Generalized} Constraint Satisfaction Problems.
+
 \subsection{Complexity for Solving and Approximating CSP's}
 One of the most surprising results in CSP's and approximation algorithms is the lack of a consistent relationship between the difficulty of solving a problem optimally, and the difficulty of approximating the problem.
 
