@@ -1,4 +1,4 @@
-\section{Rounding Schemes}
+\section{Rounding Schemes for SDP Relaxations}
 \subsection{Intuition for Rounding}
 Next question that comes to our mind is - 
 \textit{``How do we get a near optimal assignment from the solution of the relaxed problem"}. 
@@ -21,21 +21,26 @@ This perspective is the one that's actually used computationally, on a computer.
 \item Jointly Gaussian Pseudo-indicator random variables which satisfy the consistent first and second moment constraints. 
 This perspective is suited for developing``SDP Rounding algorithms". 
 }
-Let's discuss a classical rounding scheme for MAX-CUT and then introduce a more general rounding scheme - 
-\begin{example}{\bf Randomized Rounding \cite{gwFirstMaxCutSDP}}\\
+Let's begin with a classical rounding scheme for MAX-CUT and and follow with a more general SDP rounding scheme for Unique Games. In the next section, we comment on some of the claimed optimal rounding schemes for SDP relaxations of any CSP.
+
+\subsection{Goemans Williamson Algorithm}
 By now, we know how to relax MAX-CUT to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
 
-We will borrow notation and variables from Example \ref{maxcut}.We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+We will borrow notation and variables from Example \ref{maxcut}.
+We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
 Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. 
 
 We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
-We do this by choosing a vector $\hat{n} \in \R^n$ (where $\hat{n}$ denotes the normal to the hyperplane) from any rotationally symmetric distribution. Then set, $x_i = \sgn{\hat{n} \cdot y_i} \in \{-1, 1 \}$.
 
-{\bf Analysis of the Rounding} 
+{\bf Algorithm}
+\begin{enumerate}
+\item Draw a vector $\hat{n} \in \R^n$ (where $\hat{n}$ denotes the normal to the hyperplane) from any rotationally symmetric distribution. 
+\item Set $x_i = \sgn{\hat{n} \cdot y_i} \in \{-1, 1 \}$.
+\end{enumerate}
+
+{\bf Analysis of the Rounding} \\
 For a given graph $G = (V, E)$, with $V =\{1, \ldots, n\}$, and $E$ the set of edges, fix $(i, j) \in E$. Then the probability that the edge $(i, j)$ is cut by the hyperplane is same as the probability that hyperplane splits $y_i$, and $y_j$. 
-Now consider just simply the $2D$ plane containing $y_i, y_j$. Since the hyperplane was chosen from a rotationally symmetric distribution, the probability that it cuts these two vectors is same as that a random diameter in the circle containing $y_i, y_j$, lies in between the angle $\theta$ of these two vectors.
-
-Thus, 
+Now consider just simply the $2D$ plane containing $y_i, y_j$. Since the hyperplane was chosen from a rotationally symmetric distribution, the probability that it cuts these two vectors is same as that a random diameter in the circle containing $y_i, y_j$, lies in between the angle $\theta$ of these two vectors. Thus, 
 \al{
 \Pb[(i, j) \mbox{ gets cut} ] &= \frac{\theta}{\pi} \\
 &=\frac{{\rm cos\inv}\lrb{y_i \cdot y_j}}{\pi}\\
@@ -58,20 +63,43 @@ Solving it numerically we get that $\alpha = 0.87856$ works.
 \begin{remark}
 $\Ex[\mbox{Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
 \end{remark} 
-\end{example}
  
-\begin{definition}{\bf Gaussian Rounding}\\
-We can $\lrb{1-O\lrb{\sqrt{\epsilon \log q}}, 1-\epsilon}$-approximate $UG_q$ by SDP Rounding \cite{cmm06}. We can do the following :
-\iit{
-\item Solve the canonical SDP relaxation to get a collection of jointly Gaussian pseudo-indicators $\{G_v(\ell) \}_{v \in V, \ell \in D}$
-\item Draw once from them to obtain numbers $(g_v[0], \ldots, g_v[q-1])_{v \in V}$.
-\item Output the assignment $F(v) = \mbox{argmax} \{g_v(\ell)\}$.
-}
-Note that this is a randomized algorithm.
+ \subsection{Gaussian Rounding}
+
+We can see Unique Games as Constraint Satisfaction Problems that are a generalization of Max-Cut to a large domain size. Let us define an equivalent definition of Unique Games to make this relation precise:
+\begin{definition}{\bf Unique Game}\\
+A unique game consists of a constraint graph $G = (V, E)$, an assignment function $F: V \rightarrow D$ and a set of permutations $\pi_{vv'}$ on $D = \{0, \ldots, q-1 \}$ (for all edges $(v, v')$). Each permutations $\pi_{vv'}$ defines the constraint $\pi_{vv'}(F(v'))=F(v)$. The goal is to find an assignment $F$ soas to maximize the number of satisfied constraints.
 \end{definition}
-\begin{remark}
-If $\mbox{SDPOpt}(\C) \geq 1- \epsilon$, then 
+Thus, max-cut is a unique game with $q=2$ and vice-versa, unique games is a generalization of max-cut to larger domain size. 
+
+Next we discuss the rounding scheme from \cite{cmm06}, which is a generalization of the Goemans Williamson Algorithm for the Max-Cut to a Rounding Algorithm for Unique Games. 
+
+Given a Unique Game $G = (V,E)$ with edge weights $W = \{w_{vv'} | (v, v') \in E \}$, we formulate it as a CSP with constraints $\C$ and weights $W$. Then, we solve the SDP relaxation for this CSP instance and decompose the solution $\Sigma = U\trans U$ with $U \in \R^{N \times N}$ with $N = |V| \cdot |D|$, using Cholesky decomposition (which is polytime). 
+
+Denote by $[x]_r$ the function that rounds $x$ up or down depending on whether the fractional part of $x$ is greater or less than $r$. 
+Note that if $r$ is uniformly distributed in the interval $[0,1]$, then the expected value of $[x]_r$ is $x$. 
+
+{\bf Algorithm}
+\begin{enumerate}
+\item Pick a number $r$ in the interval $[0, 1]$ uniformly at random.
+\item Pick random independent Gaussian vectors $g_1, \ldots, g_{2q}$ with independent components distributed as $\mathcal{N}(0, 1)$.
+\item For each vertex $v$:
+\begin{enumerate}
+\item Find normalized vectors $\tilde{u}_{\ell} = {u_{\ell}}/{||u_\ell||_2^2}$
+\item Set $s_{u_\ell} = [2q \cdot ||u_\ell||_2^2]_r$, for $\ell=0, \ldots, q-1$.
+\item For each $\ell$, project $s_{u_\ell}$ vectors $g_1, \ldots, g_{s_{u_\ell}}$ to $\tilde{u}_\ell$:
 \al{
-\Ex_{F} \lrbb{\mbox{Val}_C(F)} \geq 1 - O \lrb{\sqrt{\epsilon \log q}}
+\xi_{u_\ell, s} = g_s\trans \tilde{u}_\ell, 1 \leq s \leq s_{u_\ell}.
 }
-\end{remark}
+Hence for each variable $u$, there are $s_{u_0}+\ldots+s_{u_{q-1}}$ many $\xi$'s, call this set $\Xi_u$.
+\item For each $u$, find the maximum magnitude member in $\Xi_u$ and let it be $\xi_{u_{\ell^*}, s^*}$. Assign
+\al{
+F(u) = \ell^*
+}
+\end{enumerate}
+\end{enumerate}
+
+\begin{theorem}
+If the optimal solution of the unique game satisfies $1-\epsilon$ fraction of constraints, then the above algorithm in expectation satisfied $1-O({\sqrt{\epsilon \log q }})$ fraction of constraints.
+\end{theorem}
+Proof of the above theorem is quite involved and we refer the reader to \cite{cmm06} for the analysis.
