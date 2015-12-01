@@ -261,19 +261,20 @@ We impose two consistency conditions
 \begin{frame}{An SDP Relaxation}
 \begin{block}{Idea}
 \begin{itemize}
-\item The LP formulation has no information on \textit{joint} distributions of variables. This information could be valuable!
-\item Find a joint distribution by introducing a \textbf{covariance matrix}.
+\item The LP formulation has no information on \textit{joint} distributions of variables. This information could be valuable! \pause
+\item Find a joint distribution by introducing a \textbf{covariance matrix}. \pause
 \end{itemize}
 \end{block}
-\textit{Build} on the LP : introduce  ``$X_{(i,\ell),(i',\ell')}$" with interpretation
+\textit{Build} on the LP : introduce  ``$X_{(i,\ell),(i',\ell')}$" with interpretation \pause
 $$X_{(i,\ell),(i',\ell')} = \text{Pr}\left( \hat{L}_j(i) = \ell \text{ and } \hat{L}_j(i') = \ell'\right)
- $$
-$ \text{ where } \hat{L}_j = L  \text{ w.p. } \lambda_j\left[L\right]$. Enforce this interpretation with
+ $$\pause
+$ \text{ where } \hat{L}_j = L  \text{ w.p. } \lambda_j\left[L\right]$. \pause Enforce this interpretation with \pause 
 \begin{align*}
- \text{(LMI) } X \succeq 0  \quad & \text{ (Affine)} \quad X_{(i,\ell),(i,\ell')} = 0  \quad  \forall ~  \ell \neq \ell' \\
- \text{ and } &\text{ (Affine)} \quad \textstyle{\sum_{L \in \mathcal{L}_j \wedge L(i) = \ell \wedge L(i') = \ell'}} \lambda_j\left[L\right] = X_{(i,\ell),(i',\ell')}
+ \text{(LMI) } X \succeq 0  \quad & \text{ (Affine)} \quad X_{(i,\ell),(i,\ell')} = 0  \quad  \forall ~  \ell \neq \ell' \pause \\
+ \text{ and } &\text{ (Affine)} \quad \textstyle{\sum_{L \in \mathcal{L}_j \wedge L(i) = \ell \wedge L(i') = \ell'}} \lambda_j\left[L\right] = X_{(i,\ell),(i',\ell')} 
 \end{align*}
-Solve this SDP to get covariance matrix $X$. Now how do we use it?
+\pause
+Solve this SDP to get covariance matrix $X$. \pause Now how do we use it?
 \end{frame}
 
 % -------- Rounding -----------
