@@ -235,17 +235,14 @@
 
 \begin{frame}{LP Relaxation}
 \begin{block}{Idea}
-Choose an assignment to maximize weighted sum of satisfied constraints. \pause Formulate it as an integer program by introducing dummy $\{ 0, 1\}$-valued variables (indicators) for each variable and each constraint \pause \emph{ and then relax it to get an LP.}
-\end{block}
+Choose an assignment to maximize weighted sum of satisfied constraints. \pause Formulate it as an I.P. by introducing dummy $\{ 0, 1\}$-valued variables (indicators) for each variable and constraint \pause \emph{- then relax it to get an LP.}
+\end{block} \pause
+$\text{For each } i \in V, \qquad  \mu_i[\ell] \doteq \mathbbm{1}( \text{variable $i$ takes value } \ell)$ \\
+\vspace{0.25cm}
 \pause
- For each variable $i \in V$, we define
- \[
-	 \mu_i[\ell] = \mathbbm{1}( \text{variable $i$ takes value } \ell)
- \] 
-\pause  Similarly, for each constraint $j \in C$,
-   \[
-   \lambda_j[L] = \mathbbm{1}( \text{assignment $L$ is chosen for constraint $j$})
-   \] 
+$\text{For each } j \in C, \qquad
+   \lambda_j[L] \doteq \mathbbm{1}( \text{assignment $L$ is used for constraint $j$})$ \\
+\vspace{0.25cm}
 \pause
 We impose two consistency conditions 
  \begin{itemize}
@@ -253,8 +250,8 @@ We impose two consistency conditions
  \pause
  \item $\mu_i[\ell] = \displaystyle\sum_{L(i) = \ell} \lambda_j[L] \Rightarrow$ Consistency in assignments
  \end{itemize}
-\pause Relax $\mu_i[\ell] \in \{ 0, 1\} \rightarrow \mu_i[\ell] \in [0, 1]$ and $\lambda_j[L] \in \{ 0, 1\} \rightarrow \lambda_j[L] \in [0, 1]$.
-
+\pause Relax $\mu_i[\ell] \in \{ 0, 1\} \rightarrow \mu_i[\ell] \in [0, 1]$ and $\lambda_j[L] \in \{ 0, 1\} \rightarrow \lambda_j[L] \in [0, 1]$. \\ \vspace{0.25cm}
+\pause Notice $\lambda_j, ~\mu_i$ are $\geq 0$ and sum to 1. Think ``\textbf{probability distributions}"!
 \end{frame}
 
 % -------- SDP -----------
