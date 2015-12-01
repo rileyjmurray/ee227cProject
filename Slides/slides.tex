@@ -1,0 +1,260 @@
+\documentclass[10pt,t,compress]{beamer}
+
+% --------------- Packages ----------------------
+% graphics
+\usepackage{graphicx}
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+% Color
+\usepackage{color}
+\usepackage{colortbl}
+% Misc
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{xifthen}
+
+% ------- tikz -------
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{tkz-euclide}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{calc}
+\usetkzobj{all}
+\tikzset{small node/.style={circle,fill=gray!5,draw,minimum size=0.4cm,inner sep=0pt} }
+\tikzset{center node/.style={circle,fill=blue!15,draw,minimum size=0.4cm,inner sep=0pt} }
+\tikzset{special node/.style={circle,fill=red!20,draw,minimum size=0.4cm,inner sep=0pt} }
+\tikzset{final node/.style={circle,fill=green!20,draw,minimum size=0.4cm,inner sep=0pt} }
+\tikzset{edge/.style = {->,> = latex, thick, } }
+\tikzset{double edge/.style = {<->,> = latex, thick, } }
+
+%---------------- Structure and Themes ----------------
+\mode<presentation>
+{
+    \usefonttheme[onlysmall]{structurebold}
+    \usefonttheme[onlymath]{serif}
+    \useinnertheme{rectangles}
+    \useoutertheme{split}
+    %\usecolortheme{orchid}
+    \usecolortheme{whale}
+}
+
+\setbeamerfont{headline}{size=\Tiny}
+\hypersetup{pdfpagemode=UseNone}
+
+%----------------  Color Definition ----------------
+\definecolor{UB_Blau_histo}{RGB}{51,153,255}
+\definecolor{UB_Blau1}{RGB}{230,235,250}
+\definecolor{UB_Blau11}{RGB}{230,235,250}
+\definecolor{UB_Blau2}{RGB}{186,204,238}
+\definecolor{UB_Blau3}{RGB}{163,189,232}
+\definecolor{UB_Blau33}{RGB}{163,189,232}
+\definecolor{UB_green}{RGB}{251,255,251}
+\definecolor{midgreen}{RGB}{60,200,20}
+\definecolor{lightgreen}{RGB}{190,247,175}
+\definecolor{lightyellow}{RGB}{255,255,147}
+\definecolor{weiss}{RGB}{255,255,255}
+\definecolor{grau}{gray}{.90}
+\definecolor{blue1}{rgb}{0.32,0.93,0.91}
+\definecolor{blue2}{rgb}{0.18,0.59,1.00}
+\definecolor{lightblue2}{rgb}{0.85,0.85,1.00}
+\definecolor{lightgreen}{rgb}{0.80,1.00,0.80}
+\definecolor{lightblue1}{rgb}{0.80,1.00,1.00}
+\definecolor{green2}{rgb}{1.00,1.00,0.00}
+
+\definecolor{col1}{RGB}{0,255,0}
+\definecolor{col2}{RGB}{102,204,0}
+\definecolor{col3}{RGB}{255,255,0}
+\definecolor{col4}{RGB}{255,128,0}
+\definecolor{col5}{RGB}{255,0,0}
+
+\setbeamercolor*{palette primary}{use=structure,fg=black,bg=UB_Blau1!}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+\setbeamercolor*{palette quaternary}{fg=black,bg=white}
+
+\setbeamercolor{block title}{use=structure,fg=black,bg=UB_Blau33}
+\setbeamercolor{block body}{parent=normal text,use=block title,bg=UB_Blau11}
+
+\setbeamercolor{block body example}{parent=normal text,use=block title,bg=UB_green}
+
+\setbeamercolor{section in head/foot}{parent=palette quaternary}
+\setbeamercolor{subsection in head/foot}{parent=palette quaternary}
+
+\setbeamercolor{author in head/foot}{parent=palette primary}
+\setbeamercolor{title in head/foot}{parent=palette primary}
+
+% ------- Fix width headline (split)w/ sections w/o subsections --------------
+\makeatletter
+\setbeamertemplate{headline}
+{%
+	\leavevmode%
+	\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex]{section in head/foot}%
+		\insertsectionnavigationhorizontal{.5\paperwidth}{\hskip0pt plus1filll}{}%
+	\end{beamercolorbox}%
+}
+\makeatother
+
+%----------------  Seitenzahlen ----------------
+\defbeamertemplate*{slidenumber}{framenumber} {\insertframenumber}
+\defbeamertemplate{slidenumber}{totalframenumber} {\insertframenumber\,/\,\inserttotalframenumber}
+\defbeamertemplate{slidenumber}{pagenumber} {\insertpagenumber}
+\defbeamertemplate{slidenumber}{totalpagenumber} {\insertpagenumber\,/\,\insertpresentationendpage}
+
+\setbeamertemplate{navigation symbols}{}
+
+\defbeamertemplate*{footline}{slidenumber right}
+{
+  \leavevmode
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{title in head/foot}
+    \usebeamerfont{title in head/foot}
+    \insertshorttitle \hfill \insertshortauthor \hfill \usebeamertemplate{slidenumber}
+  \end{beamercolorbox}}
+}
+
+% Set notation
+\newcommand{\E}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\dist}[1]{\left\|#1\right\|}
+\newcommand{\ctr}[1]{\text{ctr}\left(#1\right)}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\realp}{\mathbb{R}_{+}}
+\newcommand{\realzp}{\mathbb{R}_{\ge 0}}
+\newcommand{\integer}{\mathbb{Z}}
+\newcommand{\integerp}{\mathbb{Z}_{>0}}
+\newcommand{\integerzp}{\mathbb{Z}_{\ge 0}}
+\newcommand{\argmin}{\mathrm{arg\,min}}
+
+\newcommand{\explain}[2]{\underset{\mathclap{\overset{\uparrow}{#2}}}{#1}}
+\newcommand{\explainup}[2]{\overset{\mathclap{\underset{\downarrow}{#2}}}{#1}}
+
+
+\setbeamercovered{dynamic}
+
+%Logo Position upper right
+	\pgfdeclareimage[height=0.5cm]{uni}{./Images/logo4.pdf}
+\logo{\pgfuseimage{uni}}
+
+\makeatletter
+\setbeamertemplate{frametitle}{%
+  \begin{beamercolorbox}[wd=\paperwidth,leftskip=.5cm,% von links her eingeschoben
+       rightskip=-1mm,vmode,sep=0.0001cm]{frametitle}
+%  \begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
+    \usebeamerfont*{frametitle}%
+        %\vbox{}%\vskip-0ex%
+    \strut\insertframetitle\strut\hfill\parbox{1.8cm}{\insertlogo}% xx cm nach links eingeschoben
+      \ifx\insertframesubtitle\@empty\else\par%
+        {\usebeamerfont*{framesubtitle}{%
+         \usebeamercolor[fg]{framesubtitle}%
+         \insertframesubtitle}\strut\par}%
+      \fi%
+  \end{beamercolorbox}}
+\makeatother
+\setbeamertemplate{sidebar right}{% hier kein logo
+  \vfill%
+  \vskip2pt%
+  \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+  \vskip2pt%
+}
+
+% ---- Fix citations ---
+\setbeamertemplate{bibliography item}{}
+
+% ---- List settings ---
+\setlength\itemsep{0pt}
+\setlength{\parskip}{0pt}
+
+% --------- Show Notes (yes or no) --------------
+\setbeameroption{hide notes}% {hide, show, show only}
+\setbeamertemplate{note page}[compress]
+\setbeamerfont{note page}{size=\footnotesize}
+
+% -----------Theorems ---------------------------
+\newtheorem{defn}{Definition}
+\newtheorem{alg}{Algorithm}
+\newtheorem{lem}{Lemma}
+\newtheorem{thm}{Theorem}
+
+% --------- Presentation Details ----------------
+\thispagestyle{empty}
+
+\title[Convex Relaxations for CSP]{Convex Relaxations for Constraint Satisfaction Problems}
+
+\author{Raaz Dwivedi, Riley Murray, Quico Spaen}
+\institute{University of California, Berkeley}
+
+\date{EE227B Project\\ Berkeley, December 1, 2015}
+
+\setlength{\unitlength}{1mm}
+
+\begin{document}
+
+% --- Title page ---
+\frame{\titlepage}
+
+\section{Constraint Satisfaction Problem}
+
+\begin{frame}{Useful Lemma's}
+	\begin{lem}
+		For every $x$, $\sum_{_y \in X} \dist{x-y}^2 = \Delta_1^2(X) + n \dist{x - c}^2$.\\
+		Hence, $\sum_{ \{x,y\} \subseteq X } \dist{x-y}^2 = n \Delta_1^2(X)$.
+	\end{lem}
+	\begin{center}
+		\begin{tikzpicture}
+		% def loc second cluster
+		\def\clusterX{5};
+		\def\clusterY{1.5};
+		\node[small node] (x11) at (0,0) {};
+		\node[small node] (x12) at (1.5,0) {};
+		\node[small node] (x13) at (0.75,-0.75) {};
+		\node[small node] (x14) at (0.75,0.75) {};
+		
+		
+		\node[special node] (x) at ( \clusterX, \clusterY) {$x$};
+		
+		% arcs		
+		\visible<1>{ 
+			\draw[edge] (x) to (x11);
+			\draw[edge] (x) to (x12);
+			\draw[edge] (x) to (x13);
+			\draw[edge] (x) to (x14);
+		}
+		
+		\visible<2>{
+			\node[center node] (c) at ( 0.75,0) {$c$};
+			
+			\draw[edge] (x) to node[above]{$4\times $} (c);
+			\draw[edge] (c) to (x11);
+			\draw[edge] (c) to (x12);
+			\draw[edge] (c) to (x13);
+			\draw[edge] (c) to (x14);
+		}
+		\end{tikzpicture}
+	\end{center}	
+\end{frame}
+
+% -------- LP -----------
+\section{LP Relaxation}
+
+\begin{frame}{Title}
+	content...
+\end{frame}
+
+% -------- SDP -----------
+\section{SDP Relaxation}
+
+\begin{frame}{Title}
+	content...
+\end{frame}
+
+% -------- Rounding -----------
+\section{Rounding}
+
+\begin{frame}{Title}
+	content...
+\end{frame}
+
+\end{document}
