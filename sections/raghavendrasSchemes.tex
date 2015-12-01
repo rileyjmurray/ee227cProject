@@ -1,56 +1,56 @@
-%\documentclass[letterpaper, 12pt]{article}
-%
-%\usepackage[margin=2.5cm]{geometry}
-%\usepackage{amsmath,amsthm,amssymb}
-%\usepackage[]{mathtools}
-%\usepackage[]{bbm}
-%
-%\numberwithin{equation}{section}
-%
-%% --to donotes
-%\usepackage{xargs}                      % Use more than one optional parameter in a new commands
-%\usepackage[dvipsnames]{xcolor}
-%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-%\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-%\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-%\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-%\newcommandx{\maybeinclude}[2][1=]{\todo[linecolor=Orange,backgroundcolor=Orange!25,bordercolor=Orange,#1]{#2}}
-%\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-%
-%\usepackage[]{thmtools}
-%\usepackage[dvipsnames]{xcolor}
-%\declaretheoremstyle[
-%	bodyfont=\normalfont, 
-%	spaceabove=0.5cm]{defFormat}
-%\declaretheoremstyle[
-%	postheadspace=1cm,
-%	bodyfont=\normalfont, 
-%	spaceabove=0.5cm]{inLineDefFormat}
-%\declaretheoremstyle[
-%	spaceabove=0.5cm, 
-%	spacebelow=0.5cm,
-%	postheadspace=1cm]{namedTheorem}
-%\declaretheorem[
-%	numberwithin=section, 
-%	style=defFormat, 
-%	shaded]{definition}
-%\declaretheorem[
-%	numbered=no, 
-%	style=defFormat, 
-%	shaded]{algorithm}
-%\declaretheorem[
-%	style=inLineDefFormat, 
-%	sibling=definition,
-%	shaded,
-%	name=Definition]{ILdefinition}
-%\declaretheorem[
-%	numbered=no, 
-%	style=namedTheorem, 
-%	shaded, 
-%	name=The Unique Games Conjecture]{ugc}
-%\newtheorem{thm}{Theorem}
-%\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
-%\begin{document}
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[]{mathtools}
+\usepackage[]{bbm}
+
+\numberwithin{equation}{section}
+
+% --to donotes
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\maybeinclude}[2][1=]{\todo[linecolor=Orange,backgroundcolor=Orange!25,bordercolor=Orange,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\declaretheoremstyle[
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{defFormat}
+\declaretheoremstyle[
+	postheadspace=1cm,
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{inLineDefFormat}
+\declaretheoremstyle[
+	spaceabove=0.5cm, 
+	spacebelow=0.5cm,
+	postheadspace=1cm]{namedTheorem}
+\declaretheorem[
+	numberwithin=section, 
+	style=defFormat, 
+	shaded]{definition}
+\declaretheorem[
+	numbered=no, 
+	style=defFormat, 
+	shaded]{algorithm}
+\declaretheorem[
+	style=inLineDefFormat, 
+	sibling=definition,
+	shaded,
+	name=Definition]{ILdefinition}
+\declaretheorem[
+	numbered=no, 
+	style=namedTheorem, 
+	shaded, 
+	name=The Unique Games Conjecture]{ugc}
+\newtheorem{thm}{Theorem}
+\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
+\begin{document}
 \section{``Efficient" One-Size-Fits-All Optimal Algorithms}
 In 2008, Prasad Raghavendra published a paper entitled \textit{Optimal Algorithms and Inapproximability Results for Every CSP?}. We highlight the important characteristics below:
 
@@ -98,7 +98,7 @@ This established, we move on to the algorithm itself. In the original paper, the
 \end{itemize}
 \end{algorithm}
 
-\subsubsection{Discretizing $\Omega$}
+\subsubsection{What is $\Omega$? How Do We Discretize It?}
 
 \subsubsection{The $\text{Round}_{\mathcal{F}}$ Subroutine}
 
@@ -146,4 +146,4 @@ Discussion of runtime and performance guarantees follows the step explanations.
 
 \subsubsection{Performance Guarantees of The Variable Folding Method}
 
-%\end{document}
+\end{document}
