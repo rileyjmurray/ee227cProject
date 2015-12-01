@@ -16,6 +16,7 @@
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{xifthen}
+\usepackage{bbm}
 
 % ------- tikz -------
 \usepackage{tikz}
@@ -186,7 +187,7 @@
 \author{Raaz Dwivedi, Riley Murray, Quico Spaen}
 \institute{University of California, Berkeley}
 
-\date{EE227B Project\\ Berkeley, December 1, 2015}
+\date{EE227B Project\\ December 1, 2015}
 
 \setlength{\unitlength}{1mm}
 
@@ -198,31 +199,35 @@
 \section{Constraint Satisfaction Problem}
 
 \begin{frame}{Constraint Satisfaction Problem}
-	\centering
 	\begin{tikzpicture}
 	\node[] (CSP) at (0,0) {\large CSP $ = (V,C,w)$};
 	\node[] (CSPv) at (.25,.25) {};
 	\node[] (CSPc) at (.60,-.15) {};
 	\node[] (CSPw) at (1,.15) {};
 	\visible<2->{
-	\node[draw, thick, rectangle, align=center, anchor= south] (variables) at (-3,1.5) {{\bf Set of variables:}\\ Each variable ranges\\ over a discrete finite domain.};
+	\node[draw, thick, rectangle, align=center, anchor= south] (variables) at (-3,1) {{\bf Set of variables:}\\ Each variable ranges\\ over a discrete finite domain.};
 	\draw[edge] (CSPv) to (variables);
 	}
 	\visible<3->{
-	\node[draw, thick, rectangle, align=center, anchor= north] (constraints) at (0,-1.5) {{\bf Set of constraints:}\\ Each constraint consists of a $\{0,1\}$ valued function $R$\\ and a scope $S \subseteq V$};
+	\node[draw, thick, rectangle, align=center, anchor= north] (constraints) at (0,-1) {{\bf Set of constraints:}\\ Each constraint consists of a $\{0,1\}$ valued function $R$\\ and a scope $S \subseteq V$};
 	\draw[edge] (CSPc) to (constraints);
 	}
 	\visible<4->{
-		\node[draw, thick, rectangle, align=center, anchor= south] (weights) at (3,1.5) {{\bf Vector of weights:}\\ Non-negative weight for each constraint};
+		\node[draw, thick, rectangle, align=center, anchor= south] (weights) at (3,1) {{\bf Vector of weights:}\\ Non-negative weight for each constraint};
 		\draw[edge] (CSPw) to (weights);
 	}
 
 	\end{tikzpicture}\\
-	\visible<5->{
+	\pause[5]
 	\begin{block}{Objective}
 		Maximize weighted sum of satisfied constraints
 	\end{block}
-	}	
+	\pause
+	Examples:
+	\begin{itemize}
+		\item SAT: Constraints of the form $ x_1 \vee \bar{x}_4 \vee x_7 $, $x_i \in \{0,1\}$
+		\item Max-Cut
+	\end{itemize}
 \end{frame}
 
 % -------- LP -----------
@@ -230,17 +235,26 @@
 
 \begin{frame}{LP Relaxation}
 \begin{block}{Idea}
-Choose an assignment to maximize weighted sum of satisfied constraints. Formulate it as an integer program by introducing dummy $\{ 0, 1\}$-valued binary variables (indicators) for each variable and constraint and then relax it to get an LP.
+Choose an assignment to maximize weighted sum of satisfied constraints. \pause Formulate it as an integer program by introducing dummy $\{ 0, 1\}$-valued variables (indicators) for each variable and each constraint \pause \emph{ and then relax it to get an LP.}
 \end{block}
- For each variable $i \in V$, we define $\mu_i[\ell] =1$ if variable $i$ takes value $\ell$, and $0$ o.w. Similarly, for each constraint $j \in \{1\ldots, m\}$, we define $\lambda_j[L] = 1$ if assignment $L$ is chosen for constraint $j$ and $0$ o.w. We impose two consistency conditions 
+\pause
+ For each variable $i \in V$, we define
+ \[
+	 \mu_i[\ell] = \mathbbm{1}( \text{variable $i$ takes value } \ell)
+ \] 
+\pause  Similarly, for each constraint $j \in C$,
+   \[
+   \lambda_j[L] = \mathbbm{1}( \text{assignment $L$ is chosen for constraint $j$})
+   \] 
+\pause
+We impose two consistency conditions 
  \begin{itemize}
- \item $\sum_{\ell \in D} \mu_i[\ell] = 1$, $\sum_{L} \lambda_j[L] = 1$ $\Rightarrow$ exactly one indicator is non-zero.
- \item Consistency across $\mu$'s and $\lambda$'s, no conflicts across their assignments.
+ \item $\displaystyle\sum_{\ell \in D} \mu_i[\ell] = 1$, $\displaystyle\sum_{L} \lambda_j[L] = 1$ $\Rightarrow$ exactly one indicator is non-zero.
+ \pause
+ \item $\mu_i[\ell] = \displaystyle\sum_{L(i) = \ell} \lambda_j[L] \Rightarrow$ Consistency in assignments
  \end{itemize}
- Relax $\mu_i[\ell] \in \{ 0, 1\} \rightarrow \mu_i[\ell] \in [0, 1]$ and $\lambda_j[L] \in \{ 0, 1\} \rightarrow \lambda_j[L] \in [0, 1]$, with all other conditions intact, to get a relaxation. 
- 
- All constraints and objective are linear and the domain is convex. Thus we have an LP Relaxation!
- 
+\pause Relax $\mu_i[\ell] \in \{ 0, 1\} \rightarrow \mu_i[\ell] \in [0, 1]$ and $\lambda_j[L] \in \{ 0, 1\} \rightarrow \lambda_j[L] \in [0, 1]$.
+
 \end{frame}
 
 % -------- SDP -----------
@@ -254,11 +268,13 @@ Choose an assignment to maximize weighted sum of satisfied constraints. Formulat
 \section{Rounding}
 \begin{frame}{Rounding Schemes}
 Given the solution of relaxations, we need to find a good assignment.
+\pause
 \begin{block}{Rounding LP}
-For LP, we have a probability mass function $\mu_i[\cdot]$ for each variable. We can generate random numbers "independently" for each variable according to these pmf's and assign it to the variable to get an assignment. Is it good enough? We have (for MAX-SAT)
+For LP, we have a probability mass function $\mu_i[\cdot]$ for each variable. \pause We can generate random numbers "independently" for each variable according to these pmf's and assign it to the variable to get an assignment. \pause Is it good enough? \pause We have (for MAX-SAT)
 \[\small \mathbb{E}[\mbox{LP Rounding}] \geq \left(1-\frac{1}{e} \right) \mbox{Opt}(C) \]
 \end{block}
 
+\pause
 \begin{block}{SDP Rounding}
 The random variables are no longer independent and hence we need to generate "dependent" set of random numbers whose covariance matrix is related to $X$.
 \end{block}
