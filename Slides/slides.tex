@@ -132,7 +132,7 @@
 \newcommand{\explainup}[2]{\overset{\mathclap{\underset{\downarrow}{#2}}}{#1}}
 
 
-\setbeamercovered{dynamic}
+\setbeamercovered{invisible}
 
 %Logo Position upper right
 	\pgfdeclareimage[height=0.5cm]{uni}{./Images/logo4.pdf}
@@ -197,43 +197,32 @@
 
 \section{Constraint Satisfaction Problem}
 
-\begin{frame}{Useful Lemma's}
-	\begin{lem}
-		For every $x$, $\sum_{_y \in X} \dist{x-y}^2 = \Delta_1^2(X) + n \dist{x - c}^2$.\\
-		Hence, $\sum_{ \{x,y\} \subseteq X } \dist{x-y}^2 = n \Delta_1^2(X)$.
-	\end{lem}
-	\begin{center}
-		\begin{tikzpicture}
-		% def loc second cluster
-		\def\clusterX{5};
-		\def\clusterY{1.5};
-		\node[small node] (x11) at (0,0) {};
-		\node[small node] (x12) at (1.5,0) {};
-		\node[small node] (x13) at (0.75,-0.75) {};
-		\node[small node] (x14) at (0.75,0.75) {};
-		
-		
-		\node[special node] (x) at ( \clusterX, \clusterY) {$x$};
-		
-		% arcs		
-		\visible<1>{ 
-			\draw[edge] (x) to (x11);
-			\draw[edge] (x) to (x12);
-			\draw[edge] (x) to (x13);
-			\draw[edge] (x) to (x14);
-		}
-		
-		\visible<2>{
-			\node[center node] (c) at ( 0.75,0) {$c$};
-			
-			\draw[edge] (x) to node[above]{$4\times $} (c);
-			\draw[edge] (c) to (x11);
-			\draw[edge] (c) to (x12);
-			\draw[edge] (c) to (x13);
-			\draw[edge] (c) to (x14);
-		}
-		\end{tikzpicture}
-	\end{center}	
+\begin{frame}{Constraint Satisfaction Problem}
+	\centering
+	\begin{tikzpicture}
+	\node[] (CSP) at (0,0) {\large CSP $ = (V,C,w)$};
+	\node[] (CSPv) at (.25,.25) {};
+	\node[] (CSPc) at (.60,-.15) {};
+	\node[] (CSPw) at (1,.15) {};
+	\visible<2->{
+	\node[draw, thick, rectangle, align=center, anchor= south] (variables) at (-3,1.5) {{\bf Set of variables:}\\ Each variable ranges\\ over a discrete finite domain.};
+	\draw[edge] (CSPv) to (variables);
+	}
+	\visible<3->{
+	\node[draw, thick, rectangle, align=center, anchor= north] (constraints) at (0,-1.5) {{\bf Set of constraints:}\\ Each constraint consists of a $\{0,1\}$ valued function $R$\\ and a scope $S \subseteq V$};
+	\draw[edge] (CSPc) to (constraints);
+	}
+	\visible<4->{
+		\node[draw, thick, rectangle, align=center, anchor= south] (weights) at (3,1.5) {{\bf Vector of weights:}\\ Non-negative weight for each constraint};
+		\draw[edge] (CSPw) to (weights);
+	}
+
+	\end{tikzpicture}\\
+	\visible<5->{
+	\begin{block}{Objective}
+		Maximize weighted sum of satisfied constraints
+	\end{block}
+	}	
 \end{frame}
 
 % -------- LP -----------
