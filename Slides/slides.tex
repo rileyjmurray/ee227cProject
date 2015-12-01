@@ -239,8 +239,19 @@
 % -------- LP -----------
 \section{LP Relaxation}
 
-\begin{frame}{Title}
-	content...
+\begin{frame}{LP Relaxation}
+\begin{block}{Idea}
+Choose an assignment to maximize weighted sum of satisfied constraints. Formulate it as an integer program by introducing dummy $\{ 0, 1\}$-valued binary variables (indicators) for each variable and constraint and then relax it to get an LP.
+\end{block}
+ For each variable $i \in V$, we define $\mu_i[\ell] =1$ if variable $i$ takes value $\ell$, and $0$ o.w. Similarly, for each constraint $j \in \{1\ldots, m\}$, we define $\lambda_j[L] = 1$ if assignment $L$ is chosen for constraint $j$ and $0$ o.w. We impose two consistency conditions 
+ \begin{itemize}
+ \item $\sum_{\ell \in D} \mu_i[\ell] = 1$, $\sum_{L} \lambda_j[L] = 1$ $\Rightarrow$ exactly one indicator is non-zero.
+ \item Consistency across $\mu$'s and $\lambda$'s, no conflicts across their assignments.
+ \end{itemize}
+ Relax $\mu_i[\ell] \in \{ 0, 1\} \rightarrow \mu_i[\ell] \in [0, 1]$ and $\lambda_j[L] \in \{ 0, 1\} \rightarrow \lambda_j[L] \in [0, 1]$, with all other conditions intact, to get a relaxation. 
+ 
+ All constraints and objective are linear and the domain is convex. Thus we have an LP Relaxation!
+ 
 \end{frame}
 
 % -------- SDP -----------
@@ -252,9 +263,15 @@
 
 % -------- Rounding -----------
 \section{Rounding}
+\begin{frame}{Rounding Schemes}
+Given the solution of relaxations, we need to find a good assignment.
+\begin{block}{Rounding LP}
+For LP, we have a probability mass function $\mu_i[\cdot]$ for each variable. We can generate random numbers "independently" for each variable according to these pmf's and assign it to the variable to get an assignment. Is it good enough? We have (for MAX-SAT)
+\[\small \mathbb{E}[\mbox{LP Rounding}] \geq \left(1-\frac{1}{e} \right) \mbox{Opt}(C) \]
+\end{block}
 
-\begin{frame}{Title}
-	content...
+\begin{block}{SDP Rounding}
+The random variables are no longer independent and hence we need to generate "dependent" set of random numbers whose covariance matrix is related to $X$.
+\end{block}
 \end{frame}
-
 \end{document}
