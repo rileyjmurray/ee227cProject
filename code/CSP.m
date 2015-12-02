@@ -6,6 +6,7 @@ classdef CSP < handle
         numConstraints
         weights
         constraints
+        numVariables
     end
     
     methods
@@ -30,6 +31,14 @@ classdef CSP < handle
                 error('Invalid CSP: constraints should contain valid Constraints objects')
             end
             obj.constraints = constraints;
+            
+            % count variables
+            vars = [];
+            for i = 1:obj.numConstraints
+               vars = union(vars, obj.constraints{i}.scope);
+            end
+            obj.numVariables = length(vars);
+            
         end
         
         function objectiveValue = evaluateObjective( obj, input )
