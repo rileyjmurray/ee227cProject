@@ -7,7 +7,7 @@ classdef CSP < handle
         weights
         constraints
         numVariables
-        airity
+        arity
     end
     
     methods
@@ -35,11 +35,11 @@ classdef CSP < handle
             
             % count variables and determine airity
             vars = [];
-            obj.airity = 0;
+            obj.arity = 0;
             for i = 1:obj.numConstraints
-               tempScope = obj.constraints{i}.scope;
-               vars = union(vars, tempScope);
-               obj.airity = max(obj.airity, length(tempScope));
+               tempConstr = obj.constraints{i};
+               vars = union(vars, tempConstr.scope);
+               obj.arity = max(obj.arity, tempConstr.arity);
             end
             obj.numVariables = length(vars);
             
