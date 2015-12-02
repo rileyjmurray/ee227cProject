@@ -3,15 +3,27 @@ classdef CSP < handle
     % it does not explicitly check / able to return domains.
     
     properties
-        numConstraints
+        % inputs (required and optional)
         weights
         constraints
+        domain % a vector [0,...,q-1]; assume [0,1] unless otherwise stated.
+        
+        % calculated fields
+        numConstraints 
         numVariables
         arity
     end
     
     methods
-        function obj = CSP( weights, constraints )
+        
+        function obj = CSP( varargin )
+            if (length(varargin) == 2)
+                obj.domain = [0,1];
+            else
+                obj.domain = varargin{3};
+            end
+            constraints = varargin{2};
+            weights = varargin{1};
             obj.numConstraints = length( constraints );
             % ----- Check if weights are valid -----
             if obj.numConstraints ~= length( weights )
