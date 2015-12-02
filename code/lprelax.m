@@ -5,9 +5,9 @@
 
 %% Defining the CSP / recalling it
 
-V = 3; % Number of variables
-D = 2;% Size of domain, assuming here boolean
-arity = 3;
+V = problem.numVariables; % Number of variables
+D = length(problem.domain);% Size of domain, assuming <=10
+arity = problem.arity;
 constraints = problem.constraints; % Load the constraints
 num_c = problem.numConstraints; % Number of constraints
 M = D^arity; % Maximum number of local assignments for any constraint, uniform bound makes life easy
@@ -45,8 +45,14 @@ for i=1:num_c
     for j=1:num_local_assgn_Ci
         
         x = zeros(V, 1); %Total Assignment(we can use simply local as well)
-        s = dec2bin(j-1);
-        s =[repmat('0', 1,  num_scope_i- length(s)), s];
+        s = dec2base(j-1, D, num_scope_i);
+        % For D<=10, all digits are of the form 0, 1, ..., 9 but for D >=11
+        % it starts using A, B, ..., Z and thus dec2base exists for D<=36
+        % and is usable for the current logic for D<=10
+        % The third argument of the function tells at least how many digits
+        % should be present in the converted string.
+        
+        % s =[repmat('0', 1,  num_scope_i- length(s)), s];
         % The above two lines are in some sense a brute force to index the
         % various local assignments. First line finds a binary
         % representation for the current assignment and the second line
@@ -55,6 +61,8 @@ for i=1:num_c
         % append a zero in front and get 011. This is a string so we
         % convert it to number term by term and assign to corresponding
         % index in x. 
+        
+        
         % That is if scope = [2 3 4], then s=011; and now we assign
         % x(scope(1)) = str2double(s(1)) and this is equivalent to
         % assigning x(2) = 0. 
