@@ -7,7 +7,11 @@
     %   U = chol( sigmaVar );
     % returns an assignment of variables for "CSP"
     
+%% intialize a particular example
+worldColoring;
+CSP = africaProblem;
 %% Rounding
 n = CSP.numVariables;
 % generate random hyperplane
 v = 2 * (rand(1,n) - 0.5 * ones(1,n));
+v = v / norm(v);
