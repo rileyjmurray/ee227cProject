@@ -2,11 +2,12 @@ function [sigmaVar, lambda] = constructAndSolveSDP(problem)
 % Defining the CSP / recalling it
 
 V = problem.numVariables; % Number of variables
-D = 2; % Size of domain, assuming here boolean
-arity = problem.;
+D = length(problem.domain); % Size of domain, assuming here boolean
+arity = problem.arity;
 constraints = problem.constraints; % Load the constraints
 num_c = problem.numConstraints; % Number of constraints
-M = D^arity; % Maximum number of local assignments for any constraint, uniform bound makes life easy
+M = D^arity; % Maximum number of local assignments for any constraint, 
+    % --- > uniform bound makes life easy
 
 
 % Evaluating the satisfiability matrix

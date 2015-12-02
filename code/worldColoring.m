@@ -2,6 +2,8 @@
 % color of x(1) needs to be different from color x(2).
 relation = @(x) x(1) ~= x(2);
 
+numColors = 4;
+
 % AMERICAS
 % 1. alaska
 % 2. canada
@@ -40,7 +42,7 @@ for i = 1 : size( borders, 1 )
     constraints{ i } = Constraint( scope, relation );
 end
 
-americasProblem = CSP( ones( size( borders, 1 ), 1 ), constraints );
+americasProblem = CSP( ones( size( borders, 1 ), 1 ), constraints, 0:(numColors-1));
 
 % AFRICA
 % 1. Morocco
@@ -92,6 +94,7 @@ americasProblem = CSP( ones( size( borders, 1 ), 1 ), constraints );
 % 47. South Africa
 % 48. SwaziLand
 % 49. Lesotho
+
 borders = [
     1 2; 1 6; 2 3; 2 4; 2 6; 2 7; 2 8; 3 4; 4 5; 4 8; 4 9; 4 10;
     5 10; 6 12; 6 7; 7 8; 7 12; 7 15; 7 18; 7 19; 8 9; 8 19; 8 22; 8 23;
@@ -107,10 +110,11 @@ borders = [
     46 47; 47 48; 47 49 ];
 
 constraints = cell( size( borders, 1 ), 1 );
+
 for i = 1 : size( borders, 1 )
     scope = borders( i, : );
     constraints{ i } = Constraint( scope, relation );
 end
 
-africaProblem = CSP( ones( size( borders, 1 ), 1 ), constraints );
+africaProblem = CSP( ones( size( borders, 1 ), 1 ), constraints, 0:(numColors-1));
 
