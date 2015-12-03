@@ -1,7 +1,7 @@
 \section{Linear Programming for CSP Approximation}
 The goal of this section is to present a ``canonical" LP relaxation and rounding scheme for Constraint Satisfaction Problems. Both the relaxation and rounding scheme are valid for arbitrary CSP's, although performance guarantees are only proven in limited cases.  A non-exhaustive list of CSP-specific LP relaxations is included at the end of this section.
 
-\subsection{An Integer Program : Towards the Canonical LP [CITE]}
+\subsection{An Integer Program : Towards the Canonical LP [CITE]}\label{subsec:ip}
 Let $\mathcal{C} = (V,C,W)$ be a CSP over a domain $D$ of size $q$.
 
 Earlier, we defined an \textit{assignment of variables} as a function $F : V \to D$. Critically, the domain of $F$ is the entire set $V$. When this is the case, we could call $F$ a \textit{full assignment}. It is reasonable (and as we will see, helpful!) to consider $F$ as being built from many \textit{local assignments} $L : S \to D$ where $S \subset V$. For a constraint $C_i = (R_i,S_i) \in \mathcal{C}$, we will be interested in the local assignment $L : S_i \to D$. Where before we could write $R_i(F(S_i))$ as the value of the constraint under an assignment, we write $R_i(L)$ when it is given that $L$ is a local assignment for constraint $C_i$.
@@ -72,65 +72,8 @@ As we remarked in Section \ref{sec:introToCSP}, we can write the objective funct
 \]
 where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
 
-\iffalse
-In addition to a probability distribution over the possible value each variable can take, the formulation contains a probability distribution over the possible assignments for each constraint.
-This allows us to impose the constraint that the marginal probability for each variable matches the probability that it occurs in an assignment with the same value.
-
-We use $\mu_v[\ell]$ to denote the probability that variable $x_v$ takes value $\ell \in D$.
-Since these variables should form a probability distribution for a fixed $v \in V$, we require that the sum over $\ell \in D$ is equal to $1$ and that the $\mu_v(\ell)$ are non-negative.
-Similarly, for constraint $C_i = (R_i, S_i) \in \mathcal{C}$ we introduce a probability distribution over all possible local assignments.
-
-Let $\lambda_{C_i}$ be a probability distribution over  $\mathcal{L}_{C_i} = D^{|S_i|}$, all possible input values.
-Then, the local assignment $L \in \mathcal{L}_{C_i}$ is selected with probability $\lambda_{C_i}[L]$.
-For example, suppose $D = \{0,1\}$ and $S_i = (x_2,x_3)$. 
-Then, the corresponding variables are $\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 0], \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1]$. Again, we require that the variables corresponding to a given constraint $C_i \in \mathcal{C}$ sum up to 1 and are non-negative.
-
-The objective is to maximize the probability, denoted as the expectation of an indicator, that the constraint $C_i$ is satisfied by a local assignment $\lambda_{C_i}[\cdot]$ where $C_i \in \mathcal{C}$ is randomly drawn from distribution $W$ and local assignment $L$ is randomly drawn with probability $\lambda_{C_i}[L]$. 
-Mathematically, this can be written as:
-\[
-	OPT_{LP} = \max_{\lambda_{\mathcal{C}}} \underset{C_i \sim W}{\Ex} \left[ \underset{L \sim \lambda_{C_i}}{\Ex} \left[ R_i( L (S_i )) \right] \right]
-\]
-where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
-
-Without additional constraints, the current LP is not practical. 
-The problem is that $\lambda_C$ variables are not coupled across constraints in $\mathcal{C}$. 
-This allows us to separately select a satisfying assignment for each of the constraints. 
-Hence, $OPT_{LP} = 1$ regardless of the particular instance. 
-As eluded upon, this can be addressed by coupling the marginal probabilities for a variable $x_v$ based on the assignment probabilities $\lambda_C$ variables with $x_v$ in its scope and the corresponding $\mu_v$ variables.
-For each constraint $C_i \in \mathcal{C}$, each variable $v \in V$, and for each $ \ell \in D$, we require that:
-\[
-	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
-\]
-We refer to these constraints as first-order consistency constraints.
-It remains to show that these constraints are indeed linear.
-If $T_{C_i}(v)$ is the set of local assignments for constraint $C_i \in \mathcal{C}$ that assigns variable $x_v$  the value $\ell \in D$, then the corresponding constraint can be written as:
-\[
-	\sum_{\substack{L \in \mathcal{L}_{C_i}\\ L(v) = \ell}} \lambda_{C_i}[L] = \mu_v(\ell)
-\]
-For the example given above with scope $(x_2,x_3)$, $D = \{0,1\}$, variable $v = 3$, and $ \ell = 1$, the constraint can be written as:
-\[
-	\lambda_{C_i}[x_2 \rightarrow 0, x_3 \rightarrow 1] + \lambda_{C_i}[x_2 \rightarrow 1, x_3 \rightarrow 1] = \mu_3^1
-\]
-
-The complete formulation is then:
-\begin{alignat}{3}
-\max \quad & \sum_{C_i \in \mathcal{C}} w_{C_i} \sum_{ L \in \mathcal{L}_{C_i} }  \lambda_{C_i}[L] \  R_i(L(S_i))) \label{eq:lp_strong}\\
-\text{s.t.} \quad & 	\sum_{\substack{L \in \mathcal{L}_{C_i}\\ L(v) = \ell }} \lambda_{C_i}[L] = \mu_v(\ell) & \quad C_i \in \mathcal{C}, v \in V, \ell \in D \nonumber \\
-& \sum_{L \in \mathcal{L}_{C_i}} \lambda_{C_i}[ L ] = 1 & \quad  C_i \in \mathcal{C} \nonumber\\
-& \sum_{\ell \in D} \mu_v(\ell) = 1 & \quad v \in V \nonumber\\
-& \lambda_{C_i}[ L ] \ge 0 & \quad C_i \in \mathcal{C}, L \in \mathcal{L}_{C_i} \nonumber\\
-&	\mu_v(\ell) \ge 0	& \quad v \in  V, \ell \in D \nonumber
-\end{alignat}
-where $\mathcal{L}_{C_i}$ is the set of all possible local input assignments for the variables in scope $S_i$.
-
-Observe that this formulation couples the local assignments for different constraints through the variables $\mu$. 
-Stronger relaxations are possible by requiring that all pairwise marginals are preserved. For example, for all sets of two variables. 
-However, this results in a semi-infinite LP with an exponential number of constraints. 
-
-\fi
-
 \begin{thm}
-	Basic LP is a relaxation for the problem CSP$(\Gamma)$
+	Basic LP is a relaxation for the problem CSP$(\Gamma)$.\todo{unsure}{for binary CSP's or arbitrary CSP's?}
 \end{thm}
 \begin{proof}
 	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v^t$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
