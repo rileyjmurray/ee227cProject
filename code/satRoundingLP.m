@@ -1,4 +1,4 @@
-function [ x ] = satRoundingLP( muv )
+function [ X ] = satRoundingLP( muv )
 %% LP Rounding
 %
 % Given the optimal muv and lambda it is easy to generate a random
