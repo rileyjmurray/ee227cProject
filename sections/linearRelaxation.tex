@@ -89,7 +89,7 @@ A key technique to generate CSP solutions is rounding the LP solution.
 Various techniques have been developed to extract good CSP solutions from Basic LP.
 A common technique to generate CSP solutions with a performance guarantee is randomized rounding.
 This technique uses the information available from the LP, typically by using the optimal solution as a probability distribution, to randomly round the each variable to a value in its domain $D$.
-To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT.
+To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT. The following rounding scheme was first presented by Goemans and Williamson \cite{GoeWil94}. They combined this scheme together with the seminal approximation algorithm for Max-SAT by Johnson \cite{Joh73} to obtain a $\frac{3}{4}$ bound.
 
 \subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}
 Consider the full assignment $F$ as a vector of random variables. For each variable $v \in V$, let the random variable be given by:
@@ -163,7 +163,7 @@ Hence, we conclude with the following theorem:
 	Randomized rounding is a $\left( ( 1 - 1/e)\beta, \beta \right)$-approximation for Max-SAT for any $\beta$.
 \end{thm}
 \subsection{CSP-Specific LP Relaxations and Rounding Schemes}
-Note the following specific relaxations
+Note the following specific relaxations \cite{GoeWil94,Asa97,Yan94}.
 \begin{itemize}
 \item this thing
 \item this thing as well
