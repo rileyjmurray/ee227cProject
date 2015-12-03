@@ -2,7 +2,7 @@ function [sigmaVar, lambda] = constructAndSolveSDP(problem)
 % Defining the CSP / recalling it
 
 V = problem.numVariables; % Number of variables
-D = length(problem.domain); % Size of domain, assuming here boolean
+D = length(problem.domain); % Size of domain
 arity = problem.arity;
 constraints = problem.constraints; % Load the constraints
 num_c = problem.numConstraints; % Number of constraints
@@ -42,8 +42,7 @@ for i=1:num_c
     for j=1:num_local_assgn_Ci
         
         x = zeros(V, 1); %Total Assignment(we can use simply local as well)
-        s = dec2bin(j-1);
-        s =[repmat('0', 1,  num_scope_i- length(s)), s];
+        s = dec2base(j-1, D, num_scope_i);
         % The above two lines are in some sense a brute force to index the
         % various local assignments. First line finds a binary
         % representation for the current assignment and the second line
