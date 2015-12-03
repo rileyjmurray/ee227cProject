@@ -1,4 +1,4 @@
-function [ muv, lambda ] = lprelax( problem )
+function [ muv, lambda, cvx_optval ] = lprelax( problem )
 
 %% Simple LP Relaxation
 
