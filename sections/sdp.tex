@@ -3,40 +3,12 @@
 \subsection{Motivation}
 
 We recall the relaxations and try to motivate our way through the various relaxations (see \cite{Ryan}) -
-\begin{discussion}{\bf Integer Programming formulation of the CSP}\\
-Introduce $D$ slack variables, namely $\mu_v(\ell) \in \{ 0, 1 \}, \fa \ell \in D$ for each variable $v \in V$, call them \textit{variable indicators}. 
-Next, for each $C_i=(R_i,S_i)\in \C$, denote by $\Lm_{C_i}$, the set of all possible assignments $L : S \rightarrow D$. 
-$L$ can be viewed as restriction of a full assignment $F: V \rightarrow D$ to $S$, i.e., $F|_S$\footnote{We distinguish between partial/local assignments and total assignments for clarity, and hence use different symbols namely $L$ for local, and, $F$ for total assignment respectively.}. 
-Next, introduce dummy variables \textit{constraint indicators} for each constraint $C_i$, namely $\la_{C_i}(L) \in \{ 0, 1\} \fa L \in \Lm_{C_i}$. 
-Impose the following constraints 
-\al{
-\fa v \in V, \fa \ell \in D ~:~ \mu_v(\ell) &\in \{0, 1\} \label{vval}\\
- \fa C_i \in \C, \fa L \in \Lm_{C_i} ~:~ \la_{C_i}(L) &\in \{0, 1\}  \label{cval}
-}
-The interpretation of $\mu_v(\ell)=1$ is that variable $v$ is assigned value $\ell$, similarly $\la_{C_I}(L)=1$ stands for picking up local assignment $L$ for the constraint $C_i$. 
-To ensure consistency we impose the following logical constraints -
- \al{
-\sum_{\ell  \in D} \mu_v(\ell) &= 1\label{vass}\\
-\sum_{L \in \Lm_{C_i}} \la_{C_i}(L) &= 1 \label{cass}\\
-\sum_{\substack{L \in \Lm_{C_i} \\ L(v) = \ell }} \la_{C_i}(L) &= \mu_v(\ell) \label{cons}
-} where (\ref{vval}) and (\ref{vass}) say that $\fa v \in V$, exactly one $\mu_v(\ell)$ is $1$, and all others are zero, which for us simply means that each variable takes exactly one of the values $\ell$ in $D$. 
-Similarly (\ref{cval}) and (\ref{cass}) imply that $\fa C_i \in \C$ exactly one assignment $L$ is chosen from $\Lm_{C_i}$. 
-(\ref{cons}) stands for consistency across \textit{variable indicators} and \textit{constraint indicators}.
-Thus this is an exact formulation of CSP and hence is NP Hard. 
-\end{discussion}
 
 \begin{discussion}{\bf LP Relaxation}\\
-LP relaxation was motivated by relaxing the values that the \textit{variable indicators} and \textit{constraint indicators} can take. 
-We relax the constraints (\ref{vval}) and (\ref{cval}), but keep (\ref{vass}), (\ref{cass})  and (\ref{cons}) constraints intact. 
-In place of the binary range of values $\{0, 1\}$ we now allow the \textit{indicators} to belong to the entire interval $[0, 1]$ and call them \textit{distributions}.
-That is, now (\ref{vass}) and (\ref{cass}) are relaxed to 
-\al{
-\fa v \in V, \fa \ell \in D ~:~ \mu_v(\ell) &\in [0, 1] \label{lvas}\\
- \fa C_i \in \C, \fa L \in \Lm_{C_i} ~:~ \la_{C_i}(L) &\in [0, 1] \label{lcas} 
-}
-(\ref{lvas}) and (\ref{lcas}) combined with (\ref{vass}) and (\ref{cass}) give us the following interpretation - \\
-\textit{$\fa v \in V, \mu_v(\cdot) : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in \C, \la_{C_i}(\cdot) : \Lm_{C_i} \rightarrow [0,1]$ denotes the \textit{probability distribution over all possible assignments $L \in \Lm_{C_i}$ for variables in a constraint}.  
-(\ref{cons}) imposes conditions for consistency across \textit{distribution} $\mu_v(\cdot)$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
+In preparation for moving to the Basic SDP relaxation, we summarize (in words) the interpretations of $\lambda_i$ and $\mu_v$ in Basic LP.
+
+\textit{$\fa v \in V, \mu_v(\cdot) : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in \C, \la_{C_i}(\cdot) : \Lm_{C_i} \rightarrow [0,1]$ denotes the probability distribution over all possible assignments $L \in \Lm_{C_i}$ for variables in a constraint.  
+Constraint \ref{eq:canonLPConsistency} imposes conditions for consistency across distribution the $\mu_v(\cdot)$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
 \end{discussion}
 
 We can go a step further in restricting our search space, by introducing a second order consistency condition such that we get an SDP relaxation. 
