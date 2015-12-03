@@ -17,11 +17,12 @@ classdef CSP < handle
     methods
         
         function obj = CSP( varargin )
-            if (length(varargin) == 2)
+            if (length(varargin) == 3)
                 obj.domain = [0,1];
             else
-                obj.domain = varargin{3};
+                obj.domain = varargin{4};
             end
+            numVariables = varargin{3};
             constraints = varargin{2};
             weights = varargin{1};
             obj.numConstraints = length( constraints );
@@ -45,15 +46,12 @@ classdef CSP < handle
             end
             obj.constraints = constraints;
             
-            % count variables and determine airity
-            vars = [];
+            % determine airity
             obj.arity = 0;
             for i = 1:obj.numConstraints
                tempConstr = obj.constraints{i};
-               vars = union(vars, tempConstr.scope);
                obj.arity = max(obj.arity, tempConstr.arity);
             end
-            obj.numVariables = length(vars);
             
         end
         
