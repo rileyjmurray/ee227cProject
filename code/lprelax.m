@@ -1,7 +1,6 @@
+function [ muv, lambda, cvx_optval ] = lprelax( problem )
+
 %% Simple LP Relaxation
-%
-% Works only for boolean variables! Too many hacks to generalize to a
-% general integer variable
 
 %% Defining the CSP / recalling it
 

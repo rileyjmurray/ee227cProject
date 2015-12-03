@@ -1,9 +1,8 @@
-% set seed for repetition of experiments 
-% rng( 1 );
-% number of variables
-k = 50;
-% number of constraints
-m = 80;
+function [ problem ] = satGeneration( k, m )
+% Generates satisfiable sat instance, i.e. OPT = 1. 
+% k = num variables
+% m = num constraints
+
 % SAT relation: Scope of constraint are variables in x and y are the
 % negated elements in scope. First part check if any negations are false.
 % Second part checks if any positive elements evaluate true.
@@ -38,4 +37,4 @@ while i <= m
     end
 end
 
-problem = CSP( ones( 1, m ), constraints );
+problem = CSP( ones( 1, m ), constraints, k );
