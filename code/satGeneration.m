@@ -37,4 +37,4 @@ while i <= m
     end
 end
 
-problem = CSP( ones( 1, m ), constraints );
+problem = CSP( ones( 1, m ), constraints, k );
