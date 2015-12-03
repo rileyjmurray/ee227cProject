@@ -22,7 +22,10 @@ classdef CSP < handle
             else
                 obj.domain = varargin{4};
             end
-            numVariables = varargin{3};
+            if ( length(varargin) > 4 || length( varargin) < 3 )
+                error('number of inputs incorrect')
+            end
+            obj.numVariables = varargin{3};
             constraints = varargin{2};
             weights = varargin{1};
             obj.numConstraints = length( constraints );
