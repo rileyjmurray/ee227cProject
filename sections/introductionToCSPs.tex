@@ -40,7 +40,7 @@
 %\parskip 8pt
 
 \section{Introduction to Constraint Satisfaction Problems}
-
+There are conflicting conventions regarding what is and is not a CSP. This section is devoted to defining ``CSP"'s in the way that is most often meant by the theoretical computer science community. Some alternative characterizations of CSP's are addressed at the end of this section. 
 \subsection{Getting Oriented with CSP's}
 
 There is a great deal of research going into the approximabilty of constraint satisfaction problems, and some claims regarding CSP's can seem quite sensational. 
@@ -82,8 +82,8 @@ Note that Max-Cut is equivalent to $q-$coloring with $q = 2$.
 
 \begin{definition}
 \textbf{CSP Instance}\\
-An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by a set of $n$ variables (denoted $V$), as well as $m$ constraints and $m$ positive weights (one for each constraint). 
-Every constraint $C_i \in \mathcal{C}$ has the form $C_i = (R_i,S_i)$ where $R_i \in \Gamma$ and $S_i$ (said to be the \textit{scope} of $C_i$) is a possibly ordered list of \text{ar}($R_i$) variables. 
+An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by a set of $n$ variables (denoted $V$), a set of $m$ constraints (denoted $C$), and $m$ positive weights (one for each constraint). We write this as a triple $\mathcal{C} = (V,C,W)$.
+Every constraint $C_i \in C$ has the form $C_i = (R_i,S_i)$ where $R_i \in \Gamma$ and $S_i$ (said to be the \textit{scope} of $C_i$) is a possibly ordered list of \text{ar}($R_i$) variables. 
 
 If $F$ (a mapping $ V\to D$) is a given assignment of variables, then $R_i(F(S_i))$ equals either 1 or 0, in which case constraint $C_i$ is said to be ``satisfied" or ``not satisfied" respectively.
 The objective is to maximize the weighted sum of satisfied constraints $\sum_{i = 1}^m w_i R_i(F(S_i))$. 
@@ -106,8 +106,6 @@ Definition \ref{def:CSPinstance} departs from this convention in that a feasible
 Are CSP's then accurately understood as unconstrained optimization? 
 Not quite. 
 The CSP Framework has one and only one inviolable constraint (and that constraint is precisely what makes them difficult): each of the $n$ variables $x_i, ~ i \in\{1,\ldots,n\}$ belongs to the discrete domain $D$. 
-
-As this is the most common convention, we use the term ``constraint" throughout this report to refer to some $C_i = (R_i, S_i) \in \mathcal{C}$. The reader is advised that some papers (most notably \cite{RagSte09}) use the term ``payoff" for some $C_i = (R_i,S_i) \in \mathcal{C}$. Besides the obvious usefulness of removing confusion of whether or not CSP constraints are violable, a payoff function is used in the context of \textit{Generalized} Constraint Satisfaction Problems.
 
 \subsection{Complexity for Solving and Approximating CSP's}
 One of the most surprising results in CSP's and approximation algorithms is the lack of a consistent relationship between the difficulty of solving a problem optimally, and the difficulty of approximating the problem.
@@ -173,7 +171,27 @@ The interested reader is strongly recommended to read Khot's original paper for 
 For arbitrarily small constants $\epsilon$, $\delta > 0$, there exists a constant $k = k(\epsilon,\delta)$ such that it is NP-Hard to determine whether a unique Label Cover instance with label sets of size $k$ at satisfies \textit{at least} $1-\epsilon$ or \textit{at most} $\delta$ constraints.
 \end{ugc}
 
+\subsection{Conflicting Conventions in CSP Discourse}
 
+\subsubsection{``Hard" or ``Soft" Constraints?}
+Lots of stuff\cite{Russell2009}.
+MIT slides.
 
+\subsubsection{``Constraints", ``Payoffs", and Generalized Constraint Satisfaction Problems}
+
+The reader is advised that some papers (most notably \cite{RagSte09}) use the term ``payoff" for some $C_i = (R_i,S_i) \in \mathcal{C}$. 
+
+Why do this? Reasons!
+
+Besides the obvious usefulness of removing confusion of whether or not CSP constraints are violable, a payoff function is used in the context of \textit{Generalized} Constraint Satisfaction Problems.
+
+Examples of GCSP's
+\begin{itemize}
+\item Multiway Cut
+\item Metric Labeling
+\end{itemize}
+
+\subsection{Domains : Finite, or Uncountably Infinite?}
+Lots of stuff\cite{Russell2009}.
 
 %\end{document}
