@@ -1,11 +1,7 @@
-function [ problem ] = satGeneration( k, m, seed )
+function [ problem ] = satGeneration( k, m )
 % Generates satisfiable sat instance, i.e. OPT = 1. 
 % k = num variables
 % m = num constraints
-% seed = (scalar) random seed for random number generator.
-
-% set seed for repetition of experiments 
-rng( seed );
 
 % SAT relation: Scope of constraint are variables in x and y are the
 % negated elements in scope. First part check if any negations are false.
