@@ -1,3 +1,4 @@
+function [ X ] = satRoundingLP( muv )
 %% LP Rounding
 %
 % Given the optimal muv and lambda it is easy to generate a random
@@ -37,6 +38,4 @@ for v=1:V
     X(v) = idx(logical(Xv_idx))-1;
     % And we assign the corresponding value (-1) to the variable.
 end
-
-problem.evaluateObjective(X)
 

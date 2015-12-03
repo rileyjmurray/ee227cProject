@@ -1,9 +1,12 @@
+function [ maxCutProblem ] = maxcut( n, e, seed )
+% generate random graph for max cut problem
+% n = number of vertices
+% e = number of edges
+
+rng( seed )
+
 % Relation for the maxcut
 r = @(x) x(1)~=x(2); 
-
-% Creating the graph
-n = 10; % number of vertices.
-e = 20; % number of edges
 
 % This rnd2 is simply doing - second = (second == first? n : second)
 % It is to avoid any self edges in the graph that I generate randomly.
@@ -34,10 +37,6 @@ for i=1:e
     C{i} = Constraint(E(i,:), @(x) r(x)); 
 end
 
-% A random assignment - each variable taking value 0 or 1 independently
-% with probability half.
-
-assignment = (rand(n,1) >=0.5); 
-
 maxCutProblem = CSP(w, C); 
-maxCutProblem.evaluateObjective(assignment)
+
+

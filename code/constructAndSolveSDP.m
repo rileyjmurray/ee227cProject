@@ -1,8 +1,8 @@
-function [sigmaVar, lambda] = constructAndSolveSDP(problem)
+function [sigmaVar, lambdaVar] = constructAndSolveSDP(problem)
 % Defining the CSP / recalling it
 
 V = problem.numVariables; % Number of variables
-D = length(problem.domain); % Size of domain, assuming here boolean
+D = length(problem.domain); % Size of domain
 arity = problem.arity;
 constraints = problem.constraints; % Load the constraints
 num_c = problem.numConstraints; % Number of constraints
@@ -12,10 +12,11 @@ M = D^arity; % Maximum number of local assignments for any constraint,
 
 % Evaluating the satisfiability matrix
 
-RLS = zeros(num_c,M ); % RLS is consistent with R_i(L(S_i))
-% Indicator for satisfiability of "i"th constraint by the "j"th local
-% assignment. "M" number of assginments is an overkill but the time I spent
-% couldn't figure out a smarter way.
+RLS = zeros(num_c,M ); 
+    % RLS is consistent with R_i(L(S_i))
+    %   Indicator for satisfiability of "i"th constraint by the "j"th local
+    %   assignment. "M" number of assginments is an overkill but the time I spent
+    %   couldn't figure out a smarter way.
 
 ML = false(num_c, M, V, D); % ML stands for mu locations
 % indexed by i, j, v, l
@@ -42,8 +43,7 @@ for i=1:num_c
     for j=1:num_local_assgn_Ci
         
         x = zeros(V, 1); %Total Assignment(we can use simply local as well)
-        s = dec2bin(j-1);
-        s =[repmat('0', 1,  num_scope_i- length(s)), s];
+        s = dec2base(j-1, D, num_scope_i);
         % The above two lines are in some sense a brute force to index the
         % various local assignments. First line finds a binary
         % representation for the current assignment and the second line
@@ -102,25 +102,22 @@ echo on
 
 cvx_begin
 
-    variable lambda(num_c, M)
+    variable lambdaVar(num_c, M)
     variable sigmaVar( V * D, V * D ) semidefinite % rows / cols are  indexed like (v_1,l_1),(v_1,l_2),...,(v_1,l_D),(v_2,l_1)....
-    maximize ( trace(lambda' * W * RLS ));
+    maximize ( trace(lambdaVar' * W * RLS ));
     subject to
-    0<= lambda <=1;
+    0<= lambdaVar <=1;
     0<= sigmaVar <=1;
 
     for c_i=1:num_c
-        sum(lambda(c_i, :)) == 1;
+        sum(lambdaVar(c_i, :)) == 1;
         t = 0;
         for v=1:V
             tic;
             for l=1:D
                 for v2 = 1 : V
                     for l2 = 1 : D
-                        sum(lambda(c_i,  ML(c_i, :, v, l) & ML(c_i, :, v2, l2) )) == sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 );
-                        if v == v2 && l ~= l2
-                            sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 ) == 0;
-                        end
+                        sum(lambdaVar(c_i,  ML(c_i, :, v, l) & ML(c_i, :, v2, l2) )) == sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 );
                     end
                 end
             end
@@ -128,10 +125,15 @@ cvx_begin
             et = (t/v * (V-v));
             display(strcat('constraint progess',num2str(c_i / num_c)))
             display(strcat('remaining for this constraint',num2str(et)))
-            %tt = t + et;
-            %display(strcat('total time for this constraint',num2str(tt)))
-            %ttt = tt * (num_c - c_i);
-            %display(strcat('total time remaining',num2str(ttt)))
+        end
+    end
+    for v = 1:V
+        for l = 1:D
+           for l2 = 1:D
+               if l ~= l2
+                   sigmaVar( (  v - 1) * D + l, ( v - 1 ) * D + l2 ) == 0;
+               end  
+           end
         end
     end
 cvx_end
