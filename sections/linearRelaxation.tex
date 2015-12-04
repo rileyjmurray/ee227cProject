@@ -12,33 +12,41 @@ Now consider an \textit{Integer}-Linear Program over the following variables:
 \item $\lambda_i[L] \in  \{0,1\}$ is an indicator that \textit{local assignment} $L$ is used for constraint $C_i$
 \end{itemize}
 From these definitions, it is clear that for fixed $v$, we need one and only one $\mu_v[\ell]$ to be equal to 1. Encode this constraint as 
-\begin{equation*}
+\begin{equation}\label{musum}
 \sum_{\ell \in D} \mu_v[\ell] = 1.
-\end{equation*}
+\end{equation}
 
 Now we define $\mathcal{L}_i$ as the set of all possible local assignments for the variables in constraint $C_i$'s scope. We note that the size of $\mathcal{L}_i$ is exponential in $t = ar(R_i)$ (in fact, it's exactly $|\mathcal{L}_i| = q^t$). This is one of the key reasons why maximum arity is a \textit{fixed parameter} for all $\mathcal{C} \in \text{CSP}(\Gamma)$.
 
-Since two $L_1$,$L_2$ in $ \mathcal{L}_i$ are mutually exclusive, we likewise need one and only one of $\lambda_i[L]$ equal to 1 for fixed $i$.
-\begin{equation*}
+Since any two local assignments $L_1$, $L_2$ in $ \mathcal{L}_i$ are mutually exclusive, we likewise need one and only one of $\lambda_i[L]$ equal to 1 for fixed $i$.
+\begin{equation}\label{lambsum}
 \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1 
-\end{equation*}
+\end{equation}\label{mulambcons}
 To be consistent across $\lambda$ and $\mu$, we need one more constraint.
-\begin{equation*}
+\begin{equation}
 \mu_v[\ell] = \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] 
-\end{equation*}
-Finally, we use the objective
-\begin{equation*}
-\max \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L).
-\end{equation*}
+\end{equation}
+Now we need to come up with an objective that mimics the one defined in Equation \ref{expfirst}. We re-write the expression for objective for clarity: 
+$$\max_F \sum_{i:C_i \in C} w_i R_i(F(S_i))$$
+As discussed in the beginning of this section it is easy to see 
+\begin{equation}\label{replacewithlocal}
+R_i(F(S_i)) = \sum_{L\in \mathcal L_i}\lambda_i[L] R_i(L).
+\end{equation} 
+It follows from the facts that whether or not $R_i$ is satisfied, depends only on the local assignment and RHS of \ref{replacewithlocal} is precisely these terms summed over all possible local assignments with multiplicative factor of indicators for the respective assignments. And thus our objective becomes 
+\begin{equation}\label{glbobj}
+\max_{\mu, \lambda} \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L).
+\end{equation}
 
 We get the corresponding LP simply by relaxing $\mu_v[\ell] \in \{0,1\}$ to $\mu_v[\ell] \in [0,1]$ and $\lambda_i[L] \in \{0,1\}$ to $\lambda_i[L] \in [0,1]$.
+
+
 \subsection{The Canonical Linear Program}
 
 We define the linear program below, then address its probabilistic interpretation and equivalent representations.
 \begin{definition}\textbf{Basic LP} \\
 Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic LP for $\mathcal{C}$ is
 \begin{alignat}{2}
-\max ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
+\max_{\mu, \lambda} ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
 s.t. ~ & ~ \sum_{\ell \in D} \mu_v[\ell] = 1 & \forall v \in V  \label{eq:canonLPmuSum} \\
      ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:canonLPlambdaSum} \\
      ~ & ~ \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] = \mu_v[\ell]  & \forall v \in V, \ell \in D, i : C_i \in C \label{eq:canonLPConsistency} \\
@@ -47,10 +55,11 @@ s.t. ~ & ~ \sum_{\ell \in D} \mu_v[\ell] = 1 & \forall v \in V  \label{eq:canonL
 \end{alignat}
 \end{definition}
 
-\begin{remark}\label{re:super}
-Given constraints \ref{eq:canonLPlambdaSum}, \ref{eq:canonLPConsistency} and \ref{eq:canonLPlambdaNonNeg}, constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant. 
-\end{remark}
+\begin{lemma}\label{le:super}
+For the Basic LP, constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant. 
+\end{lemma}
 \begin{proof}
+It is not difficult to see that constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant in the presence of \ref{eq:canonLPlambdaSum}, \ref{eq:canonLPConsistency} and \ref{eq:canonLPlambdaNonNeg} :
 \begin{align*}
 \ref{eq:canonLPlambdaNonNeg} \rm{\ and \ } \ref{eq:canonLPlambdaSum} &\Rightarrow 0\leq  \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] \leq  \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  \\
 {\rm \ Combine\ with \ }\ref{eq:canonLPConsistency}&\Rightarrow  0\leq \mu_v[L] \leq 1
@@ -64,8 +73,28 @@ Also, summing on both sides of \ref{eq:canonLPConsistency} with respect to $\ell
 and thus even \ref{eq:canonLPmuSum} is superfluous.
 \end{proof}
 
-In other words, the remark above renders $\mu_v[\cdot]$ indicators as superfluous. Nevertheless, we keep them  for the discussion that follows, as they help in gaining some insight and extending the relaxation idea to a better one.
+In other words, the remark above renders $\mu_v[\cdot]$ indicators as superfluous. \emph{Nevertheless, we keep them for the discussion that follows, as they help in gaining some insight, help us come up with an intuitive rounding scheme and also lead us to extending the relaxation in a very natural fashion.}
 
+\begin{thm}
+	Basic LP is a relaxation for the problem CSP$(\Gamma)$.
+\end{thm}
+\begin{proof}
+	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v[t]$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
+	Furthermore, for each $C_i \in \mathcal{C}$ set $\lambda_{C_i}[y]$ equal to $1$ if $y$ is the local assignment for the scope $S_i$ corresponding to the optimal solution to the CSP and $0$ otherwise. 
+	It follows that this is a feasible LP solution. 
+	Hence, $OPT(\mathcal{C}) \le OPT_{LP}(\mathcal{C})$.
+\end{proof}
+
+\begin{remark}
+It is worthwhile to note that conditions in the Basic LP do not ensure that two constraints having same scope have same values for the relaxed indicators $\lambda$ over different local assignments. This constraint can be imposed in the following manner.\\
+For $C_{i}=(R_i, S_i)$ and $C_j=(R_j, S_j)$, if we have $S_i = S_j$, then
+\begin{equation}\label{extracons}
+\lambda_i[L] =   \lambda_j[L] ~ \ \forall L \in \mathcal L_i = \mathcal L_j
+\end{equation}
+However we ignore this condition owing to the difficulty that pops up in using them in a meaningful way while rounding up the fractional solution (to get a full assignment for the original CSP) that we get from the LP relaxation.  
+\end{remark}
+
+\subsection{LP as an Expectation Maximization}
 Note that between constraints \ref{eq:canonLPmuNonNeg} and \ref{eq:canonLPmuSum}, a solution $\mu^*_v[\ell]$ to the above LP defines a probability distribution (over $\ell \in D$) of assignments for $v$. That is, if we wanted to randomly generate an assignment $\hat{\ell}_v$ for variable $v$, then we could simply state $\hat{\ell}_v = \ell$ with probability $\mu^*_v[\ell]$. Given this interpretation, we write
 \begin{equation}
 \mu_v[\ell] = \mathbb{P}\left( \hat{\ell}_v = \ell \right) \quad \text{ where } \quad \hat{\ell}_v \sim \mu_v 
@@ -85,31 +114,34 @@ Since the events  $\{\hat{L}_i = L_1 \}$ and $\{\hat{L}_i = L_2 \}$ are mutually
 \mathbb{P}\left( \hat{\ell}_v = \ell \right) = \mathbb{P}\left( \bigcup_{L : L(v) =  \ell} \left\{\hat{L}_i = L\right\} \right) \qquad \forall v \in V, \ell \in D, i : C_i \in C
 \end{equation}
 
-As we remarked in Section \ref{sec:introToCSP}, we can write the objective function of a CSP in the probabilistic terms $\max_{F : V \to D} \mathbb{E}\left[ R_i(F(S_i)) \right]$. With slight modifications (to reflect the fact that our decision variables are now \textit{local} rather than global assignments), we can make a similar statement. Namely, let $C_i \in C$ be randomly drawn from distribution $W$ and let local assignment $L$ be randomly drawn from distribution $\lambda_i$. Then 
+As we remarked in Section \ref{sec:introToCSP} and Equation \ref{expfirst}, we can write the objective function of a CSP in the probabilistic terms $\max_{F} \mathbb{E}_{\tilde{C} \sim W}\left[R_F(\tilde{C})\right] $. With slight modifications (to reflect the fact that our decision variables are now \textit{local} rather than global assignments), we can make a similar statement. 
 
+We define a new random variable $R(\tilde{C}, L(\tilde{C}))$, where $\tilde{C}$ is as defined before i.e., 
+$$\mathbb{P} (\tilde{C} = C_i ) = w_i$$
+and 
+$$\mathbb{P}(L(\tilde{C}) = L |\tilde{C}=C_i ) =  \lambda_i[L]\  \forall L \in \mathcal{L}_i,$$ 
+then we can express our objective in \ref{glbobj} as 
+\begin{equation}
+\max_\lambda \mathbb{E}_{\tilde{C}, L(\tilde{C})} R(\tilde{C}, L(\tilde{C}))
+\end{equation}
+Using tower property we can write this as 
+\begin{equation}
+\max_\lambda \mathbb{E}_{\tilde{C}} \left[ \mathbb{E} \left(R(\tilde{C}, L(\tilde{C}))\displaystyle|\tilde{C}\right). \right]
+\end{equation}
+To make the expression more legible we make some abuse of notation and write $C_i \sim W$ in place of $\tilde{C} \sim W$ and write $L \sim \lambda_i$ to denote that $L$ takes values in $\mathcal L_i$ according to $\lambda_i$ given $\tilde{C} = C_i$. And thus our objective is reduced to
 \[
-	OPT_{LP} = \max_{\lambda_{\mathcal{C}}} \underset{C_i \sim W}{\Ex} \left[ \underset{L \sim \lambda_{i}}{\Ex} \left[ R_i( L (S_i )) \right] \right]
+	OPT_{LP} = \max_{\lambda_{\mathcal{C}}} \underset{C_i \sim W}{\Ex} \left[ \underset{L \sim \lambda_{i}}{\Ex} \left[ R_i( L (S_i )) |C_i \right] \right]
 \]
 where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
-
-\begin{thm}
-	Basic LP is a relaxation for the problem CSP$(\Gamma)$.
-\end{thm}
-\begin{proof}
-	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v[t]$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
-	Furthermore, for each $C_i \in \mathcal{C}$ set $\lambda_{C_i}[y]$ equal to $1$ if $y$ is the local assignment for the scope $S_i$ corresponding to the optimal solution to the CSP and $0$ otherwise. 
-	It follows that this is a feasible LP solution. 
-	Hence, $OPT(\mathcal{C}) \le OPT_{LP}(\mathcal{C})$.
-\end{proof}
-
 Having obtained a valid LP relaxation for any CSP problem, the question is now how to use this relaxation to generate good feasible solutions to the CSP. 
 A key technique to generate CSP solutions is rounding the LP solution.
+
 
 \subsection{A Rounding Scheme for the Canonical LP Relaxation}
 Various techniques have been developed to extract good CSP solutions from Basic LP.
 A common technique to generate CSP solutions with a performance guarantee is randomized rounding.
 This technique uses the information available from the LP, typically by using the optimal solution as a probability distribution, to randomly round the each variable to a value in its domain $D$.
-To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT. The following rounding scheme was first presented by Goemans and Williamson \cite{GoeWil94}. They combined this scheme together with the seminal approximation algorithm for Max-SAT by Johnson \cite{Joh73} to obtain a $\frac{3}{4}$ bound.
+To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT. 
 
 \subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}\label{sec:lpRoundingSat}
 This rounding scheme was introduced by Goemans and Williamson \cite{GoeWil94}. They combine this randomized rounding scheme together with the seminal approximation algorithm for Max-SAT by Johnson \cite{Joh73} to obtain a $\frac{3}{4}$ bound.
@@ -125,15 +157,23 @@ where $\mu^*_v[\ell]$ is the value of variable $\mu_v[\ell]$ in an optimal solut
 Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v[\ell]$ is $1$, and since $\mu_v[\ell]$ is non-negative, the above is a valid definition for a random variable. 
 Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
 
-The expected objective value of this randomized assignment is given by:
+The expected objective value of this randomized assignment is given by taking expectation in \ref{expfirst} and we get
 \[
-	\underset{F}{\Ex}\left[ \underset{C_i \sim W}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+	\mathbb{E}_F  \left[\text{Val}_{\mathcal{C}}[F] \right]= \mathbb{E}_F \mathbb{E}_{\tilde{C}}\left[R_F(\tilde{C})\right]
 \]
-Since we can swap the order of expectation (where $\mathbb{P}$ is an expectation over an indicator), this is equivalent to
+Since we can swap the order of expectation, this is equivalent to
 \[
-\underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]
+	 \mathbb{E}_{\tilde{C}} \mathbb{E}_F \left[R_F(\tilde{C})\right]
 \]
-This swap allows us to consider each $C_i \in \mathcal{C}$ separately. 
+and under our new notation we replace $\tilde{C}$ with $C_i$ to get 
+\[
+	 \mathbb{E}_{C_i \sim W} \mathbb{E}_F \left[R_F(C_i)\right].
+\]
+Now note that, since $R_F(C_i) = \mathbbm{1} [\mbox{$F$ satisfies $C_i$]}$ we get $\mathbb{E}_F \left[R_F(C_i)\right] = \mathbb{P}_F [\mbox{ $F$ satisfies $C_i$}]$ and our objective function becomes
+\[
+\mathbb{E}_F  \left[\text{Val}_{\mathcal{C}}[F] \right] = \underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[F \text{ satisfies } C_i] \right]
+\]
+This swap allows us to consider each $C_i \in \mathcal{C}$ separately.
 Therefore, a single constraint $C_i \in \mathcal{C}$ can be considered.
 
 Observe that since the constraints are in disjunctive form, each literal needs to evaluate to false for the constraint to be false. 
@@ -149,7 +189,8 @@ In particular, the probability of not satisfying the constraint in the above exa
 Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. 
 This can be done, by relating $F$ to the distribution over local assignments.
 \begin{align}
-	p_{C_i} &:= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
+	p_{C_i} &:=  \underset{L \sim \lambda_{i}}\Ex \left[ R_i( L (S_i )) |C_i \right]\nonumber\\
+			&= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
 			&=  \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
 			&\le \sum_{v \in  S } \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} \left[  \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
 			&= \sum_{v \in S} \left( 1 - \mu_v^*[b_{C_i}(v)] \right) \label{eq:objectiveLP}
@@ -163,15 +204,13 @@ It remains to relate the LP objective value to the expected objective of the rou
 Note that the former (see \eqref{eq:objectiveLP}) is an arithmetic mean (AM) whereas the latter (see \eqref{eq:objectiveRounding}) is an geometric mean (GM). 
 This suggests the use of the inequality of arithmetic and geometric means.
 \begin{align*}
-		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] &= 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))\\
-		&= 1 - \underset{v \in S}{GM}(\mu_{v}^*[b_c(v)])^{|S|}\\
-		&\ge 1 - \underset{v \in S}{AM}(\mu_{v}^*[b_c(v)])^{|S|}\\
-		&= 1 - \left( 1  - \underset{v \in S}{AM}(1 -\mu_{v}^*[b_c(v)]) \right)^{|S|}\\
-		&\ge 1 - \left( 1  - \frac{p_{C_i}}{|S|}\right)^{|S|}\\
+		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] &= 1 - \prod_{v \in S_i} \mu_v[b_{C_i}(v)]\\
+		&= 1 - \underset{v \in S_i}{GM}(\mu_{v}^*[b_c(v)])^{|S_i|}\\
+		&\ge 1 - \underset{v \in S_i}{AM}(\mu_{v}^*[b_c(v)])^{|S_i|}\\
+		&= 1 - \left( 1  - \underset{v \in S_i}{AM}(1 -\mu_{v}^*[b_c(v)]) \right)^{|S_i|}\\
+		&\ge 1 - \left( 1  - \frac{p_{C_i}}{|S_i|}\right)^{|S_i|}\\
 \end{align*}
-
-If $|S| \leftarrow \infty$, then the ratio approaches $1 - \frac{1}{e}$. 
-Therefore, the objective value of the rounding scheme
+One can show that $$1 - \left( 1  - \frac{p_{C_i}}{|S_i|}\right)^{|S_i|} \geq r \cdot p_{C_i} ~\ \forall p_{C_i} \in [0, 1]$$ and $r \downarrow 1-1/e$ as $|S_i| \rightarrow \infty$.Therefore, the objective value of the rounding scheme
 \begin{align*}
 	\underset{F}{\Ex} \left[ \text{Val}_{\mathcal{C}}[F]\right] &= \underset{F}{\Ex}\left[ \underset{C_i \sim W}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
 	&=  \underset{C_i \sim W}{\mathbb{E}}\left[ \underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] \right]\\
