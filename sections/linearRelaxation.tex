@@ -56,21 +56,21 @@ s.t. ~ & ~ \sum_{\ell \in D} \mu_v[\ell] = 1 & \forall v \in V  \label{eq:canonL
 \end{definition}
 
 \begin{lemma}\label{le:super}
-For the Basic LP, constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant. 
+For the Basic LP, constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} can be dropped without altering optimal $\lambda^*$ or the optimal objective.
 \end{lemma}
 \begin{proof}
-It is not difficult to see that constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant in the presence of \ref{eq:canonLPlambdaSum}, \ref{eq:canonLPConsistency} and \ref{eq:canonLPlambdaNonNeg} :
+It is not difficult to see that constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are implied by \ref{eq:canonLPlambdaSum}, \ref{eq:canonLPConsistency} and \ref{eq:canonLPlambdaNonNeg} :
 \begin{align*}
 \ref{eq:canonLPlambdaNonNeg} \rm{\ and \ } \ref{eq:canonLPlambdaSum} &\Rightarrow 0\leq  \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] \leq  \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  \\
 {\rm \ Combine\ with \ }\ref{eq:canonLPConsistency}&\Rightarrow  0\leq \mu_v[L] \leq 1
 \end{align*}
-Thus, \ref{eq:canonLPmuNonNeg} is redundant. 
+Thus, \ref{eq:canonLPmuNonNeg} is implied. 
 
 Also, summing on both sides of \ref{eq:canonLPConsistency} with respect to $\ell \in D$ we get, 
 \begin{align*}
 {\rm RHS} = \sum_{\ell \in D} \mu_v[\ell] = {\rm LHS} = \sum_{\ell \in D} \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] = \sum_{L \in \mathcal{L}_i} \lambda_i[L] \overset{\ref{eq:canonLPlambdaSum}}=1
 \end{align*}
-and thus even \ref{eq:canonLPmuSum} is superfluous.
+and thus \ref{eq:canonLPmuSum} is implied as well.
 \end{proof}
 
 In other words, the remark above renders $\mu_v[\cdot]$ indicators as superfluous. \emph{Nevertheless, we keep them for the discussion that follows, as they help in gaining some insight, help us come up with an intuitive rounding scheme and also lead us to extending the relaxation in a very natural fashion.}
@@ -124,9 +124,9 @@ then we can express our objective in \ref{glbobj} as
 \begin{equation}
 \max_\lambda \mathbb{E}_{\tilde{C}, L(\tilde{C})} R(\tilde{C}, L(\tilde{C}))
 \end{equation}
-Using tower property we can write this as 
-\begin{equation}\label{tower}
-\max_\lambda \mathbb{E}_{\tilde{C}} \left[ \mathbb{E} \left(R(\tilde{C}, L(\tilde{C}))\displaystyle|\tilde{C}\right). \right]
+Using the formula for conditional expectation, we can write this as 
+\begin{equation}
+\max_\lambda \mathbb{E}_{\tilde{C}} \left[ \mathbb{E} \left(R(\tilde{C}, L(\tilde{C}))\displaystyle|\tilde{C}\right). \right] \label{eq:tower}
 \end{equation}
 To make the expression more legible we make some abuse of notation and write $C_i \sim W$ in place of $\tilde{C} \sim W$ and write $L \sim \lambda_i$ to denote that $L$ takes values in $\mathcal L_i$ according to $\lambda_i$ given $\tilde{C} = C_i$. And thus our objective is reduced to
 \[
