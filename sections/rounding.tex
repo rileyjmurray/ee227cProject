@@ -30,7 +30,7 @@ We now move to the quintessential SDP and randomized-rounding based approximatio
 By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
 
 We will borrow notation and variables from Example \ref{maxcut}.
-We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
+We assume that given $\Si$ we can find use \emph{Cholesky Decomposition}  to find $Y : \Si = Y\trans Y$ in polynomial time.
 Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. 
 
 We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
