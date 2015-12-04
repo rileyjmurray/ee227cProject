@@ -3,7 +3,7 @@
 % ----------------------------------------------------------------
 
 % number of times to repeat each experiment
-rep = 10;
+rep = 50;
 
 % size of problems. Col 1 = num vars, col 2 = num constraints
 expSettings = [ 
@@ -14,6 +14,9 @@ expSettings = [
     50 50;
     50 100;
     50 200;
+    100 100;
+    100 200;
+    100 400;
     ];
 
 solveTime = - ones( size( expSettings, 1 ), rep );
@@ -47,6 +50,6 @@ for i = 1 : size( expSettings, 1 )
     end
 end
 
-save( 'lpExp10rec.mat', 'roundval','optval','lpval','solveTime','genTime','roundTime' )
+save( ['lpExp' num2str( rep ) 'rec.mat'], 'roundval','optval','lpval','solveTime','genTime','roundTime' )
         
         
