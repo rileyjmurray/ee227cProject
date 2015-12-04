@@ -19,7 +19,7 @@ We concretely summarize various angles, that we discussed briefly before, to loo
 This perspective is arguably the best for understanding the SDP. 
 \item Pseudo-indicator random variables which satisfy the second moment constraints. 
 This perspective is arguably the best when constructing SDP solutions by hand.
-\item Vectors $\{ y_{v, \ell} \}$ satisfying the first and second moment consistency constraints.  
+\item Vectors $\{ y_{(v, \ell)} : (v, \ell) \in V \times D \}$ satisfying the first and second moment consistency constraints.  
 This perspective is the one that's actually used computationally, on a computer. 
 \item Jointly Gaussian Pseudo-indicator random variables which satisfy the consistent first and second moment constraints. 
 This perspective is suited for developing``SDP Rounding algorithms". 
@@ -29,11 +29,11 @@ We now move to the quintessential SDP and randomized-rounding based approximatio
 \subsection{Goemans Williamson Algorithm}
 By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
 
-We will borrow notation and variables from Example \ref{maxcut}.
-We assume that given $\Si$ we can find\footnote{We discuss this in appendix.} $Y : \Si = Y\trans Y$. 
-Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. 
+We will borrow notation and variables from Example \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{n \times |V|}$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix. (Note that choice of $n$ was more or less arbitrary and preferably $n \leq |V|$). 
 
-We want to cut the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of he hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
+Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. We assume that given the optimal solution of the SDPformulation of  Max-Cut  in  Example \ref{maxcut}  (which is not Basic!) we have already found $Y$ such that $Y\trans Y = \Si$ (which can be done in polynomial time using Cholesky Decomposition).
+
+Our aim is to partition the various vertices in two groups. We can do this by partitioning the vectors $y_i$. We do this by cutting the vectors $\{y_i\}_{i \in V}$ with a random hyper plane through origin such that all vectors on one side of the hyperplane correspond to variables in one partition, and the rest are classified into other partition, thereby giving us a cut. 
 
 \begin{algorithm}\textbf{Goemans Williamson Rounding}
 \begin{enumerate}
@@ -77,7 +77,7 @@ Note that Max-Cut is a Unique CSP since the $\{\neq\}$ constraint on a domain of
 
 Next we discuss the rounding scheme from \cite{cmm06}, which is a generalization of the Goemans Williamson Algorithm for the Max-Cut to a Rounding Algorithm for Unique Games. 
 
-Given a Unique Game $G = (V,E)$ with edge weights $W = \{w_{vv'} | (v, v') \in E \}$, we formulate it as a CSP with constraints $\C$ and weights $W$. Then, we solve the SDP relaxation for this CSP instance and decompose the solution $\Sigma = U\trans U$ with $U \in \R^{N \times N}$ with $N = |V| \cdot |D|$, using Cholesky decomposition (which is polytime). 
+Given a Unique Game $G = (V,E)$ with edge weights $W = \{w_{vv'} | (v, v') \in E \}$, we formulate it as a CSP with constraints $\C$ (using appropriate choice of constraint functions $R$) and weights $W$. Then, we solve the SDP relaxation for this CSP instance and decompose the solution $\Sigma = U\trans U$ with $U \in \R^{N \times N}$ with $N = |V| \cdot |D|$, using Cholesky decomposition (which is polytime). 
 
 Denote by $[x]_r$ the function that rounds $x$ up or down depending on whether the fractional part of $x$ is greater or less than $r$. 
 Note that if $r$ is uniformly distributed in the interval $[0,1]$, then the expected value of $[x]_r$ is $x$. 
@@ -105,7 +105,7 @@ F(u) = \ell^*
 \begin{theorem}
 If the optimal solution of the unique game satisfies $1-\epsilon$ fraction of constraints, then the above algorithm in expectation satisfied $1-O({\sqrt{\epsilon \log q }})$ fraction of constraints.
 \end{theorem}
-Proof of the above theorem is quite involved and we refer the reader to \cite{cmm06} for the analysis.
+Proof of the above theorem is quite involved and we refer the reader to \cite{cmm06} for the analysis, which mainly involved tools and techniques from Probability theory.
 
 \subsection{CSP-Specific Relaxations and Rounding Schemes}
 \begin{itemize}

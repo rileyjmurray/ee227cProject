@@ -1,6 +1,18 @@
 \begin{abstract}
 
-In this report, we 
+The aim of the report is threefold 
+\begin{itemize}
+\item Introduce the reader to the Constraint Satisfaction Problems (CSP) framework
+\item Equip the reader with ``tractable tools" to solve the CSPs to a ``good approximation". This is done in a wholesome fashion since we don't leave for the reader to implement the schemes but in fact demonstrate them in our numerical section.
+\item Introduce some of the optimal approximation schemes in literature and comment on their computational aspects
+\end{itemize} 
+
+In this report, we analyze the convex relaxations for various Constraint Satisfaction Problems (CSP) both from theoretical as well as practical point of view. We try to be as elaborate as possible and begin with defining CSP. We then motivate and discuss the convex relaxations for the CSPs. The focus then shifts towards recovery of a good solution for the CSP from the solution of the relaxed problems, viz, the Rounding Schemes, which are randomized in nature. Next, we  discuss some ``optimal schemes" and comment on them from computational point of view. We conclude by presenting several numerical examples for various problems and rounding schemes discussed in the previous sections.
+
+A lot of research on the effectiveness of these relaxation schemes has been tied to Unique Games Conjecture in the literature. Consequently, we briefly describe the Unique Games Conjecture after the introduction of CSPs and try to show how it relates to the CSPs. For the sake of completeness we have also added a preliminaries section to familiarize the reader with some of the terms from algorithmic complexity that we use throughout our report. 
+
+
+To summarize we outline the topics discussed in this report - 
 \begin{itemize}
 \item Define a ``constraint satisfaction problem" (CSP), and state how CSP's relate to the Unique Games Conjecture.
 \item Present a generic LP relaxation for all CSP's, an associated rounding scheme, and the weaknesses of this approach.
@@ -11,5 +23,6 @@ In this report, we
 \item Demonstrate a rounding scheme for Basic SDP that applies to all ``Unique" CSP's.
 \item Experiment with a selection of rounding schemes for Basic SDP. The rounding schemes are meant to be generic and have practical run time, but do not come with any theoretical analysis.
 \end{itemize}
+
 
 \end{abstract}
