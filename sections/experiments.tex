@@ -1,0 +1,33 @@
+\section{Numerical Experiments}
+In this section, the LP and SDP relaxations as well as rounding schemes introduced in sections \label{sec:lpRelax} and \ref{sec:sdpRelax} are put to the test for key CSP problems, such as Max-Cut and Max k-SAT. This section provides empirical validation and identifies their usefulness in practical applications. In particular, this section contains numerical studies for the LP relaxation and the Max k-SAT rounding scheme and the SDP relaxation in combination with the Goeman-Williamson rounding scheme for Max Cut. 
+
+\subsection{LP Relaxation and Rounding scheme for Max k-SAT}
+The LP relaxation as introduced in section \ref{sec:lpRelax} can be applied to any CSP. However, it does not provide a feasible solution to the CSP ( unless the optimal solution happens to be feasible for CSP) since the LP is a relaxation of a CSP. Therefore, its application is dependent on a technique to generate feasible solutions from the LP solution. Such a technique was introduced for K-SAT in section \ref{sec:lpRoundingSat}. In this section, results are presented of applying the LP relaxation and the rounding scheme to Max 3-SAT on randomly generated 3-SAT instances.
+
+The 3-SAT instances where generated as follows:
+\begin{enumerate}
+	\item First, a feasible solution $x^*$ is generated. $p_T$, the probability that a variab....
+\end{enumerate}
+
+To be finished.
+
+RESULTS
+
+\begin{table}
+	\footnotesize
+	\centering
+	\begin{tabularx}{\textwidth}{>{\centering}p{1.7cm}>{\centering}p{1.7cm}ssCCmC}
+		\toprule
+		Number of variables & Number of constraints & Mean $z^*$ (s.d.) & Mean $z^*_{LP}$ (s.d.) & Mean $z^*_{round}$ (s.d.) & Mean $t_{gen}$ (s.d.) & Mean $t_{solve}$ (s.d.) & Mean $t_{round}$ (s.d.) \\ \midrule
+		10                  & 20                    &     1 (0)     &           1 (0)            &                 0.885 ( 0.08)                  &         0.02 ( 0.03)          &      1.48 (0.07)                      &  0.00 (0.00)\\
+		10                  & 50                    &    1   (0)    &           1 (0)            &                  0.887 (0.05)                  &         0.05 ( 0.01)          &       3.5 (0.3 )                     &  0.00 (0.00)\\
+		20                  & 40                    &     1 (0)     &           1 (0)            &                  0.880 (0.05)                  &         0.039 (0.004)         &       4.8 (0.1)                     & 0.00 (0.00) \\
+		20                  & 100                   &     1 (0)     &           1 (0)            &                  0.891 (0.04)                  &          0.13 (0.02)          &       11.9 (0.9)                     & 0.00 (0.00) \\
+		50                  & 50                    &    1  (0)     &           1 (0)            &                  0.892 (0.04)                  &          0.06 (0.01)          &       14.4 (0.7)                     &  0.00 (0.00)\\
+		50                  & 100                   &    1   (0)    &           1 (0)            &                  0.891 (0.03)                  &          0.14 (0.01)          &       28.4 (0.4)                &  0.00 (0.00)\\
+		50                  & 200                   &    1   (0)    &           1 (0)            &                  0.882 (0.02)                  &          0.34 (0.02)          &       51 (1)                     & 0.00 (0.00) \\
+		100                 & 100                   &    1   (0)    &           1 (0)            &                  0.899 (0.04)                  &          0.13 (0.02)          &        50 (1)                     &  0.00 (0.00)\\
+		100                 & 200                   &    1  (0)     &           1 (0)            &                  0.883 (0.02)                  &           0.4 (0.2)           &        122 (22)                    &  0.00 (0.00)\\ \bottomrule
+	\end{tabularx}                                                                                                                                  
+\end{table}
+

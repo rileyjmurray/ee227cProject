@@ -4,6 +4,10 @@
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage[]{mathtools}
 \usepackage[]{bbm}
+\usepackage{booktabs,tabularx}
+\newcolumntype{C}{>{\arraybackslash}X}
+\newcolumntype{s}{>{\arraybackslash\hsize=.5\hsize}X}
+\newcolumntype{m}{>{\arraybackslash\hsize=.85\hsize}X}
 
 \numberwithin{equation}{section}
 
@@ -81,6 +85,8 @@
 	\input{sections/rounding}
 	\newpage
 	\input{sections/raghavendrasSchemes}
+	
+	\input{sections/experiments}
 	
 	\bibliographystyle{abbrv}
 	\bibliography{references/references}

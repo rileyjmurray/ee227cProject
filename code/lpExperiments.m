@@ -26,7 +26,7 @@ lpval = - ones( size( expSettings, 1 ), rep );
 optval = - ones( size( expSettings, 1 ), rep );
 roundval = -ones( size( expSettings, 1 ), rep );
 
-for i = 1 : size( expSettings, 1 )
+for i = size( expSettings, 1 ) : size( expSettings, 1 )
     for j = 1 : rep
         % set seed for repetition
         rng( expSettings( i, 1 ) * expSettings( i, 2 ) * j )
