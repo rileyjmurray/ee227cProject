@@ -182,8 +182,17 @@ Thus we have
 }
 \end{proof}
 
+\subsubsection{Cholesky Decomposition}
+Note that since $\Sigma \succeq 0$ we can use \emph{Cholesky Decomposition} to find 
+$$Y = \lrbb{y_{(v, \ell)}: (v, \ell) \in V \times D}$$
+such that 
+$$\Sigma = Y\trans Y$$ and hence $$ \Sigma_{(v, \ell), (v', \ell')} = y_{(v, \ell)}\trans y_{(v', \ell')}.$$
+And this can be done in polynomial time. This interpretation is also present across literature, and then Basic SDP is equivalent to finding the set of vectors $\{y_{(v, \ell)} : (v, \ell) \in V \times D\}$ which satisfy the appropriately modified version of constraints \ref{eq:SDPtiePSD}-\ref{eq:SDPPSD}.
+
+
 \iffalse
-We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the constraint $R_i$. This also gives: 
+We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the
+constraint $R_i$. This also gives: 
 \al{
 \Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} = \Pb_{L \sim \la_{i}} (L:S_i \rightarrow D^{|S_i|} {\rm \ satisfies \ } R_i)
 }
