@@ -1,17 +1,17 @@
-\section{SDP Relaxations for CSP}\label{sec:sdpRelax}
-\maybeinclude{Raghavendra says that his SDP's are ``stronger" than other SDP's. What makes an SDP ``strong"? Is this something other people discuss?}
+\section{Semidefinite Programming Relaxations for CSP's}\label{sec:sdpRelax}
 
-\subsection{Motivation}
+\subsection{Motivation : From ``First Order" to ``Second Order" Consistency Constraints}
 
 We recall the relaxations and try to motivate our way through the various relaxations (see \cite{Ryan}) -
 
 \begin{discussion}{\bf LP Relaxation}\\
 In preparation for moving to the Basic SDP relaxation, we summarize (in words) the interpretations of $\lambda_i$ and $\mu_v$ in Basic LP.
 
-\textit{$\fa v \in V, \mu_v(\cdot) : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in \C, \la_{C_i}(\cdot) : \Lm_{C_i} \rightarrow [0,1]$ denotes the probability distribution over all possible assignments $L \in \Lm_{C_i}$ for variables in a constraint.  
-Constraint \ref{eq:canonLPConsistency} imposes conditions for consistency across distribution the $\mu_v(\cdot)$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
+For a CSP $\C = (V, C, W)$,  \textit{$\fa v \in V, \mu_v[\cdot] : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in C, \la_{C_i}[\cdot] : \Lm_{C_i} \rightarrow [0,1]$ denotes the probability distribution over all possible local assignments $L \in \Lm_{C_i}$ for variables in  $C_i$.  
+Constraint \ref{eq:canonLPConsistency} imposes conditions for consistency across distribution the $\mu_v[\cdot]$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
 \end{discussion}
 
+Constraint \ref{eq:canonLPConsistency} can be considered as first order constraint for variable assignment, where we are imposing consistency across marginals. 
 We can go a step further in restricting our search space, by introducing a second order consistency condition such that we get an SDP relaxation. 
 The relaxation will be with respect to IP formulation, but tightening with respect to the LP relaxation and hence our values will be now closer to the optimal value of CSP. 
 The intuition for such a relaxation can be motivated by the relaxation procedure for MAX - CUT problem which we present next. 
@@ -34,32 +34,29 @@ which is clearly an SDP and can be solved in polynomial time, i.e. efficiently!
 Thus we see that the SDPs did pop out for a MAX CUT relaxation.
 \end{example}
 
-\subsection{Basic SDP Relaxation}
+\subsection{Semi-Definite Program}
+We define the semi-definite program and then discuss the probabilistic assignment interpretation, besides explicitly showing that we are talking about a relaxation.
 
-The SDP relaxation is similar to the LP realization but with an important generalization. 
+\begin{definition}\textbf{Basic SDP} \\
+Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic SDP for $\mathcal{C}$ is
+\begin{alignat}{2}
+\max ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
+s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
+     ~ & ~ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell, L(v')=\ell'} }\la_{C_i}[L] &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
+     ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
+     ~& ~ \\
+     ~ & ~ \Sigma \succeq 0& \label{eq:SDPPSD}
+\end{alignat}
+\end{definition}
+\subsection{Basic SDP Relaxation - The Random Assignment Interpretation}
+
+The SDP relaxation is similar to the LP relaxation but with an important generalization. 
 We will have the exactly same probability distribution $\la_{C_i}$ for each constraint and the same objective function. 
-However, rather than having the the marginals for the variables we will impose conditions on second order distribution of these variables. 
+We further imposed conditions on second order distribution of these variables. 
 More precisely,
 \al{
  \Pb_{L \sim \la_{C_i}}(L(v) = \ell, L(v')= \ell') = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}}, ~:~ \Sigma \succeq 0 \label{eq0}
  } 
-
-The way we have defined the constraints we can see that the SDP case does cover the optimal assignment. 
-If the optimal assignment was $v=\ell_v$, we can set $ \Sigma'_{\lrb{v, \ell_v},\lrb{v', \ell_{v'}}} = 1$ and all other elements to zero, and see that $\Si' \succeq 0$. 
-Thus this is indeed a relaxation.
-
-
-There is a more popular but equivalent way to define these constraints, and it helps us to understand the rounding scheme that we will discuss later on. 
-Note that to any positive semi-definite matrix $\Sigma$, we can associate $L$ such that, $\Si = LL\trans$, and in turn we can label $\Si$ as the covariance matrix of some joint random variables. 
-Further, if we take these joint random variables as Gaussian, then we can as well make draws from them, as the first and second moments of a Gaussian  uniquely determine its distribution. 
-These observations will be crucial for rounding process, but we stated them here to motivate this alternate expression of the constraints. 
-
-We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell \in D}$, by calling it their covariance matrix. Since we impose $\Si \succeq 0$, it is indeed a valid representation. 
-We will also have constraints which cause these random variables to hang together with the $\la_{C_i}$'s in a gentlemanly fashion. 
-These joint random variables $I_v(\ell)$ will be called as \textit{pseduoindicator random variables}. 
-We emphasize that they are jointly distributed. 
-%One can think of them as follows: 
-%\textit{``There is a box, when you press a button on one side of the box i.e., when you make a draw, out comes value for each of the $|V| \cdot |D|$ random variables."}
 
 We are ready to properly define the SDP relaxation using this random variable representation and its covariance structure.  
 We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the constraint $R_i$. This also gives: 
@@ -125,6 +122,44 @@ Last but not the least, we also have,
 \Si \succeq 0
 }
 which is a linear matrix inequality. Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
+
+\subsection{Is it a relaxation?}
+To show that this is indeed a relaxation, we have to show that the optimal assignment belongs to our search space. 
+
+Suppose that the optimal assignment was $v=\ell_v$, then we have to construct a positive semi-definite matrix $\Sigma$ such that choosing it gives us precisely the above assignment. 
+Define the entries of $\Sigma$ as follows 
+$$ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \mathbbm{1}(\ell = \ell_v) \cdot \mathbbm{1}(\ell' = \ell_{v'}) = \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}}.$$ 
+
+Note that \cite{lambda and sigma} condition for this $\Sigma$ means that corresponding $\lambda_{C_i}$'s can be positive for only those local assignments $L$ which assign $\ell_v$ to $v$ for $v$ in their scope. 
+For all other assignments, $\lambda_{C_i}[L]=0$.
+Now we are left to show that such a $\Sigma$ is symmetric and positive semi-definite.
+
+Clearly $\Sigma$ is symmetric. 
+Also, 
+\al{
+y\trans \Sigma y &=\sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} y_{(v', \ell')}  \\ 
+&= \sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}} y_{(v', \ell')}   \\
+&=\sum_v \sum_{v'}  y_{(v, \ell)} y_{(v', \ell_{v'})}  \\
+&= \sum_v y_{(v, \ell_v)}^2 + \sum_{v \neq v'} y_{(v, \ell)} y_{(v', \ell_{v'})} \\
+&=  \lrb{\sum_{v}y_{(v, \ell_v)}}^2\\
+&\geq 0
+}
+proving that $\Sigma$ is PSD. 
+
+ Thus our search space does include the optimal assignment and hence this is indeed a relaxation.
+
+\subsection{Another Interpretation}
+
+There is a more popular but equivalent way to define these constraints, and it helps us to understand the rounding scheme that we will discuss later on. 
+Note that to any positive semi-definite matrix $\Sigma$, we can associate $L$ such that, $\Si = LL\trans$, and in turn we can label $\Si$ as the covariance matrix of some joint random variables. 
+Further, if we take these joint random variables as Gaussian, then we can as well make draws from them, as the first and second moments of a Gaussian  uniquely determine its distribution. 
+These observations will be crucial for rounding process, but we stated them here to motivate this alternate expression of the constraints. 
+
+We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell \in D}$, by calling it their covariance matrix. Since we impose $\Si \succeq 0$, it is indeed a valid representation. 
+We will also have constraints which cause these random variables to hang together with the $\la_{C_i}$'s in a gentlemanly fashion. 
+These joint random variables $I_v(\ell)$ will be called as \textit{pseduoindicator random variables}. 
+We emphasize that they are jointly distributed. 
+
 
 \subsection{Some Analysis}
 \begin{remark}\label{remark01}

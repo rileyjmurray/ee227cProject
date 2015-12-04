@@ -17,15 +17,14 @@ classdef CSP < handle
     methods
         
         function obj = CSP( varargin )
-            if (length(varargin) == 3)
+            if (length(varargin) == 2)
                 obj.domain = [0,1];
             else
-                obj.domain = varargin{4};
+                obj.domain = varargin{3};
             end
-            if ( length(varargin) > 4 || length( varargin) < 3 )
+            if ( length(varargin) > 3 || length( varargin) < 2 )
                 error('number of inputs incorrect')
             end
-            obj.numVariables = varargin{3};
             constraints = varargin{2};
             weights = varargin{1};
             obj.numConstraints = length( constraints );
@@ -51,10 +50,13 @@ classdef CSP < handle
             
             % determine airity
             obj.arity = 0;
+            vars = [];
             for i = 1:obj.numConstraints
                tempConstr = obj.constraints{i};
+               vars = union(vars,tempConstr.scope);
                obj.arity = max(obj.arity, tempConstr.arity);
             end
+            obj.numVariables = length(vars);
             
         end
         
