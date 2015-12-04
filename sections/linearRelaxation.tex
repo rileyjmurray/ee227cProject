@@ -42,10 +42,29 @@ Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic LP for $\mathcal
 s.t. ~ & ~ \sum_{\ell \in D} \mu_v[\ell] = 1 & \forall v \in V  \label{eq:canonLPmuSum} \\
      ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:canonLPlambdaSum} \\
      ~ & ~ \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] = \mu_v[\ell]  & \forall v \in V, \ell \in D, i : C_i \in C \label{eq:canonLPConsistency} \\
-     ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:canonLPlambdaNonNeg} \\
-     ~ & ~ 0 \leq \mu_v[\ell] \leq 1 & v \in V, \ell \in D \label{eq:canonLPmuNonNeg}
+     ~ & ~ 0 \leq \mu_v[\ell] \leq 1 & v \in V, \ell \in D \label{eq:canonLPmuNonNeg}\\
+     ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:canonLPlambdaNonNeg} 
 \end{alignat}
 \end{definition}
+
+\begin{remark}\label{re:super}
+Given constraints \ref{eq:canonLPlambdaSum}, \ref{eq:canonLPConsistency} and \ref{eq:canonLPlambdaNonNeg}, constraints \ref{eq:canonLPmuSum} and \ref{eq:canonLPmuNonNeg} are redundant. 
+\end{remark}
+\begin{proof}
+\begin{align*}
+\ref{eq:canonLPlambdaNonNeg} \rm{\ and \ } \ref{eq:canonLPlambdaSum} &\Rightarrow 0\leq  \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] \leq  \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  \\
+{\rm \ Combine\ with \ }\ref{eq:canonLPConsistency}&\Rightarrow  0\leq \mu_v[L] \leq 1
+\end{align*}
+Thus, \ref{eq:canonLPmuNonNeg} is redundant. 
+
+Also, summing on both sides of \ref{eq:canonLPConsistency} with respect to $\ell \in D$ we get, 
+\begin{align*}
+{\rm RHS} = \sum_{\ell \in D} \mu_v[\ell] = {\rm LHS} = \sum_{\ell \in D} \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] = \sum_{L \in \mathcal{L}_i} \lambda_i[L] \overset{\ref{eq:canonLPlambdaSum}}=1
+\end{align*}
+and thus even \ref{eq:canonLPmuSum} is superfluous.
+\end{proof}
+
+In other words, the remark above renders $\mu_v[\cdot]$ indicators as superfluous. Nevertheless, we keep them  for the discussion that follows, as they help in gaining some insight and extending the relaxation idea to a better one.
 
 Note that between constraints \ref{eq:canonLPmuNonNeg} and \ref{eq:canonLPmuSum}, a solution $\mu^*_v[\ell]$ to the above LP defines a probability distribution (over $\ell \in D$) of assignments for $v$. That is, if we wanted to randomly generate an assignment $\hat{\ell}_v$ for variable $v$, then we could simply state $\hat{\ell}_v = \ell$ with probability $\mu^*_v[\ell]$. Given this interpretation, we write
 \begin{equation}
@@ -74,10 +93,10 @@ As we remarked in Section \ref{sec:introToCSP}, we can write the objective funct
 where $R_i( L (S_i ))$ is an indicator whether assignment $L$ for scope $S_i$ satisfies the relation given by $R_i$.
 
 \begin{thm}
-	Basic LP is a relaxation for the problem CSP$(\Gamma)$.\todo{unsure}{for binary CSP's or arbitrary CSP's?}
+	Basic LP is a relaxation for the problem CSP$(\Gamma)$.
 \end{thm}
 \begin{proof}
-	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v^t$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
+	Given an optimal solution for an instance of the problem CSP($\Gamma$), assign $\mu_v[t]$ to be $1$ if the variable $x_v$ takes value $t$ in the optimal solution to the CSP($\Gamma$) instance and $0$ otherwise.
 	Furthermore, for each $C_i \in \mathcal{C}$ set $\lambda_{C_i}[y]$ equal to $1$ if $y$ is the local assignment for the scope $S_i$ corresponding to the optimal solution to the CSP and $0$ otherwise. 
 	It follows that this is a feasible LP solution. 
 	Hence, $OPT(\mathcal{C}) \le OPT_{LP}(\mathcal{C})$.
@@ -98,12 +117,12 @@ This rounding scheme was introduced by Goemans and Williamson \cite{GoeWil94}. T
 Consider the full assignment $F$ as a vector of random variables. For each variable $v \in V$, let the random variable be given by:
 \[
 	F(v) = \begin{cases}
-	1 & \text{with probability } \mu^*_v(1)\\
-	0 & \text{with probability } \mu^*_v(0)
+	1 & \text{with probability } \mu^*_v[1]\\
+	0 & \text{with probability } \mu^*_v[0]
 	\end{cases}
 \]
-where $\mu^*_v(\ell)$ is the value of variable $\mu_v(\ell)$ in an optimal solution to the LP.
-Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v(\ell)$ is $1$, and since $\mu_v(\ell)$ is non-negative, the above is a valid definition for a random variable. 
+where $\mu^*_v[\ell]$ is the value of variable $\mu_v[\ell]$ in an optimal solution to the LP.
+Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v[\ell]$ is $1$, and since $\mu_v[\ell]$ is non-negative, the above is a valid definition for a random variable. 
 Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
 
 The expected objective value of this randomized assignment is given by:
@@ -122,10 +141,10 @@ In other words, there is a unique falsifying assignment $b_{C_i}$ that makes con
 For example, if $C_i = x_1 \vee x_2 \vee \bar{x}_3$, then the unique falsifying assignment is given by $x_1 = 0$, $x_2 = 0$, and $x_3 = 1$. 
 Considering the definition of $F(v)$ and the independence of $F(i)$ and $F(j)$ for $i \neq j$, it then follows that 
 \begin{equation}
-		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v)) \label{eq:objectiveRounding}
+		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] = 1 - \prod_{v \in S_i} \mu_v[b_{C_i}(v)] \label{eq:objectiveRounding}
 \end{equation}
 where $b_{C_i}(v)$ is the value of variable $v \in S_i$ in the falsifying assignment. 
-In particular, the probability of not satisfying the constraint in the above example is $ 1- \mu_1^*(0) \mu_2^*(0) \mu_3^*(1)$.
+In particular, the probability of not satisfying the constraint in the above example is $ 1- \mu_1^*[0] \mu_2^*[0] \mu_3^*[1]$.
 
 Having identified the objective value of the randomized solution, the question is whether any guarantees can be made on the quality of the solution compared to the LP. 
 This can be done, by relating $F$ to the distribution over local assignments.
@@ -133,7 +152,7 @@ This can be done, by relating $F$ to the distribution over local assignments.
 	p_{C_i} &:= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
 			&=  \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
 			&\le \sum_{v \in  S } \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} \left[  \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
-			&= \sum_{v \in S} \left( 1 - \mu_v^*(b_{C_i}(v)) \right) \label{eq:objectiveLP}
+			&= \sum_{v \in S} \left( 1 - \mu_v^*[b_{C_i}(v)] \right) \label{eq:objectiveLP}
 \end{align}
 This last step follows from the first-order consistency constraints:
 \[
@@ -145,9 +164,9 @@ Note that the former (see \eqref{eq:objectiveLP}) is an arithmetic mean (AM) whe
 This suggests the use of the inequality of arithmetic and geometric means.
 \begin{align*}
 		\underset{F}{\mathbb{P}}[ F \text{ satisfies } C_i] &= 1 - \prod_{v \in S_i} \mu_v(b_{C_i}(v))\\
-		&= 1 - \underset{v \in S}{GM}(\mu_{v}^*(b_c(v)))^{|S|}\\
-		&\ge 1 - \underset{v \in S}{AM}(\mu_{v}^*(b_c(v)))^{|S|}\\
-		&= 1 - \left( 1  - \underset{v \in S}{AM}(1 -\mu_{v}^*(b_c(v))) \right)^{|S|}\\
+		&= 1 - \underset{v \in S}{GM}(\mu_{v}^*[b_c(v)])^{|S|}\\
+		&\ge 1 - \underset{v \in S}{AM}(\mu_{v}^*[b_c(v)])^{|S|}\\
+		&= 1 - \left( 1  - \underset{v \in S}{AM}(1 -\mu_{v}^*[b_c(v)]) \right)^{|S|}\\
 		&\ge 1 - \left( 1  - \frac{p_{C_i}}{|S|}\right)^{|S|}\\
 \end{align*}
 
