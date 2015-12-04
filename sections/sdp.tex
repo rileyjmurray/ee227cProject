@@ -1,24 +1,72 @@
 \section{Semidefinite Programming Relaxations for CSP's}\label{sec:sdpRelax}
+This section takes the next step in the hierarchy of relaxations. First, we motivate and present a generic Semi Definite Programming relaxation for CSP's (called ``Basic SDP"). The relaxation is very general and is omnipresent in the literature on SDP relaxations for CSPs in one variant or the other. We make a few comments regarding rounding before Section \ref{sec:rounding} takes this question head on. The material in this section draws from O' Donnell \cite{Ryan}.
 
-\subsection{Motivation : From ``First Order" to ``Second Order" Consistency Constraints}
+\subsection{From ``First Order" to ``Second Order" Consistency }
 
-We recall the relaxations and try to motivate our way through the various relaxations (see \cite{Ryan}) -
+For the integer program which motivated Basic LP, constraint \ref{mulambcons} simply amounts to bookkeeping. When we relaxed the integer program to Basic LP, the variables $\mu_v$ and $\lambda_i$, and the constraint \ref{eq:canonLPConsistency} all took on probabilistic interpretations. We summarize these interpretations below.
 
-\begin{discussion}{\bf LP Relaxation}\\
-In preparation for moving to the Basic SDP relaxation, we summarize (in words) the interpretations of $\lambda_i$ and $\mu_v$ in Basic LP.
-
-For a CSP $\C = (V, C, W)$,  \textit{$\fa v \in V, \mu_v[\cdot] : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in C, \la_{C_i}[\cdot] : \Lm_{C_i} \rightarrow [0,1]$ denotes the probability distribution over all possible local assignments $L \in \Lm_{C_i}$ for variables in  $C_i$.  
+For a CSP $\C = (V, C, W)$,  \textit{$\fa v \in V, \mu_v[\cdot] : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in C, \la_{i}[\cdot] : \Lm_{i} \rightarrow [0,1]$ denotes the probability distribution over all possible local assignments $L \in \Lm_{i}$ for variables in  $C_i$.  
 Constraint \ref{eq:canonLPConsistency} imposes conditions for consistency across distribution the $\mu_v[\cdot]$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
-\end{discussion}
 
-Constraint \ref{eq:canonLPConsistency} can be considered as first order constraint for variable assignment, where we are imposing consistency across marginals. 
-We can go a step further in restricting our search space, by introducing a second order consistency condition such that we get an SDP relaxation. 
-The relaxation will be with respect to IP formulation, but tightening with respect to the LP relaxation and hence our values will be now closer to the optimal value of CSP. 
-The intuition for such a relaxation can be motivated by the relaxation procedure for MAX - CUT problem which we present next. 
+When speaking in these probabilistic terms, it is natural to consider a \textit{second order} constraint across $\lambda$ in the form of an appropriately defined covariance matrix. As well will see, ``Basic SDP" has a probabilistic interpretation that does exactly this. 
 
-It is further established, that this relaxation is in-fact the optimal poly-time relaxation for any general CSP, first by assuming Unique Games Conjecture \cite{Khot} and then later in fact more generally \cite{nphard}. 
+For concreteness (and to simplify its proof of validity as a CSP relaxation), we present Basic SDP first in non-probabilistic terms. Once it is clear how Basic SDP could be implemented, we provide an equivalent probabilistic statement that demonstrates the second-order consistency constraint for $\lambda$.
 
-\begin{example}{\bf MAX - CUT}\label{maxcut}\\
+\subsection{The Canonical Semi-Definite Program}
+
+Over the course of this section it will become clear that Basic SDP is be a relaxation with respect to IP formulation, but tightening with respect to the LP relaxation. Basic SDP is significant in that it has been proven to be the strongest possible convex relaxation for any general CSP, first by assuming Unique Games Conjecture \cite{Rag08} and then later in fact more generally \cite{nphard}.\footnote{We note that these papers do not that their results in these terms. Rather, they show (1) a certain rounding scheme is provably optimal for Basic SDP, (2) the resulting approximation algorithm runs in polynomial time, and (3) the performance guarantees of the approximation algorithm cannot be beat by any polynomial time algorithm if the UGC is true.}
+
+\begin{definition}\textbf{Basic SDP} \\
+Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$, and let $\Sigma \in \mathbb{R}^{N \times N}$ where $N = |V| \cdot |D|$. Then the Basic SDP for $\mathcal{C}$ is
+\begin{alignat}{2}
+\max_{\lambda, \Sigma} ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
+s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
+     ~ & ~ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L] &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
+     ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
+     ~& ~ \Sigma_{\lrb{v, \ell},\lrb{v, \ell'}} = 0 & \forall \ell' \neq \ell,  \forall v \in V\\
+     ~ & ~ \Sigma \succeq 0& \label{eq:SDPPSD}
+\end{alignat}
+\end{definition}
+
+\begin{theorem}
+Basic SDP is a Semi-Definite Program.
+\end{theorem}
+\begin{proof}
+The objective is linear in the variable $\lambda$. The constraints include linear matrix inequality in the variable $\Sigma$ and other linear constraints are linear, hence the problem is convex and is in fact a semi-definite program.
+\end{proof}
+
+
+\begin{theorem}\label{sdprelaxproof}
+Basic SDP is a relaxation for CSP($\Gamma$).
+\end{theorem}
+\begin{proof}
+To show that this is indeed a relaxation, we have to show that the optimal assignment belongs to our search space. 
+
+Suppose that the optimal assignment was $v=\ell_v$, then we have to construct a positive semi-definite matrix $\Sigma$ such that choosing it gives us precisely the above assignment. 
+Define the entries of $\Sigma$ as follows 
+$$ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \mathbbm{1}(\ell = \ell_v) \cdot \mathbbm{1}(\ell' = \ell_{v'}) = \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}}.$$ 
+
+Note that this condition on $\Sigma$ means that corresponding $\lambda_{C_i}$'s can be positive for only those local assignments $L$ which assign $\ell_v$ to $v$ for $v$ in their scope. 
+For all other assignments, $\lambda_{C_i}[L]=0$.
+Now we are left to show that such a $\Sigma$ is symmetric and positive semi-definite.
+
+Clearly $\Sigma$ is symmetric. 
+Also, 
+\al{
+y\trans \Sigma y &=\sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} y_{(v', \ell')}  \\ 
+&= \sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}} y_{(v', \ell')}   \\
+&=\sum_v \sum_{v'}  y_{(v, \ell)} y_{(v', \ell_{v'})}  \\
+&= \sum_v y_{(v, \ell_v)}^2 + \sum_{v \neq v'} y_{(v, \ell)} y_{(v', \ell_{v'})} \\
+&=  \lrb{\sum_{v}y_{(v, \ell_v)}}^2\\
+&\geq 0
+}
+proving that $\Sigma$ is PSD. \\
+Thus our search space does include the optimal assignment and hence this is indeed a relaxation.
+\end{proof}
+
+Before we move into the probabilistic interpretation of Basic SDP, we compare Basic SDP to the well-known SDP introduced by Goemans and Williamson for Max-Cut.
+
+\subsection{Max-Cut SDP as a Special Case of Basic SDP}\label{maxcut}
 MAX CUT problem can be formulated as the following integer quadratic program : 
 \al{
  \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-x_ix_j) ~:~ x_i \in \{ -1, 1\}
@@ -32,39 +80,119 @@ If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then o
 \[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]
 which is clearly an SDP and can be solved in polynomial time, i.e. efficiently! 
 Thus we see that the SDPs did pop out for a MAX CUT relaxation.
-\end{example}
 
-\subsection{Semi-Definite Program}
-We define the semi-definite program and then discuss the probabilistic assignment interpretation, besides explicitly showing that we are talking about a relaxation.
-
-\begin{definition}\textbf{Basic SDP} \\
-Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic SDP for $\mathcal{C}$ is
-\begin{alignat}{2}
-\max ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
-s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
-     ~ & ~ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell, L(v')=\ell'} }\la_{C_i}[L] &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
-     ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
-     ~& ~ \\
-     ~ & ~ \Sigma \succeq 0& \label{eq:SDPPSD}
-\end{alignat}
-\end{definition}
-\subsection{Basic SDP Relaxation - The Random Assignment Interpretation}
+\subsection{The Probabilistic Interpretation of Basic SDP}
 
 The SDP relaxation is similar to the LP relaxation but with an important generalization. 
-We will have the exactly same probability distribution $\la_{C_i}$ for each constraint and the same objective function. 
-We further imposed conditions on second order distribution of these variables. 
+We will have the exactly same probability distribution $\la_{i}$ for each constraint and the same objective function. 
+RHS of \ref{eq:SDPtiePSD} imposes conditions on second order distribution of the local assignments. 
 More precisely,
 \al{
- \Pb_{L \sim \la_{C_i}}(L(v) = \ell, L(v')= \ell') = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}}, ~:~ \Sigma \succeq 0 \label{eq0}
+ \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L]  = \Pb_{L \sim \la_{i}}\lrbb{L(v) = \ell, L(v')= \ell'} \label{eq0}
  } 
-
-We are ready to properly define the SDP relaxation using this random variable representation and its covariance structure.  
-We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the constraint $R_i$. This also gives: 
+ where $L \sim\la_i$ stands for the distribution of $L(\tilde{C})$ (taking values on the set of local assignments on $S_i$) given $\tilde{C} = C_i$ as in \ref{eq:tower}.
+Thus we have, 
 \al{
-\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} = \Pb_{L \sim \la_{C_i}} (L:S_i \rightarrow D^{|S_i|} {\rm \ satisfies \ } R_i)
+\Pb_{L \sim \la_{i}}\lrbb{L(v) = \ell, L(v')= \ell'} = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} ~ \fa i:C_i \in C.
+}
+Since this is independent of $i$, we can also say that 
+\al{
+\Pb_{L(\tilde{C})} \lrbb{L(v) = \ell, L(v')= \ell'} = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}}. \label{fullprob}
+}
+Also 
+\al{
+&&\Sigma_{\lrb{v, \ell},\lrb{v, \ell'}} &= 0 &\fa \ell \neq \ell' , v \in V\\
+&\rr &\Pb_{L \sim \la_{i}}\lrbb{L(v) = \ell, L(v)= \ell'} &= 0 &\fa \ell \neq \ell', v \in V, i:C_i \in C
+}
+which is another consistency condition.
+
+
+\subsubsection{PseudoIndicators : More on Basic SDP's Probabilistic Interpretation}
+There is a more popular but equivalent way to define these constraints, and it helps us to understand the rounding scheme that we will discuss later on. 
+Note that to any positive semi-definite matrix $\Sigma$, we can associate a set of joint random variables. 
+Further, if we take these joint random variables as Gaussian, then we can as well make draws from them, as the first and second moments of a Gaussian  uniquely determine its distribution. 
+These observations will be crucial for rounding process, but we stated them here to motivate this alternate expression of the constraints. 
+
+We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell \in D}$, by calling it their covariance matrix. That is we define $\lrb{I_v(\ell)}_{v\in V, \ell \in D}$ such that
+\al{
+\Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \Ex\lrbb{I_v(\ell) I_{v'}(\ell')}. \label{secondmom}
+}
+Since we impose $\Si \succeq 0$, this is indeed a valid representation. 
+We also have constraints which cause these random variables to hang together with the $\la_{i}$'s in a gentlemanly fashion. We also impose
+\al{
+\sum_{(v',\ell')} \Sigma_{{\lrb{v, \ell},\lrb{v', \ell'}}} = \Ex \lrbb{I_v(\ell)}. \label{firstmom}
+}
+These joint random variables $I_v(\ell)$ will be called as \textit{pseduoindicator random variables}. A true indicator would be $\{ 0, 1\}$-valued, but these random variables may be not. But we call them pseudoindicators because of some of their properties that resemble that of indicator random variables. We next describe a few of these properties: 
+
+\begin{theorem}
+The first and second moment constraints \ref{secondmom} and \ref{firstmom} for $I_v(\ell)$ imply 
+\al{
+\Ex \lrbb{I_v(\ell)} = \Ex \lrbb{I_v(\ell)^2}.
+}
+Note that this is also true for any true-indicator variable (i.e., for any random variable which is $\{ 0, 1\}$-valued.
+\end{theorem}
+\begin{proof}
+\al{
+\ref{fullprob} \rr \Pb_{L(\tilde{C})} \lrb{L(v)=\ell} &= \sum_{(v', \ell')} \Pb_{L(\tilde{C})} \lrb{L(v)=\ell, L(v')= \ell'} \\
+&= \sum_{(v',\ell')} \Sigma_{{\lrb{v, \ell},\lrb{v', \ell'}}}\label{firstprob} \\
+\rr \Pb_{L(\tilde{C})} \lrb{L(v)=\ell} &\overset{\ref{firstmom}}= \Ex \lrb{I_v(\ell)} \label{thm43}
+}
+\al{
+\Ex \lrbb{I_v(\ell)^2)} &= \Sigma_{{\lrb{v, \ell},\lrb{v, \ell}}} \\
+&\overset{\ref{fullprob}}= \Pb_{L(\tilde{C})} (L(v) = \ell , L(v) = \ell) \\
+&= \Pb_{L(\tilde{C})} (L(v) = \ell ) \\
+&\overset{\ref{thm43}}= \Ex[I_v(\ell)] 
+}
+\end{proof}
+\begin{theorem}
+$I_v(\ell)$ sum to $1$ over $\ell \in D$ for any $v \in V$. That is,
+\al{
+ \sum_{\ell \in D} I_v(\ell) = 1 \quad \mbox{a.s.}, ~ \fa v \in V
+ }
+ Note that \ref{musum} and \ref{lambsum} were constraints which exploited precisely this property of a true-indicator random variable. 
+\end{theorem}
+\begin{proof}
+Define $J_v = \sum_{\ell \in D} I_v(\ell)$, then 
+\al{
+&&\Ex[J_v] &= \sum_{\ell \in D} \Ex [I_v(\ell)] \\
+&&&=  \sum_{\ell \in D} \Pb_{L(\tilde{C})} (L(v) = \ell ) \\
+&&&\overset{\ref{firstprob}}= \sum_{\ell \in D}\lrb{\sum_{(v',\ell')} \Sigma_{{\lrb{v, \ell},\lrb{v', \ell'}}}} \\
+&&&\overset{\ref{eq:SDPtiePSD}}= \sum_{\ell \in D }\lrb{\sum_{(v',\ell')} \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L]  } ~: \mbox{for any $i:C_i\in C$}\\
+&&&=\sum_{\ell \in D }\lrb{ \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell} }\la_{i}[L]  }\\
+&&&= \sum_{L\in \mathcal{L}_{i}} \la_{i}[L]  \\
+&\rr&\Ex[J_v]&\overset{\ref{eq:SDPlambdaSum}}=1 \label{sum1}
+}
+\al{
+&\mbox{Also,}&\Ex[J_v^2] &= \Ex \lrbb{\lrb{ \sum_{\ell \in D} [I_v(\ell)]}\lrb{ \sum_{\ell' \in D} [I_v(\ell')]}} \\
+&&&= \sum_{\ell, \ell' \in D} \Ex\lrbb{I_v(\ell)I_v(\ell')}\\
+&&&= \sum_{\ell, \ell' \in D} \Sigma_{(v, \ell),(v, \ell')} \\
+&&&= \sum_{\ell, \ell' \in D} \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L]\\
+&&&= \sum_{L\in \mathcal{L}_{i}} \la_{i}[L]\\
+&&&\overset{\ref{eq:SDPlambdaSum}}=1\\
+&\rr&\Ex\lrbb{J_v^2}&\os{\ref{sum1}}=\Ex[J_v]^2
+}
+Thus we have 
+\al{
+\mbox{Var}(J_v) = \Ex[J_v^2] - \Ex[J_v]^2 = 1-1 = 0 \rr J_v \equiv 1 \ \mbox{a.s.}, ~\fa v \in V
+}
+\end{proof}
+
+\subsubsection{Cholesky Decomposition}
+Note that since $\Sigma \succeq 0$ we can use \emph{Cholesky Decomposition} to find 
+$$Y = \lrbb{y_{(v, \ell)}: (v, \ell) \in V \times D}$$
+such that 
+$$\Sigma = Y\trans Y$$ and hence $$ \Sigma_{(v, \ell), (v', \ell')} = y_{(v, \ell)}\trans y_{(v', \ell')}.$$
+And this can be done in polynomial time. This interpretation is also present across literature, and then Basic SDP is equivalent to finding the set of vectors $\{y_{(v, \ell)} : (v, \ell) \in V \times D\}$ which satisfy the appropriately modified version of constraints \ref{eq:SDPtiePSD}-\ref{eq:SDPPSD}.
+
+
+\iffalse
+We denote an SDP solution by $\Sm$. Also, $R_i(L(S_i))$ is the indicator if the local assignment $L$ on $S_i$ satisfies the
+constraint $R_i$. This also gives: 
+\al{
+\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} = \Pb_{L \sim \la_{i}} (L:S_i \rightarrow D^{|S_i|} {\rm \ satisfies \ } R_i)
 }
 \begin{definition}{\label{def1}}
-{\bf Basic SDP for CSP$(\C)$}  
+{\bf Basic SDP for CSP$(\Gamma)$}  
 \al{
 \mbox{SDPOpt}(\C) &= \max_{\substack{\la_{C_i}, \Si, A}} \mbox{SDPVal}_\C(\Sm) := \Ex _{C_i \sim W} \lrbb{\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))}} %\text{\footnotemark} \\
 %&=  \max_{\substack{\la_{C_i}, \Si, A}} \sum_{C_i \in \C}w_{C_i} \Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))}
@@ -88,85 +216,12 @@ We also define the following constraint:\footnote{This condition is deemed redun
 }
 \end{definition}
 
-\subsection{Is Definition \ref{def1} an SDP?}
-
-Note that for a given $C_i =(R_i, S_i) \in \mathcal{C}$, $\la_{C_i}$ is a probability distribution over all possible assignments $\mathcal{L}_{C_i} = \{L: S \rightarrow D\}$. Clearly,  
-\al{
-\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} &= \Pb_{L \sim \la_{C_i}} (L:S_i \rightarrow D^{|S_i|} {\rm \ satisfies \ } R_i) \\
-&= \sum_{L \in \mathcal{L}_{C_i}} \la_{C_i}(L) \mathbb{I} \lrbb{ L {\rm \ satisfies \ }R _i }
-}
-is linear in $\la_{C_i}$'s.
-This makes the objective explicitly linear in the variables $\la_{C_i}$'s:
-\al{
-\Ex _{C_i \sim W} \lrbb{\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))}} &= \sum_{C_i \in \C}w_{C_i} \Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} \\
-&=  \sum_{C_i \in \mathcal{C}} \sum_{L \in \mathcal{L}_{C_i}} \la_{C_i}(L) \lrb{w_{C_i}\mathbb{I} \lrbb{ L {\rm \ satisfies \ }R _i }} 
-}
-Next we see that 
-\al{
-\Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} &=\Pb_{L \sim \la_{C_i}} (L(v) = \ell \wedge L(v) = \ell') \\
-&= \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell, L(v')=\ell'} }\la_{C_i}(L)
-}
-is a linear constraint in the variables. Next, 
-\al{
-&&\sum_{\ell \in D}\Pb_{L \sim \la_{C_i}} (L(v) = \ell) &= 1 \\
-&\lrr &\sum_{\ell \in D}  \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell }}\la_{C_i}(L) &= 1
-}
-is also linear. 
-It is trivial to see that the last constraint is also linear:
-\al{
-&&\Pb_{L \sim \la_{C_i}} (L(v) = \ell ) &= \Ex[I_v(\ell)] = A_{v, \ell} \\
-&\lrr   &\sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell }}\la_{C_i}(L) &= A_{v, \ell} 
-}
-Last but not the least, we also have, 
-\al{
-\Si \succeq 0
-}
-which is a linear matrix inequality. Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
-
-\subsection{Is it a relaxation?}
-To show that this is indeed a relaxation, we have to show that the optimal assignment belongs to our search space. 
-
-Suppose that the optimal assignment was $v=\ell_v$, then we have to construct a positive semi-definite matrix $\Sigma$ such that choosing it gives us precisely the above assignment. 
-Define the entries of $\Sigma$ as follows 
-$$ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \mathbbm{1}(\ell = \ell_v) \cdot \mathbbm{1}(\ell' = \ell_{v'}) = \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}}.$$ 
-
-Note that \cite{lambda and sigma} condition for this $\Sigma$ means that corresponding $\lambda_{C_i}$'s can be positive for only those local assignments $L$ which assign $\ell_v$ to $v$ for $v$ in their scope. 
-For all other assignments, $\lambda_{C_i}[L]=0$.
-Now we are left to show that such a $\Sigma$ is symmetric and positive semi-definite.
-
-Clearly $\Sigma$ is symmetric. 
-Also, 
-\al{
-y\trans \Sigma y &=\sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} y_{(v', \ell')}  \\ 
-&= \sum_{(v, \ell)} \sum_{(v', \ell')}  y_{(v, \ell)} \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}} y_{(v', \ell')}   \\
-&=\sum_v \sum_{v'}  y_{(v, \ell)} y_{(v', \ell_{v'})}  \\
-&= \sum_v y_{(v, \ell_v)}^2 + \sum_{v \neq v'} y_{(v, \ell)} y_{(v', \ell_{v'})} \\
-&=  \lrb{\sum_{v}y_{(v, \ell_v)}}^2\\
-&\geq 0
-}
-proving that $\Sigma$ is PSD. 
-
- Thus our search space does include the optimal assignment and hence this is indeed a relaxation.
-
 \subsection{Another Interpretation}
 
-There is a more popular but equivalent way to define these constraints, and it helps us to understand the rounding scheme that we will discuss later on. 
-Note that to any positive semi-definite matrix $\Sigma$, we can associate $L$ such that, $\Si = LL\trans$, and in turn we can label $\Si$ as the covariance matrix of some joint random variables. 
-Further, if we take these joint random variables as Gaussian, then we can as well make draws from them, as the first and second moments of a Gaussian  uniquely determine its distribution. 
-These observations will be crucial for rounding process, but we stated them here to motivate this alternate expression of the constraints. 
-
-We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell \in D}$, by calling it their covariance matrix. Since we impose $\Si \succeq 0$, it is indeed a valid representation. 
-We will also have constraints which cause these random variables to hang together with the $\la_{C_i}$'s in a gentlemanly fashion. 
-These joint random variables $I_v(\ell)$ will be called as \textit{pseduoindicator random variables}. 
-We emphasize that they are jointly distributed. 
 
 
 \subsection{Some Analysis}
-\begin{remark}\label{remark01}
-If we drop the ``consistent first moment" condition (\ref{cfm}) from the Basic SDP, we get
-an equivalent formulation; i.e., any solution $\mathcal{S}$ to the Basic SDP which doesn't satisfy  (\ref{cfm}) can be transformed into a solution $\mathcal{S}'$ which does satisfy  (\ref{cfm}) and has $\mbox{SDPVal}_\C(\Sm')
-= \mbox{SDPVal}_\C (\Sm)$.
-\end{remark}
+
 
 \begin{remark}
 The consistent first and second moment constraints imply 
@@ -203,4 +258,51 @@ Thus we have
 \mbox{Var}(J_v) = \Ex[J_v^2] - \Ex[J_v]^2 = 1-1 = 0 \rr J_v = J  \equiv 1 \ \mbox{a.s.}
 }
 \end{proof}
+
+\fi
+
+\iffalse
+
+\subsection{Is Definition \ref{def1} an SDP?}
+
+Note that for a given $C_i =(R_i, S_i) \in \mathcal{C}$, $\la_{C_i}$ is a probability distribution over all possible assignments $\mathcal{L}_{C_i} = \{L: S \rightarrow D\}$. Clearly,  
+\al{
+\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} &= \Pb_{L \sim \la_{C_i}} (L:S_i \rightarrow D^{|S_i|} {\rm \ satisfies \ } R_i) \\
+&= \sum_{L \in \mathcal{L}_{C_i}} \la_{C_i}(L) \mathbb{I} \lrbb{ L {\rm \ satisfies \ }R _i }
+}
+is linear in $\la_{C_i}$'s.
+This makes the objective explicitly linear in the variables $\la_{C_i}$'s:
+\al{
+\Ex _{C_i \sim W} \lrbb{\Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))}} &= \sum_{C_i \in \C}w_{C_i} \Ex_{L \sim \la_{C_i}} \lrb{R_i(L(S_i))} \\
+&=  \sum_{C_i \in \mathcal{C}} \sum_{L \in \mathcal{L}_{C_i}} \la_{C_i}(L) \lrb{w_{C_i}\mathbb{I} \lrbb{ L {\rm \ satisfies \ }R _i }} 
+}
+Next we see that 
+\al{
+\Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} &=\Pb_{L \sim \la_{C_i}} (L(v) = \ell \wedge L(v) = \ell') \\
+&= \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell, L(v')=\ell'} }\la_{C_i}(L)
+}
+is a linear constraint in the variables. Next, 
+\al{
+&&\sum_{\ell \in D}\Pb_{L \sim \la_{C_i}} (L(v) = \ell) &= 1 \\
+&\lrr &\sum_{\ell \in D}  \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell }}\la_{C_i}(L) &= 1
+}
+is also linear. 
+It is trivial to see that the last constraint is also linear:
+\al{
+&&\Pb_{L \sim \la_{C_i}} (L(v) = \ell ) &= \Ex[I_v(\ell)] = A_{v, \ell} \\
+&\lrr   &\sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell }}\la_{C_i}(L) &= A_{v, \ell} 
+}
+Last but not the least, we also have, 
+\al{
+\Si \succeq 0
+}
+which is a linear matrix inequality. Thus, with a linear objective and some linear constraints, besides an SDP constraint we do have an SDP relaxation.
+
+
+\begin{remark}\label{remark01}
+If we drop the ``consistent first moment" condition (\ref{cfm}) from the Basic SDP, we get
+an equivalent formulation; i.e., any solution $\mathcal{S}$ to the Basic SDP which doesn't satisfy  (\ref{cfm}) can be transformed into a solution $\mathcal{S}'$ which does satisfy  (\ref{cfm}) and has $\mbox{SDPVal}_\C(\Sm')
+= \mbox{SDPVal}_\C (\Sm)$.
+\end{remark}
+\fi
 
