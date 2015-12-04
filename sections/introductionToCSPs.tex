@@ -86,20 +86,19 @@ An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by a set of $n$ vari
 Every constraint $C_i \in C$ has the form $C_i = (R_i,S_i)$ where $R_i \in \Gamma$ and $S_i$ (said to be the \textit{scope} of $C_i$) is a possibly ordered list of \text{ar}($R_i$) variables. 
 
 If $F$ (a mapping $ V\to D$) is a given assignment of variables, then $R_i(F(S_i))$ equals either 1 or 0, in which case constraint $C_i$ is said to be ``satisfied" or ``not satisfied" respectively.
-The objective is to maximize the weighted sum of satisfied constraints $\sum_{i = 1}^m w_i R_i(F(S_i))$. 
+The objective is to maximize the weighted sum of satisfied constraints $\sum_{i = 1}^m w_i R_i(F(S_i))$. For a given $F$ we call this value as  $\text{Val}_{\mathcal{C}}[F]$.
 
 $\mathcal{C}$ is said to be \textit{satisfiable} if $\forall i, ~ R_i(F(S_i)) = 1$ at optimality.
 \label{def:CSPinstance}
 \end{definition}
-To simplify notation, we will often write $F(C_i)$ in place of $R_i(F(S_i))$.
 
 \subsubsection{Discussion of Definition \ref{def:CSPinstance}}\maybeinclude{Generalized CSP's with [-1,1] payoffs. Could then include ``MultiwaiCut" and "MetricLabeling."}
 \textbf{Remarks on the objective function - }Without loss of generality, we may take the weights to sum to 1. 
-When we do this, we can interpret the weights as probabilities and $C$ as a random variable ($C = C_i$ with probabilty $w_i$). 
-In this notation, we can write any CSP instance as
-\begin{equation}
-\max_{F: V \to D} \mathbb{E}\left[F(C)\right]
+When we do this, we can interpret the weights as probabilities and introduce a random variable $\tilde{C}$  which takes values in the set of constraints, i.e., it takes values in $C$. In particular, $\tilde{C} = C_i$ with probabiilty $w_i$. We denote this as $ \tilde{C} \sim W$, where $W$ stands for the probability mass function for the random variable $\tilde{C}$. This random variable view comes in handy later on. Next we define the random variable $R_F(\tilde{C}) = R_i(F(S_i))$ with probability $w_i$. And thus in this notation, we can write our objective as to maximize the expectation as expressed below -
+\begin{equation} \label{expfirst}
+\max_{F}  \text{Val}_{\mathcal{C}}[F] = \max_F \mathbb{E}_{\tilde{C} \sim W}\left[R_F(\tilde{C})\right] = \sum_{i=1}^m w_i R_i(F(S_i))
 \end{equation}
+
 
 \textbf{Remarks on the constraints - }In almost all optimization paradigms, ``constraints" are by their very definition \textit{inviolable}. 
 Definition \ref{def:CSPinstance} departs from this convention in that a feasible solution is not required to satisfy any of a CSP's ``constraints." 
