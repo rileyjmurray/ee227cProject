@@ -40,7 +40,7 @@ Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic LP for $\mathcal
 \begin{alignat}{2}
 \max ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
 s.t. ~ & ~ \sum_{\ell \in D} \mu_v[\ell] = 1 & \forall v \in V  \label{eq:canonLPmuSum} \\
-     ~ & ~ \sum_{L \in \mathcal{L}_j} \lambda_j[L] = 1  & \forall i : C_i \in C \label{eq:canonLPlambdaSum} \\
+     ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:canonLPlambdaSum} \\
      ~ & ~ \sum_{\substack{ L \in \mathcal{L}_i \\ L(v) = \ell }} \lambda_i[L] = \mu_v[\ell]  & \forall v \in V, \ell \in D, i : C_i \in C \label{eq:canonLPConsistency} \\
      ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:canonLPlambdaNonNeg} \\
      ~ & ~ 0 \leq \mu_v[\ell] \leq 1 & v \in V, \ell \in D \label{eq:canonLPmuNonNeg}

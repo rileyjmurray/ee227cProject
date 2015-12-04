@@ -41,7 +41,7 @@ We define the semi-definite program and then discuss the probabilistic assignmen
 Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic SDP for $\mathcal{C}$ is
 \begin{alignat}{2}
 \max ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
-s.t. ~ & ~ \sum_{L \in \mathcal{L}_j} \lambda_j[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
+s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
      ~ & ~ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \sum_{\substack {L\in \mathcal{L}_{C_i}\\ L(v) = \ell, L(v')=\ell'} }\la_{C_i}[L] &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
      ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
      ~& ~ \\
