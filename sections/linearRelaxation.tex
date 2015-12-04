@@ -125,7 +125,7 @@ then we can express our objective in \ref{glbobj} as
 \max_\lambda \mathbb{E}_{\tilde{C}, L(\tilde{C})} R(\tilde{C}, L(\tilde{C}))
 \end{equation}
 Using tower property we can write this as 
-\begin{equation}
+\begin{equation}\label{tower}
 \max_\lambda \mathbb{E}_{\tilde{C}} \left[ \mathbb{E} \left(R(\tilde{C}, L(\tilde{C}))\displaystyle|\tilde{C}\right). \right]
 \end{equation}
 To make the expression more legible we make some abuse of notation and write $C_i \sim W$ in place of $\tilde{C} \sim W$ and write $L \sim \lambda_i$ to denote that $L$ takes values in $\mathcal L_i$ according to $\lambda_i$ given $\tilde{C} = C_i$. And thus our objective is reduced to
@@ -190,14 +190,14 @@ Having identified the objective value of the randomized solution, the question i
 This can be done, by relating $F$ to the distribution over local assignments.
 \begin{align}
 	p_{C_i} &:=  \underset{L \sim \lambda_{i}}\Ex \left[ R_i( L (S_i )) |C_i \right]\nonumber\\
-			&= \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
-			&=  \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
-			&\le \sum_{v \in  S } \underset{L \sim \lambda_{C_i}^*}{\mathbb{P}} \left[  \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
+			&= \underset{L \sim \lambda_{i}^*}{\mathbb{P}} [L \text{ satisfies } C_i] \nonumber\\
+			&=  \underset{L \sim \lambda_{i}^*}{\mathbb{P}}\left[ \bigcup_{v \in S} \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
+			&\le \sum_{v \in  S } \underset{L \sim \lambda_{i}^*}{\mathbb{P}} \left[  \left\{ L(v) \neq b_{C_i}(v) \right\} \right] \nonumber\\
 			&= \sum_{v \in S} \left( 1 - \mu_v^*[b_{C_i}(v)] \right) \label{eq:objectiveLP}
 \end{align}
 This last step follows from the first-order consistency constraints:
 \[
-	\underset{L \sim \lambda_{C_i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
+	\underset{L \sim \lambda_{i} }{\mathbb{P}}[ L(v) = \ell] = \underset{L \sim \mu_v }{\mathbb{P}}[ L = \ell]
 \]
 
 It remains to relate the LP objective value to the expected objective of the rounding procedure. 
