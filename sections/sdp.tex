@@ -1,46 +1,23 @@
 \section{Semidefinite Programming Relaxations for CSP's}\label{sec:sdpRelax}
-This section takes the next step in the hierarchy of relaxations. We will motivate and present the Semi Definite Programming Relaxation for the CSP. The relaxation is very general and is omnipresent in the literature on SDP relaxations for CSPs in one variant or the other. We make a few comments regarding rounding and take it up in more detailed fashion in next section.
+This section takes the next step in the hierarchy of relaxations. First, we motivate and present a generic Semi Definite Programming relaxation for CSP's (called ``Basic SDP"). The relaxation is very general and is omnipresent in the literature on SDP relaxations for CSPs in one variant or the other. We make a few comments regarding rounding before Section \ref{sec:rounding} takes this question head on. The material in this section draws from O' Donnell \cite{Ryan}.
 
+\subsection{From ``First Order" to ``Second Order" Consistency }
 
-\subsection{Motivation : From ``First Order" to ``Second Order" Consistency Constraints}
-
-We recall the relaxations and try to motivate our way through the various relaxations (see \cite{Ryan} for more details) -
-
-\begin{discussion}{\bf LP Relaxation}\\
-In preparation for moving to the Basic SDP relaxation, we summarize (in words) the interpretations of $\lambda_i$ and $\mu_v$ in Basic LP.
+For the integer program which motivated Basic LP, constraint \ref{mulambcons} simply amounts to bookkeeping. When we relaxed the integer program to Basic LP, the variables $\mu_v$ and $\lambda_i$, and the constraint \ref{eq:canonLPConsistency} all took on probabilistic interpretations. We summarize these interpretations below.
 
 For a CSP $\C = (V, C, W)$,  \textit{$\fa v \in V, \mu_v[\cdot] : D \rightarrow [0, 1]$ denotes the \textit{probability distribution of variable $v$ over its range $D$}. And, $\fa C_i \in C, \la_{i}[\cdot] : \Lm_{i} \rightarrow [0,1]$ denotes the probability distribution over all possible local assignments $L \in \Lm_{i}$ for variables in  $C_i$.  
 Constraint \ref{eq:canonLPConsistency} imposes conditions for consistency across distribution the $\mu_v[\cdot]$ for a variable $v$ and its marginals with respect to any constraint distribution such that the scope of that constraint contains $v$.}
-\end{discussion}
 
-Constraint \ref{eq:canonLPConsistency} can be considered as first order constraint for variable assignment, where we are imposing consistency across marginals. 
-We can go a step further in restricting our search space, by introducing a second order consistency condition such that we get an SDP relaxation. 
-The relaxation will be with respect to IP formulation, but tightening with respect to the LP relaxation and hence our values will be now closer to the optimal value of CSP. 
-The intuition for such a relaxation can be motivated by the relaxation procedure for MAX - CUT problem which we present next. 
+When speaking in these probabilistic terms, it is natural to consider a \textit{second order} constraint across $\lambda$ in the form of an appropriately defined covariance matrix. As well will see, ``Basic SDP" has a probabilistic interpretation that does exactly this. 
 
-It is further established, that this relaxation is in-fact the optimal poly-time relaxation for any general CSP, first by assuming Unique Games Conjecture \cite{Khot} and then later in fact more generally \cite{nphard}. 
+For concreteness (and to simplify its proof of validity as a CSP relaxation), we present Basic SDP first in non-probabilistic terms. Once it is clear how Basic SDP could be implemented, we provide an equivalent probabilistic statement that demonstrates the second-order consistency constraint for $\lambda$.
 
-\begin{example}{\bf MAX - CUT}\label{maxcut}\\
-MAX CUT problem can be formulated as the following integer quadratic program : 
-\al{
- \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-x_ix_j) ~:~ x_i \in \{ -1, 1\}
- }
-Clearly $x_i^2=1$, and $x_i=x_j\rr x_ix_j=1$ and thus contribution of that term to the sum is zero. 
-Also, $x_i \neq x_j \rr x_ix_j=-1$, and thus that weight contributes to the sum. 
-We can see that by associating each vertex $i$ with the variable $x_i$, we have that if an edge has both end points with same $x$-value, it is ignored in the sum, and all the edges with end points in different groups contribute weight to the sum. 
-\cite{delormecombinatorial} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
-\[ \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-y_i\trans y_j) ~:~ y_i\trans y_i = 1 {\mbox {\ i.e.\ }} y_i \in S^{n-1} \]
-If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then one can easily see that for $$Y = (y_1, \cdots, y_n) \rr \Sigma = Y\trans Y \succeq 0,$$ and our program reduces to 
-\[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]
-which is clearly an SDP and can be solved in polynomial time, i.e. efficiently! 
-Thus we see that the SDPs did pop out for a MAX CUT relaxation.
-\end{example}
+\subsection{The Canonical Semi-Definite Program}
 
-\subsection{Semi-Definite Program}
-We define the semi-definite program and then discuss the probabilistic assignment interpretation, besides explicitly showing that this new formulation is indeed a relaxation. In the following definition $\Sigma \in \mathbb{R}^{N \times N}$ where $N = |V| \cdot |D|$.
+Over the course of this section it will become clear that Basic SDP is be a relaxation with respect to IP formulation, but tightening with respect to the LP relaxation. Basic SDP is significant in that it has been proven to be the strongest possible convex relaxation for any general CSP, first by assuming Unique Games Conjecture \cite{Rag08} and then later in fact more generally \cite{nphard}.\footnote{We note that these papers do not that their results in these terms. Rather, they show (1) a certain rounding scheme is provably optimal for Basic SDP, (2) the resulting approximation algorithm runs in polynomial time, and (3) the performance guarantees of the approximation algorithm cannot be beat by any polynomial time algorithm if the UGC is true.}
 
 \begin{definition}\textbf{Basic SDP} \\
-Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$. The Basic SDP for $\mathcal{C}$ is
+Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$, and let $\Sigma \in \mathbb{R}^{N \times N}$ where $N = |V| \cdot |D|$. Then the Basic SDP for $\mathcal{C}$ is
 \begin{alignat}{2}
 \max_{\lambda, \Sigma} ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
 s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
@@ -69,7 +46,7 @@ Suppose that the optimal assignment was $v=\ell_v$, then we have to construct a 
 Define the entries of $\Sigma$ as follows 
 $$ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \mathbbm{1}(\ell = \ell_v) \cdot \mathbbm{1}(\ell' = \ell_{v'}) = \mathbbm{1}\lrb{\ell = \ell_v, \ell'= \ell_{v'}}.$$ 
 
-Note that \cite{lambdaandsigma} condition for this $\Sigma$ means that corresponding $\lambda_{C_i}$'s can be positive for only those local assignments $L$ which assign $\ell_v$ to $v$ for $v$ in their scope. 
+Note that this condition on $\Sigma$ means that corresponding $\lambda_{C_i}$'s can be positive for only those local assignments $L$ which assign $\ell_v$ to $v$ for $v$ in their scope. 
 For all other assignments, $\lambda_{C_i}[L]=0$.
 Now we are left to show that such a $\Sigma$ is symmetric and positive semi-definite.
 
@@ -87,9 +64,24 @@ proving that $\Sigma$ is PSD. \\
 Thus our search space does include the optimal assignment and hence this is indeed a relaxation.
 \end{proof}
 
-To interpret this SDP in a fashion that we understand so far, we will have to turn to the random variable interpretation. 
+Before we move into the probabilistic interpretation of Basic SDP, we compare Basic SDP to the well-known SDP introduced by Goemans and Williamson for Max-Cut.
 
-\subsection{Basic SDP Relaxation - The Random Assignment Interpretation}
+\subsection{Max-Cut SDP as a Special Case of Basic SDP}\label{maxcut}
+MAX CUT problem can be formulated as the following integer quadratic program : 
+\al{
+ \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-x_ix_j) ~:~ x_i \in \{ -1, 1\}
+ }
+Clearly $x_i^2=1$, and $x_i=x_j\rr x_ix_j=1$ and thus contribution of that term to the sum is zero. 
+Also, $x_i \neq x_j \rr x_ix_j=-1$, and thus that weight contributes to the sum. 
+We can see that by associating each vertex $i$ with the variable $x_i$, we have that if an edge has both end points with same $x$-value, it is ignored in the sum, and all the edges with end points in different groups contribute weight to the sum. 
+\cite{delormecombinatorial} relaxed the above program by replacing each variable $x_i$ with a unit vector $y_i$ in $\R^n$ such that its norm is 1, i.e. $y_i \in S^{n-1}$, and replacing the $x_ix_j$ by the dot product between the vectors. 
+\[ \max \sum_{i,j} w_{ij} \ \frac{1}{2}(1-y_i\trans y_j) ~:~ y_i\trans y_i = 1 {\mbox {\ i.e.\ }} y_i \in S^{n-1} \]
+If we define a matrix $\Sigma$ such that $$\Sigma_{ij} = y_i\trans y_j,$$ then one can easily see that for $$Y = (y_1, \cdots, y_n) \rr \Sigma = Y\trans Y \succeq 0,$$ and our program reduces to 
+\[ \max_\Sigma \sum_{i,j} w_{ij} \ \frac{1}{2}(1-\Sigma_{ij}) ~:~ \Sigma \succeq 0 ~:~ \Sigma_{ii} = 1  \]
+which is clearly an SDP and can be solved in polynomial time, i.e. efficiently! 
+Thus we see that the SDPs did pop out for a MAX CUT relaxation.
+
+\subsection{The Probabilistic Interpretation of Basic SDP}
 
 The SDP relaxation is similar to the LP relaxation but with an important generalization. 
 We will have the exactly same probability distribution $\la_{i}$ for each constraint and the same objective function. 
@@ -98,7 +90,7 @@ More precisely,
 \al{
  \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L]  = \Pb_{L \sim \la_{i}}\lrbb{L(v) = \ell, L(v')= \ell'} \label{eq0}
  } 
- where $L \sim\la_i$ stands for the distribution of $L(\tilde{C})$ (taking values on the set of local assignments on $S_i$) given $\tilde{C} = C_i$ as in \ref{tower}.
+ where $L \sim\la_i$ stands for the distribution of $L(\tilde{C})$ (taking values on the set of local assignments on $S_i$) given $\tilde{C} = C_i$ as in \ref{eq:tower}.
 Thus we have, 
 \al{
 \Pb_{L \sim \la_{i}}\lrbb{L(v) = \ell, L(v')= \ell'} = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} ~ \fa i:C_i \in C.
@@ -114,7 +106,8 @@ Also
 }
 which is another consistency condition.
 
-\subsubsection{PseudoIndicators}
+
+\subsubsection{PseudoIndicators : More on Basic SDP's Probabilistic Interpretation}
 There is a more popular but equivalent way to define these constraints, and it helps us to understand the rounding scheme that we will discuss later on. 
 Note that to any positive semi-definite matrix $\Sigma$, we can associate a set of joint random variables. 
 Further, if we take these joint random variables as Gaussian, then we can as well make draws from them, as the first and second moments of a Gaussian  uniquely determine its distribution. 
@@ -167,7 +160,9 @@ Define $J_v = \sum_{\ell \in D} I_v(\ell)$, then
 &&&\overset{\ref{eq:SDPtiePSD}}= \sum_{\ell \in D }\lrb{\sum_{(v',\ell')} \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L]  } ~: \mbox{for any $i:C_i\in C$}\\
 &&&=\sum_{\ell \in D }\lrb{ \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell} }\la_{i}[L]  }\\
 &&&= \sum_{L\in \mathcal{L}_{i}} \la_{i}[L]  \\
-&\rr&\Ex[J_v]&\overset{\ref{eq:SDPlambdaSum}}=1 \label{sum1}\\
+&\rr&\Ex[J_v]&\overset{\ref{eq:SDPlambdaSum}}=1 \label{sum1}
+}
+\al{
 &\mbox{Also,}&\Ex[J_v^2] &= \Ex \lrbb{\lrb{ \sum_{\ell \in D} [I_v(\ell)]}\lrb{ \sum_{\ell' \in D} [I_v(\ell')]}} \\
 &&&= \sum_{\ell, \ell' \in D} \Ex\lrbb{I_v(\ell)I_v(\ell')}\\
 &&&= \sum_{\ell, \ell' \in D} \Sigma_{(v, \ell),(v, \ell')} \\
