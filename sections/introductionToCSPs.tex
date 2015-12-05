@@ -40,7 +40,7 @@
 %\parskip 8pt
 
 \section{Introduction to Constraint Satisfaction Problems}\label{sec:introToCSP}
-There are conflicting conventions regarding what is and is not a CSP. This section is devoted to defining ``CSP"'s in the way that is usually meant by the theoretical computer science community. Some alternative characterizations of CSP's are addressed at the end of this section. 
+There are conflicting conventions regarding what is and is not a CSP. This section is devoted to defining ``CSP"'s in the way that is usually meant by the theoretical computer science community. Some alternative characterizations of CSP's are addressed at the end of this section.
 \subsection{Getting Oriented with CSP's}
 
 There is a great deal of research going into the approximabilty of constraint satisfaction problems, and some claims regarding CSP's can seem quite sensational. 
@@ -54,7 +54,7 @@ The list of points below gives some facts relating to CSP's to help orient the r
 \item The ability to generate a near optimal-solution for a CSP is intimately related to an open problem in computer science known as the ``Unique Games Conjecture."
 \end{itemize}
 
-\subsection{The CSP Framework and CSP Instances}\maybeinclude{A section dedicated for formulating a variety of problems as CSPs? The reader will care less and less if all we talk about is max cut and max SAT.}
+\subsection{The CSP Framework and CSP Instances}
 Define the \textit{arity} of an indicator function $R$ as the number of arguments it takes, and denote the arity by $\text{ar}(R)$.
 
 \begin{definition}
@@ -92,7 +92,7 @@ $\mathcal{C}$ is said to be \textit{satisfiable} if $\forall i, ~ R_i(F(S_i)) = 
 \label{def:CSPinstance}
 \end{definition}
 
-\subsubsection{Discussion of Definition \ref{def:CSPinstance}}\maybeinclude{Generalized CSP's with [-1,1] payoffs. Could then include ``MultiwaiCut" and "MetricLabeling."}
+\subsubsection{Discussion of Definition \ref{def:CSPinstance}}
 \textbf{Remarks on the objective function - }Without loss of generality, we may take the weights to sum to 1. 
 When we do this, we can interpret the weights as probabilities and introduce a random variable $\tilde{C}$  which takes values in the set of constraints, i.e., it takes values in $C$. In particular, $\tilde{C} = C_i$ with probabiilty $w_i$. We denote this as $ \tilde{C} \sim W$, where $W$ stands for the probability mass function for the random variable $\tilde{C}$. This random variable view comes in handy later on. Next we define the random variable $R_F(\tilde{C}) = R_i(F(S_i))$ with probability $w_i$. And thus in this notation, we can write our objective as to maximize the expectation as expressed below -
 \begin{equation} \label{expfirst}
@@ -170,27 +170,7 @@ The interested reader is strongly recommended to read Khot's original paper for 
 For arbitrarily small constants $\epsilon$, $\delta > 0$, there exists a constant $k = k(\epsilon,\delta)$ such that it is NP-Hard to determine whether a unique Label Cover instance with label sets of size $k$ at satisfies \textit{at least} $1-\epsilon$ or \textit{at most} $\delta$ constraints.
 \end{ugc}
 
-\subsection{Conflicting Conventions in CSP Discourse}
 
-\subsubsection{``Hard" or ``Soft" Constraints?}
-Lots of stuff\cite{Russell2009}.
-MIT slides.
 
-\subsubsection{``Constraints", ``Payoffs", and Generalized Constraint Satisfaction Problems}
-
-The reader is advised that some papers (most notably \cite{RagSte09}) use the term ``payoff" for some $C_i = (R_i,S_i) \in \mathcal{C}$. 
-
-Why do this? Reasons!
-
-Besides the obvious usefulness of removing confusion of whether or not CSP constraints are violable, a payoff function is used in the context of \textit{Generalized} Constraint Satisfaction Problems.
-
-Examples of GCSP's
-\begin{itemize}
-\item Multiway Cut
-\item Metric Labeling
-\end{itemize}
-
-\subsection{Domains : Finite, or Uncountably Infinite?}
-Lots of stuff\cite{Russell2009}.
 
 %\end{document}
