@@ -24,7 +24,7 @@ This perspective is suited for developing``SDP Rounding algorithms".
 \end{itemize}
 We now move to the quintessential SDP and randomized-rounding based approximation algorithm for Max-Cut.
 
-\subsection{Goemans Williamson Algorithm}
+\subsection{Goemans Williamson Algorithm}\label{GWAlgo}
 By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
 
 We will borrow notation and variables from Section \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{n \times |V|}$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix. (Note that choice of $n$ was more or less arbitrary and preferably $n \leq |V|$). 
