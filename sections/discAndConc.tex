@@ -1,5 +1,12 @@
 \section{Discussion and Conclusions}	
-	The biggest take-aways are (1) Raghavendra's schemes cannot be implemented, (2) there is a surprising lack of general-purpose rounding schemes that apply to Basic SDP (i.e. Raghavendra's isn't just the optimal generic rounding scheme, it's the \textit{only} generic rounding scheme.). There \textit{are} rounding schemes that are slightly more general (namely, d-to-1 games as considered in the Gaussian rounding paper). Graph coloring is an important benchmark CSP because it's d-to-d. Interestingly, all approximation algorithms for graph coloring that we can find increase the number of colors, rather than failing to satisfy some adjacency constraints. 
+	Reflecting on the material presented in this report, we find the following among the more significant aspects of CSP approximations by convex relaxations.
+\begin{itemize}
+\item
+\item
+\item
+\end{itemize}
+	
+	 Raghavendra's schemes cannot be implemented, (2) there is a surprising lack of general-purpose rounding schemes that apply to Basic SDP (i.e. Raghavendra's isn't just the optimal generic rounding scheme, it's the \textit{only} generic rounding scheme.). There \textit{are} rounding schemes that are slightly more general (namely, d-to-1 games as considered in the Gaussian rounding paper). Graph coloring is an important benchmark CSP because it's d-to-d. Interestingly, all approximation algorithms for graph coloring that we can find increase the number of colors, rather than failing to satisfy some adjacency constraints. 
 	
 	In addition to these theoretical limitations, we found that while the LP relaxation can be solved quickly, the time taken to solve the SDP relaxation was prohibitively slow for problems with thousands of variables. As a result, there are \textit{two} obstacles to using SDP relaxations of CSP's (1) the lack of rounding schemes for non-unique CSP's, and (2) the speed of SDP solvers themselves.
 	
