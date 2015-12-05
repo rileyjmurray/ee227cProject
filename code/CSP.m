@@ -16,17 +16,9 @@ classdef CSP < handle
     
     methods
         
-        function obj = CSP( varargin )
-            if (length(varargin) == 2)
-                obj.domain = [0,1];
-            else
-                obj.domain = varargin{3};
-            end
-            if ( length(varargin) > 3 || length( varargin) < 2 )
-                error('number of inputs incorrect')
-            end
-            constraints = varargin{2};
-            weights = varargin{1};
+        function obj = CSP( weights, constraints, domain, numVariables )
+            obj.domain = domain;
+            obj.numVariables = numVariables;
             obj.numConstraints = length( constraints );
             % ----- Check if weights are valid -----
             if obj.numConstraints ~= length( weights )
@@ -55,9 +47,7 @@ classdef CSP < handle
                tempConstr = obj.constraints{i};
                vars = union(vars,tempConstr.scope);
                obj.arity = max(obj.arity, tempConstr.arity);
-            end
-            obj.numVariables = length(vars);
-            
+            end            
         end
         
         function objectiveValue = evaluateObjective( obj, input )
