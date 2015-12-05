@@ -1,12 +1,17 @@
 \section{Numerical Experiments}
-In this section, the LP and SDP relaxations as well as rounding schemes introduced in sections \ref{sec:lpRelax} and \ref{sec:sdpRelax} are put to the test for key CSP problems, such as Max-Cut and Max k-SAT. This section provides empirical validation and identifies their usefulness in practical applications. In particular, this section contains numerical studies for the LP relaxation and the Max k-SAT rounding scheme and the SDP relaxation in combination with the Goeman-Williamson rounding scheme for Max Cut. 
+In this section, the LP and SDP relaxations as well as rounding schemes introduced in sections \label{sec:lpRelax} and \ref{sec:sdpRelax} are put to the test for key CSP problems, such as Max-Cut and Max k-SAT. This section provides empirical validation and identifies their usefulness in practical applications. In particular, this section contains numerical studies for the LP relaxation and the Max k-SAT rounding scheme and the SDP relaxation in combination with the Goeman-Williamson rounding scheme for Max Cut. 
 
 \subsection{LP Relaxation and Rounding scheme for Max k-SAT}
 The LP relaxation as introduced in section \ref{sec:lpRelax} can be applied to any CSP. However, it does not provide a feasible solution to the CSP ( unless the optimal solution happens to be feasible for CSP) since the LP is a relaxation of a CSP. Therefore, its application is dependent on a technique to generate feasible solutions from the LP solution. Such a technique was introduced for K-SAT in section \ref{sec:lpRoundingSat}. In this section, results are presented of applying the LP relaxation and the rounding scheme to Max 3-SAT on randomly generated 3-SAT instances.
 
 The 3-SAT instances where generated as follows:
 \begin{enumerate}
-	\item First, a feasible solution $x^*$ is generated. $p_T$, the probability that a variab....
+	\item A solution $x^*$ on $k$ variables is generated. Each variable is independently set to $1$ or $0$, where $1$ is chosen with probability $p_T$. $p_T$ is the probability of setting a variable to true. This is probability is drawn from a uniform distribution on $[0,1]$. 
+	\item $m$ constraints are added. These constraints are constructed via the following procedure:
+	\begin{enumerate}
+		\item The number of negated variables in the scope is uniformly drawn from $[0,1,2,3]$.
+		\item 
+	\end{enumerate}
 \end{enumerate}
 
 To be finished.
@@ -31,3 +36,4 @@ RESULTS
 	\end{tabularx}                                                                                                                                  
 \end{table}
 
+\subsection{Experiments with Max-Cut}
