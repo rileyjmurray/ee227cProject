@@ -12,7 +12,7 @@ classdef Constraint < handle
     methods
         function obj = Constraint( scope, relation )
             obj.arity = length( scope );
-            obj.scope = scope;
+            obj.scope = reshape(scope,1,[]);
             obj.relation = relation;
         end
         

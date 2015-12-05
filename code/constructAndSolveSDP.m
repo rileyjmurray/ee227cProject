@@ -111,9 +111,9 @@ cvx_begin
 
     for c_i=1:num_c
         sum(lambdaVar(c_i, :)) == 1;
-        for v= constraints{ c_i }.scope'
+        for v = constraints{ c_i }.scope
             for l=1:D
-                for v2 = constraints{ c_i }.scope'
+                for v2 = constraints{ c_i }.scope
                     for l2 = 1 : D
                         sum(lambdaVar(c_i,  ML(c_i, :, v, l) & ML(c_i, :, v2, l2) )) == sigmaVar( (  v - 1) * D + l, ( v2 - 1 ) * D + l2 );
                     end

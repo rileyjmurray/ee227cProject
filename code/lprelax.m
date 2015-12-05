@@ -128,7 +128,7 @@ cvx_begin
         end
         for c_i=1:num_c
             sum(lambda(c_i, :)) == 1;
-            for v = constraints{ c_i }.scope'
+            for v = constraints{ c_i }.scope
                 for l=1:D
                     sum(lambda(c_i,  ML(c_i, :, v, l))) == muv(v, l);
                 end
