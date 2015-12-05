@@ -29,7 +29,7 @@ We now move to the quintessential SDP and randomized-rounding based approximatio
 \subsection{Goemans Williamson Algorithm}
 By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
 
-We will borrow notation and variables from Example \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{n \times |V|}$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix. (Note that choice of $n$ was more or less arbitrary and preferably $n \leq |V|$). 
+We will borrow notation and variables from Section \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{n \times |V|}$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix. (Note that choice of $n$ was more or less arbitrary and preferably $n \leq |V|$). 
 
 Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. We assume that given the optimal solution of the SDPformulation of  Max-Cut  in  Example \ref{maxcut}  (which is not Basic!) we have already found $Y$ such that $Y\trans Y = \Si$ (which can be done in polynomial time using Cholesky Decomposition).
 
