@@ -47,9 +47,7 @@ classdef CSP < handle
                tempConstr = obj.constraints{i};
                vars = union(vars,tempConstr.scope);
                obj.arity = max(obj.arity, tempConstr.arity);
-            end
-            obj.numVariables = length(vars);
-            
+            end            
         end
         
         function objectiveValue = evaluateObjective( obj, input )
