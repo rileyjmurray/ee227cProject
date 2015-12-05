@@ -1,18 +1,26 @@
-	The biggest take-aways are (1) Raghavendra's schemes cannot be implemented, (2) there is a surprising lack of general-purpose rounding schemes that apply to Basic SDP (i.e. Raghavendra's isn't just the optimal generic rounding scheme, it's the \textit{only} generic rounding scheme.). There \textit{are} rounding schemes that are slightly more general (namely, d-to-1 games as considered in the Gaussian rounding paper). Graph coloring is an important benchmark CSP because it's d-to-d. Interestingly, all approximation algorithms for graph coloring that we can find increase the number of colors, rather than failing to satisfy some adjacency constraints. 
+\section{Discussion and Conclusions}	
+	Reflecting on the material presented in this report, we find the following among the more significant aspects of CSP approximations by convex relaxations.
+\begin{itemize}
+\item The rounding schemes in \textit{How to Round Any CSP} and \textit{Optimal Algorithms ... For Every CSP?} are too slow to be implemented in practice.
+\item The above rounding schemes are not only the only \textit{optimal} rounding schemes for Basic SDP, they are also the \textit{only} rounding schemes that apply to any k-CSP (regardless of whether or not that CSP is Unique).
+\item There are generic rounding schemes for certain sub-classes of CSP's (particularly, any Unique CSP).
+\end{itemize}
+	
+Graph coloring is an important benchmark CSP because its arity is 2, but the $\{\neq\}$ operator is non-unique in both arguments on domains of size $q > 2$. Interestingly, all approximation algorithms for graph coloring that we can find increase the number of colors, rather than failing to satisfy some adjacency constraints. 
 	
 	In addition to these theoretical limitations, we found that while the LP relaxation can be solved quickly, the time taken to solve the SDP relaxation was prohibitively slow for problems with thousands of variables. As a result, there are \textit{two} obstacles to using SDP relaxations of CSP's (1) the lack of rounding schemes for non-unique CSP's, and (2) the speed of SDP solvers themselves.
 	
-	Addressing the second problem requires substantial expertise in the implementation of convex optimization algorithms, but the first can potentially be handled in a variety of ways. Using the geometric interpretation of the columns in $Y : Y^\intercal Y = \Sigma^*$, it would be reasonable to classify these vectors according to cosine similarity. To use a heuristic approach with a more rigorous foundation, Prasad Raghavendra commented\footnote{in a private communication} that the algorithm proposed in \textit{How to Round Any CSP} could be implemented by projecting SDP vectors onto a very small constant number of directions (say, 3) rather than onto $1/\epsilon^2$ directions.
+	Addressing the second problem requires substantial expertise in the implementation of convex optimization algorithms, but the first can potentially be handled in a variety of ways. Using the geometric interpretation of the columns in $Y : Y^\intercal Y = \Sigma^*$, it would be reasonable to classify these vectors according to cosine similarity. For CSP's which are invariant under a permutation of elements in the domain (including graph coloring), a cosine similarity classification is sufficient to characterize a rounding scheme. 
+	
+To use a heuristic approach with a more rigorous foundation, Prasad Raghavendra commented\footnote{in a private communication} that the algorithm proposed in \textit{How to Round Any CSP} could be implemented in spirit simply by projecting SDP vectors onto a very small constant number of directions (say, 3) rather than onto $1/\epsilon^2$ directions.
 
-
-\subsection{CSP-Specific LP Relaxations and Rounding Schemes}
+\iffalse
 Note the following problem specific specific LP relaxations \cite{GoeWil94,Asa97,Yan94}.
 \begin{itemize}
 \item this thing
 \item this thing as well
 \item also this thing
 \end{itemize}
-
-\subsection{CSP-Specific SDP}
 k-SAT
 graph coloring
+\fi
