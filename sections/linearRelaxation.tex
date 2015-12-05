@@ -144,7 +144,7 @@ This technique uses the information available from the LP, typically by using th
 To showcase a potential rounding technique, let us consider the problem of Max $k$-SAT. 
 
 \subsubsection{Randomized Rounding scheme for LP relaxation of Max k-SAT}\label{sec:lpRoundingSat}
-This rounding scheme was introduced by Goemans and Williamson \cite{GoeWil94}. They combine this randomized rounding scheme together with the seminal approximation algorithm for Max-SAT by Johnson \cite{Joh73} to obtain a $\frac{3}{4}$ bound.
+This rounding scheme was introduced by Goemans and Williamson \cite{GoeWil94}. They combine this randomized rounding scheme together with the seminal approximation algorithm for Max k-SAT by Johnson \cite{Joh73} to obtain a $\frac{3}{4}$ bound.
  
 Consider the full assignment $F$ as a vector of random variables. For each variable $v \in V$, let the random variable be given by:
 \[
@@ -155,7 +155,7 @@ Consider the full assignment $F$ as a vector of random variables. For each varia
 \]
 where $\mu^*_v[\ell]$ is the value of variable $\mu_v[\ell]$ in an optimal solution to the LP.
 Since the sum over $\ell \in D = \{0,1\}$ of  $\mu_v[\ell]$ is $1$, and since $\mu_v[\ell]$ is non-negative, the above is a valid definition for a random variable. 
-Furthermore, note that $F(1), \dots, F(n)$ is a feasible solution to the Max k-SAT problem.
+Furthermore, note that $F(1), \dots, F(n)$ is a valid assignment for the Max k-SAT problem.
 
 The expected objective value of this randomized assignment is given by taking expectation in \ref{expfirst} and we get
 \[

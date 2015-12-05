@@ -1,14 +1,12 @@
-\section{An Overview of CSP-SDP Rounding Schemes}\label{sec:rounding}
+\section{[Relatively] Simple SDP Rounding Schemes}\label{sec:rounding}
 This section presents the following
 \begin{itemize}
 \item A framework for understanding the output of Basic SDP that is useful in developing randomized rounding schemes. 
 \item The Goemans Williamson Algorithm for Max-Cut and Max 2-SAT.
 \item A more general rounding scheme for Basic SDP that applies to any \textit{Unique} CSP.
-\item A discussion on problem-specific SDPs and rounding schemes.
-\item Some remarks on moving forward with general rounding schemes based on Basic SDP.
 \end{itemize}
 
-\subsection{A Framework for Basic SDP Rounding} 
+\subsection{A Framework for Rounding Basic SDP} 
 Note that the solution of the relaxed problem gives us a PSD matrix and probability distributions over constraints. 
 Next challenge is to make a ``consistent draw" from this distribution and analyzing the expected value of CSP resulting from such draws, 
 however we have already understood the intuition behind various terms and hence it is merely a computational task now.  
@@ -66,7 +64,7 @@ Solving it numerically we get that $\alpha = 0.87856$ works.
 $\Ex[\mbox{Cut}]  \geq 0.87856 \mbox{\ SDPOpt} \geq 0.87856 \mbox{\ Opt }$
 \end{remark} 
  
- \subsection{Gaussian Rounding for Unique CSP's}
+\subsection{Gaussian Rounding for Unique CSP's}
 
 We begin the graph-theoretic definition of the \textit{uniqueness property} of a CSP.
 \begin{definition}{\bf Unique Game}\\
@@ -105,11 +103,4 @@ F(u) = \ell^*
 \begin{theorem}
 If the optimal solution of the unique game satisfies $1-\epsilon$ fraction of constraints, then the above algorithm in expectation satisfied $1-O({\sqrt{\epsilon \log q }})$ fraction of constraints.
 \end{theorem}
-Proof of the above theorem is quite involved and we refer the reader to \cite{cmm06} for the analysis, which mainly involved tools and techniques from Probability theory.
-
-\subsection{CSP-Specific Relaxations and Rounding Schemes}
-\begin{itemize}
-\item Max-k-SAT
-\item graph coloring
-\item something else
-\end{itemize}
+Proof of the above theorem is quite involved and we refer the reader to \cite{cmm06} for the analysis, which mainly involved tools and techniques from probability theory.
