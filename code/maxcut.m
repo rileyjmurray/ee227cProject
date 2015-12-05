@@ -1,9 +1,9 @@
-function [ maxCutProblem ] = maxcut( n, e, seed )
+function [ maxCutProblem ] = maxcut( n, e )
 % generate random graph for max cut problem
 % n = number of vertices
 % e = number of edges
 
-rng( seed )
+%rng( seed )
 
 % Relation for the maxcut
 r = @(x) x(1)~=x(2); 
