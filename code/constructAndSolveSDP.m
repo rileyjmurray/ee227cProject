@@ -111,9 +111,7 @@ cvx_begin
 
     for c_i=1:num_c
         sum(lambdaVar(c_i, :)) == 1;
-        t = 0;
-        for v=1:V
-            tic;
+        for v= constraints{ c_i }.scope'
             for l=1:D
                 for v2 = 1 : V
                     for l2 = 1 : D
@@ -121,11 +119,8 @@ cvx_begin
                     end
                 end
             end
-            t = t + toc;
-            et = (t/v * (V-v));
-            display(strcat('constraint progess',num2str(c_i / num_c)))
-            display(strcat('remaining for this constraint',num2str(et)))
         end
+        display(strcat('constraint progess',num2str(c_i / num_c)))
     end
     for v = 1:V
         for l = 1:D
