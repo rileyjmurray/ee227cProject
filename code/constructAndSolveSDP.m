@@ -103,7 +103,7 @@ echo on
 cvx_begin
 
     variable lambdaVar(num_c, M)
-    variable sigmaVar( V * D, V * D ) semidefinite % rows / cols are  indexed like (v_1,l_1),(v_1,l_2),...,(v_1,l_D),(v_2,l_1)....
+    variable sigmaVar( V * D, V * D ) symmetric semidefinite % rows / cols are  indexed like (v_1,l_1),(v_1,l_2),...,(v_1,l_D),(v_2,l_1)....
     maximize ( trace(lambdaVar' * W * RLS ));
     subject to
     0<= lambdaVar <=1;
