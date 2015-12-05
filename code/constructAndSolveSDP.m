@@ -1,4 +1,4 @@
-function [sigmaVar, lambdaVar] = constructAndSolveSDP(problem)
+function [sigmaVar, lambdaVar, cvx_optval] = constructAndSolveSDP(problem)
 % Defining the CSP / recalling it
 
 V = problem.numVariables; % Number of variables
