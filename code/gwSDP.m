@@ -13,11 +13,17 @@ for i=1:num_c
     W(scope_i(2), scope_i(1)) = W(scope_i(2), scope_i(1))+w(i); 
 end
 
+% Ideally the objective is $\sum _{(i, j) \in E} 0.5 w_{ij}*(1 -
+% \Sigma_{ij})$ but we sum over all i and j and thus all entries are
+% repeated and we can modify the expression to $\sum_i \sum_j 0.25*w_{ij}(1 
+% - \Sigma_{ij})$.  $\sum_i \sum_j w_{ij} = 2 \sum_{(i, j) \in E} w_{ij} = 
+% 2$ and the later term can be written as trace(W'*\Sigma).
+
 echo on 
 
 cvx_begin
     variable sigmaVar(n,n) symmetric semidefinite
-    maximize (0.5*(sum(w)-trace(W'*sigmaVar))); 
+    maximize (0.25*(2*sum(w)-trace(W'*sigmaVar))); 
     subject to 
         diag(sigmaVar) == 1;
 cvx_end
