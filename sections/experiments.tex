@@ -40,7 +40,7 @@ The 3-SAT instances where generated as follows:
 The results of the experiments are reported in Table \ref{tab:expSat}. It is observed that generating the CVX formulation as well as solving the LP is the bottleneck. As expected, this increases when the problem instances become large. Furthermore, note that the proven bound of $0.63$ is indeed satisfied. This is an empirical verification of the stated theorem.
 
 \subsection{Experiments with Max-Cut}
-In this section, we generate several max-cut problem instances and then compare the results using LP Relaxation and SDP Relaxation. We also present empirical results for the schemes namely LP Rounding and GW Rounding (section \ref{GWAlgo}). 
+In this section, we generate several max-cut problem instances and then compare the results using LP Relaxation and SDP Relaxation. We also present empirical results for the schemes namely LP Rounding (section \ref{sec:lpRoundingSat}) and GW Rounding (section \ref{GWAlgo}). 
 
 The Max-Cut instances were generated as follows. We provide set of vertices $(V)$, and the number of edges as the input $(E)$. Next, 
 \begin{enumerate}
@@ -56,7 +56,11 @@ In this fashion, we are able to generate a random instance of a bipartite graph 
 
 The way we generate the problem instances, they do have an optimal cut and hence in either relaxation schemes, the optimal value will be $1$. Hence, we only compare the results for the effectiveness of the two rounding schemes, by listing the value that we obtain by randomly rounding the solution that we obtain from the relaxations. 
 
-
+As for the previous set up, we use CVX for solving the convex problem in either relaxation. We have following comments on the results that are tabulated in Table \ref{tab:maxlp} for the LP Relaxation and Table \ref{tab:maxgw} for the SDP relaxation. 
+\begin{itemize}
+\item For the LP relaxation, the round value is around $0.5$ which is same as for a random assignment suggesting that LP rounding doesn't work very well for the Max-Cut. 
+\item The Goemans and Williamson Rounding scheme works very well for \emph{almost all} instances which was quite surprising, nevertheless we think that owes justification in the fact that we tested them only on bipartite graphs. It is worthwhile to note that for bipartite graphs there exists a deterministic algorithm which runs in linear time to give us the optimal cut, and in our case this random scheme seems to be almost equally good. 
+\end{itemize}
 
 \begin{table}
 	\footnotesize
@@ -78,7 +82,8 @@ The way we generate the problem instances, they do have an optimal cut and hence
     100 				& 100	 					& 1(0) & 1(0) 		& 0.51(0.06)	& 1.38(0.06)	& 0.025(0.003)	  	& 0.00(0.00)\\
     100 				& 200	 					& 1(0) & 1(0) 		& 0.50(0.04)	& 2.4(0.2)		& 0.0461(0.003)	  	& 0.00(0.00)\\
  \bottomrule
-	\end{tabularx}                                                                                                                                  
+	\end{tabularx}      
+	\label{tab:maxlp}                                                                                                                            
 \end{table}
 
 
@@ -105,7 +110,8 @@ The way we generate the problem instances, they do have an optimal cut and hence
     100 				& 200	 					& 1(0) & 1(0) 		& 1(0)				& 0.62(0.08)			& 0.0461(0.003)	 & 0.00(0.00)\\
 
  \bottomrule
-	\end{tabularx}                                                                                                                                  
+	\end{tabularx}            
+	\label{tab:maxgw}                                                                                                                      
 \end{table}
 
 
