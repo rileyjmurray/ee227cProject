@@ -21,7 +21,7 @@ Let $\mathcal{C} = (V,C,W)$ be a CSP over domain $D$, and let $\Sigma \in \mathb
 \begin{alignat}{2}
 \max_{\lambda, \Sigma} ~&~ \sum_{i : C_i \in C} \sum_{L \in \mathcal{L}_i}   w_i\lambda_i[L] R_i(L) & \\
 s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C \label{eq:SDPlambdaSum} \\
-     ~ & ~ \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell, L(v')=\ell'} }\la_{i}[L] &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
+     ~ & ~ \sum_{\substack {L\in \mathcal{L}_{i}\\ L(v) = \ell\\ L(v')=\ell'} }\la_{i}[L]  = \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}}  &~\forall v,v' \in V, \ell,\ell' \in D, i : C_i \in C \label{eq:SDPtiePSD}\\
      ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
      ~& ~ \Sigma_{\lrb{v, \ell},\lrb{v, \ell'}} = 0 & \forall \ell' \neq \ell,  \forall v \in V\\
      ~ & ~ \Sigma \succeq 0& \label{eq:SDPPSD}
