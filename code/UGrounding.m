@@ -1,7 +1,7 @@
-%% Rounding scheme for UG problems
+function [ F ] = UGrounding( sigma, V, D )
 
-V = 3;
-D = 2;
+%% Rounding scheme for UG problems
+U = chol(sigma); 
 
 r = rand();
 
