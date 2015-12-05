@@ -1,10 +1,9 @@
 \section*{Appendix}
-\subsection*{Notation in Raghavendra's Papers}
-Unfamiliar and complex notation can make reading either of the original works (\textit{Optimal Algorithms .. For Every CSP?}, or \textit{How to Round Any CSP.}) difficult. In this section, we consolidate the notation used in these works to aid future readers.
 
-\subsubsection*{Notation in \textit{Optimal Algorithms ... For Every CSP?} (2008)}
+\subsubsection{Conflicting Conventions for CSP's : ``Hard" or ``Soft" Constraints?}
 
-\subsubsection*{Notation in \textit{How to Round Any CSP} (2009)}
+The reader may find that some literature on CSP's insists that CSP constraints are ``hard"\footnote{Wikipedia has several articles on CSP's and CSP extensions which use this convention.}, while others claim that CSP constraints are ``soft." In both frameworks, CSP's are noted as being NP-Hard or NP-Complete in the general case. To clear the air, we note that a constraint is said to be \textit{hard} if it is inviolable, and a constraint is said to be \textit{soft} if it has some finite contribution to an objective function. 
 
-\subsection{Recommended Reading}
-"Handbook of Approximation Algorithms : Chpt 8 : On Analyzing SDP Relaxations of Complex Quadratic Optimization Problems"
+The artificial intelligence community has spent a considerable amount of effort developing algorithms for a family of problems consisting of \textit{hard constraints} and \textit{no objective function} (and has come to call these problems ``CSP's")  \cite{Russell2009}. The algorithms developed for these problems are usually designed to search as much of the solution space as is necessary to find a feasible solution, and AI community often says that CSP's have only \textit{hard} constraints.
+
+Conversely, the theoretical computer science community is more likely to say that CSP's consist of only \textit{soft} constraints. The different definition reflects that trend that the theoretical computer science community is generally less interested in exact algorithms for NP-complete problems than fundamental limitations of approximation algorithms.
