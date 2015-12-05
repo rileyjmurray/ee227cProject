@@ -123,8 +123,7 @@ We associate $\Si$ to joint real random variables $\lrb{I_v(\ell)}_{v\in V, \ell
 \al{
 \Sigma_{\lrb{v, \ell},\lrb{v', \ell'}} = \Ex\lrbb{I_v(\ell) I_{v'}(\ell')}. \label{secondmom}
 }
-Since we impose $\Si \succeq 0$, this is indeed a valid representation. 
-We also have constraints which cause these random variables to hang together with the $\la_{i}$'s in a gentlemanly fashion. We also impose
+Since we impose $\Si \succeq 0$, this is indeed a valid representation. We also impose
 \al{
 \sum_{(v',\ell')} \Sigma_{{\lrb{v, \ell},\lrb{v', \ell'}}} = \Ex \lrbb{I_v(\ell)}. \label{firstmom}
 }
@@ -141,7 +140,7 @@ Note that this is also true for any true-indicator variable (i.e., for any rando
 \al{
 \ref{fullprob} \rr \Pb_{L(\tilde{C})} \lrb{L(v)=\ell} &= \sum_{(v', \ell')} \Pb_{L(\tilde{C})} \lrb{L(v)=\ell, L(v')= \ell'} \\
 &= \sum_{(v',\ell')} \Sigma_{{\lrb{v, \ell},\lrb{v', \ell'}}}\label{firstprob} \\
-\rr \Pb_{L(\tilde{C})} \lrb{L(v)=\ell} &\overset{\ref{firstmom}}= \Ex \lrb{I_v(\ell)} \label{thm43}
+\rr \Pb_{L(\tilde{C})} \lrb{L(v)=\ell} &\overset{\ref{firstmom}}= \Ex [I_v(\ell)] \label{thm43}
 }
 \al{
 \Ex \lrbb{I_v(\ell)^2)} &= \Sigma_{{\lrb{v, \ell},\lrb{v, \ell}}} \\
