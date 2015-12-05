@@ -3,20 +3,19 @@
 % ----------------------------------------------------------------
 
 % number of times to repeat each experiment
-rep = 5;
+rep = 50;
 
 % size of problems. Col 1 = num vars, col 2 = num constraints
 expSettings = [ 
     5 4;
     10 50;
     20 40;
-%     20 100;
-%     50 50;
-%     50 100;
-%     50 200;
-%     100 100;
-%     100 200;
-%     100 400;
+    20 100;
+    50 50;
+    50 100;
+    50 200;
+    100 100;
+    100 200;
     ];
 genTime = - ones( size( expSettings, 1 ), rep );
 optval = - ones( size( expSettings, 1 ), rep );
@@ -57,10 +56,10 @@ for i = 1 : size( expSettings, 1 )
         [sigmaVargw, gwsdpval(i, j)] = gwSDP(problem);
         gwsolveTime(i, j) = toc;
         
-        tic;
-        % solve SDP relax UG
-        [ sigmaVarug, lambdasdp, ugsdpval(i,j) ] = constructAndSolveSDP( problem );
-        ugsolveTime( i, j ) = toc;
+%         tic;
+%         % solve SDP relax UG
+%         [ sigmaVarug, lambdasdp, ugsdpval(i,j) ] = constructAndSolveSDP( problem );
+%         ugsolveTime( i, j ) = toc;
         
         tic;
         %solve lp relax
@@ -74,11 +73,11 @@ for i = 1 : size( expSettings, 1 )
         gwroundTime( i, j ) = toc;
         gwroundval( i, j ) = problem.evaluateObjective( assignment );
         
-        tic;
-        % apply UG rounding scheme
-        [ assignment ] = UGrounding(sigmaVarug, V, D);
-        ugroundTime( i, j ) = toc;
-        ugroundval( i, j ) = problem.evaluateObjective( assignment );
+%         tic;
+%         % apply UG rounding scheme
+%         [ assignment ] = UGrounding(sigmaVarug, V, D);
+%         ugroundTime( i, j ) = toc;
+%         ugroundval( i, j ) = problem.evaluateObjective( assignment );
         
         tic;
         % apply LP rounding scheme
