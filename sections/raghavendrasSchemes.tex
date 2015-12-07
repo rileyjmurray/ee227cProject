@@ -104,9 +104,7 @@ This established, we move on to the algorithm itself. In the original paper, the
 
 \subsubsection{Smoothing an SDP Solution}
 
-\subsubsection{Time Complexity of UGDFS}
-
-\subsubsection{Performance Guarantees of UGDFS}
+\subsubsection{Time Complexity and Performance Guarantees of UGDFS}
 
 \subsection{How to Round Any CSP (2009)}
 As before, we present the algorithm at a high level and then address each bullet point in detail. Unlike the previous section, we explain the steps in the order that they would be executed by the algorithm. The reader is welcome to read these explanatory sub-sections in any order. 
@@ -122,7 +120,7 @@ Discussion of runtime and performance guarantees follows the step explanations.
 \begin{itemize}
 \item Build $\text{SDP}_{\text{gen}}(\mathcal{C})$.
 \item Solve $X \leftarrow \text{SDPgen}(\mathcal{C}).\text{solve}$.
-\item SMOOTHING???
+\item Smoothen the solution.
 \item Identify a set of ``bad" constraints $B_{\epsilon} = \text{ConstraintAssesor}(\mathcal{C},X)$.
 \item Define a new CSP, $\mathcal{C}'$ with constraint set $\{C_i \in \mathcal{C} : C_i \not \in B_{\epsilon}\}$.
 \item Define yet another CSP, ``$\mathcal{C}'/\phi$" $ \leftarrow \text{Folding}(\mathcal{C}')$.
@@ -142,8 +140,6 @@ Discussion of runtime and performance guarantees follows the step explanations.
 
 \subsubsection{Unfolding the Variable Assignment $F^*$}
 
-\subsubsection{Time Complexity of The Variable Folding Method}
-
-\subsubsection{Performance Guarantees of The Variable Folding Method}
+\subsubsection{Time Complexity and Performance Guarantees of The Variable Folding Method}
 
 %\end{document}

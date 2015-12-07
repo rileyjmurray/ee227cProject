@@ -8,8 +8,7 @@ This section presents the following
 
 \subsection{A Framework for Rounding Basic SDP} 
 Note that the solution of the relaxed problem gives us a PSD matrix and probability distributions over constraints. 
-Next challenge is to make a ``consistent draw" from this distribution and analyzing the expected value of CSP resulting from such draws, 
-however we have already understood the intuition behind various terms and hence it is merely a computational task now.  
+The next challenge is to make a ``consistent draw" from this distribution and analyzing the expected value of CSP resulting from such draws. 
 
 We concretely summarize various angles, that we discussed briefly before, to look at canonical SDP relaxations for a CSP :
 \begin{itemize}
@@ -25,9 +24,9 @@ This perspective is suited for developing``SDP Rounding algorithms".
 We now move to the quintessential SDP and randomized-rounding based approximation algorithm for Max-Cut.
 
 \subsection{Goemans Williamson Algorithm}\label{GWAlgo}
-By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-cut. 
+By now, we know how to relax Max-Cut to an SDP, and assuming efficient poly-time algorithm for SDP solver, we have a solution for the SDP formulation. Now, we want to somehow convert that back to \textit{good solution} for Max-Cut. 
 
-We will borrow notation and variables from Section \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{n \times |V|}$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix. (Note that choice of $n$ was more or less arbitrary and preferably $n \leq |V|$). 
+We will borrow notation and variables from Section \ref{maxcut}. We remind the reader that the notation for the example is different than our Basic SDP and also $Y \in \R^{d \times |V|}, (d \leq |V|)$ and $\Si \in \R^{|V| \times |V|}$ as against our Basic SDP where we have $|V| \cdot |D|$ columns in place of $|V|$ for either matrix.
 
 Next we discuss the rounding discussed in \cite{gwFirstMaxCutSDP}. We assume that given the optimal solution of the SDPformulation of  Max-Cut  in  Example \ref{maxcut}  (which is not Basic!) we have already found $Y$ such that $Y\trans Y = \Si$ (which can be done in polynomial time using Cholesky Decomposition).
 
@@ -45,11 +44,11 @@ For a given graph $G = (V, E)$, with $V =\{1, \ldots, n\}$, and $E$ the set of e
 Now consider just simply the $2D$ plane containing $y_i, y_j$. Since the hyperplane was chosen from a rotationally symmetric distribution, the probability that it cuts these two vectors is same as that a random diameter in the circle containing $y_i, y_j$, lies in between the angle $\theta$ of these two vectors. Thus, 
 \al{
 \Pb[(i, j) \mbox{ gets cut} ] &= \frac{\theta}{\pi} =\frac{{\rm cos\inv}\lrb{y_i \cdot y_j}}{\pi} = \frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}\\
-\Ex[\mbox{Weight of edges cut}] &= \sum_{(i, j) \in E}w_{ij} \Pb[(i, j) \mbox{ gets cut} ] = \sum_{(i, j) \in E}w_{ij} \frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}
+\Ex[\mbox{Weight of edges cut}] &= \sum_{[i, j] \in E}w_{ij} \Pb[(i, j) \mbox{ gets cut} ] = \sum_{[i, j] \in E}w_{ij} \frac{{\rm cos\inv}\lrb{\Si_{ij}}}{\pi}
 }
 Now recall that 
 \al{
-\mbox{SDPOpt} = \sum_{(i, j) \in E} w_{ij} \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \geq \mbox{Opt}.
+\mbox{SDPOpt} = \sum_{[i, j] \in E} w_{ij} \lrb{\frac{1}{2}-\frac{1}{2}\Si_{ij}} \geq \mbox{Opt}.
 }
 So, if we find $\alpha$ such that 
 \al{

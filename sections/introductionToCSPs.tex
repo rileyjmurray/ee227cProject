@@ -40,7 +40,7 @@
 %\parskip 8pt
 
 \section{Introduction to Constraint Satisfaction Problems}\label{sec:introToCSP}
-There are conflicting conventions regarding what is and is not a CSP. This section is devoted to defining ``CSP"'s in the way that is usually meant by the theoretical computer science community. Some alternative characterizations of CSP's are addressed at the end of this section.
+There are conflicting conventions regarding what is and is not a CSP. This section is devoted to defining ``CSP"'s in the way that is usually meant by the theoretical computer science community. A great help in getting {\it ourselves} oriented in the broad topic of CSP's and CSP approximations were lecture notes from Ryan O' Donnell's course at CMU \cite{Ryan}.
 \subsection{Getting Oriented with CSP's}
 
 There is a great deal of research going into the approximabilty of constraint satisfaction problems, and some claims regarding CSP's can seem quite sensational. 
@@ -72,10 +72,9 @@ We usually write $D = \{0,1,\ldots,q-1\}$, although the elements of $D$ can serv
 \begin{itemize}
 \item Max-Cut : For a graph $G = (V,E)$, label each vertex either ``$0$" or ``$1$" to maximize the number of edges connecting vertices with different labels.   
 Here $D = \{0,1\}$, and all constraints are of the form $\{v_i \neq v_j\}$. We could write $\Gamma = \{\neq\}$ as the ``not equal" operator. 
-\item $q-$Coloring : Find an as-consistent-as-possible coloring for a graph using at most $q$ colors. 
+\item Graph Coloring : Find an as-consistent-as-possible coloring for a graph using at most $q$ colors. 
 Our domain is $D = \{0,1,\ldots,q-1\}$, and $\Gamma$ is again $\{\neq\}$. 
 Note that Max-Cut is equivalent to $q-$coloring with $q = 2$.
-\item Max E3-SAT : Here, the domain is $D = \{0,1\}$, and our constraint types (elements of $\Gamma$) are of the form $(x_j \vee x_j \vee x_k)$, $(x_i\vee \bar{x}_j \vee x_k)$, $(\bar{x}_i \vee \bar{x}_j \vee x_k)$, $\ldots$ - all disjunctions on \textit{`E'xactly} $3$ literals. 
 \item Max $k-$SAT : $D = \{0,1\}$, $\Gamma$ is all disjunctions of \textit{up to} $k$ literals.
 \item $3-$CSP : $D = \{0,1\}$, $\Gamma$ is all relations on up to three binary variables.
 \end{itemize}
@@ -162,7 +161,7 @@ Khot posed the ``game" in the UGC in three equivalent ways
 \item A new graph-theoretic CSP called ``Label Cover."\footnote{Khot's game chose a particular type of Label Cover problem where the graph is bipartite, but subsequent discussions of Unique Games do not emphasize this characteristic. }
 \end{itemize}
 
-If it is claimed that an algorithm is for ``Unique Games," the reader would do well to clarify which formation the author's work with. Because graph theory has a larger research community than those working with Probabilistically Checkable Proofs, several researchers (including Khot himself) primarily use the Label Cover formulation of Unique Games in discourse. 
+If it is claimed that an algorithm is for ``Unique Games," the reader would do well to clarify which formulation the authors work with. Because graph theory has a larger research community than those working with Probabilistically Checkable Proofs, several researchers (including Khot himself) primarily use the Label Cover formulation of Unique Games in discourse. 
 
 The interested reader is strongly recommended to read Khot's original paper for a precise definitions for Proababilistically Checkable Proofs, the Two-Prover One-Round ``unique" game, and the Label Cover problem. But suffice it to say
 

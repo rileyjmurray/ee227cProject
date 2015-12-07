@@ -1,7 +1,7 @@
 \section{Linear Programming for CSP Approximation}\label{sec:lpRelax}
 The goal of this section is to present a ``canonical" LP relaxation and rounding scheme for Constraint Satisfaction Problems. Both the relaxation and rounding scheme are valid for arbitrary CSP's, although performance guarantees are only proven in limited cases.  A non-exhaustive list of CSP-specific LP relaxations is included at the end of this section.
 
-\subsection{An Integer Program : Towards the Canonical LP [CITE]}\label{subsec:ip}
+\subsection{An Integer Program : Towards the Canonical LP }\label{subsec:ip}
 Let $\mathcal{C} = (V,C,W)$ be a CSP over a domain $D$ of size $q$.
 
 Earlier, we defined an \textit{assignment of variables} as a function $F : V \to D$. Critically, the domain of $F$ is the entire set $V$. When this is the case, we could call $F$ a \textit{full assignment}. It is reasonable (and as we will see, helpful!) to consider $F$ as being built from many \textit{local assignments} $L : S \to D$ where $S \subset V$. For a constraint $C_i = (R_i,S_i) \in \mathcal{C}$, we will be interested in the local assignment $L : S_i \to D$. Where before we could write $R_i(F(S_i))$ as the value of the constraint under an assignment, we write $R_i(L)$ when it is given that $L$ is a local assignment for constraint $C_i$.
