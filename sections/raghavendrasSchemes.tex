@@ -211,8 +211,8 @@ This established, we move on to the algorithm itself. In the original paper, the
 We need to define a few terms before we precisely state $\Omega$. Let $\Delta_q$ denote the set of standard basis vectors in $\mathbb{R}^q$, and define $\text{Conv}(\Delta_q)$ as the convex hull of these vectors. We plot $\text{Conv}(\Delta_2)$ and $\text{Conv}(\Delta_3)$ below.
 
 \begin{center}
-\includegraphics[scale=0.4]{../images/convDelta2} \qquad
-\includegraphics[scale=0.4]{../images/convDelta3}
+\includegraphics[scale=0.4]{images/convDelta2} \qquad
+\includegraphics[scale=0.4]{images/convDelta3}
 \end{center}
 
 That is, $\text{Conv}(\Delta_2)$ is a line, and $\text{Conv}(\Delta_3)$ is a triangular segment of a plane. More generally, $\text{Conv}(\Delta_q)$ is the $q-$dimensional simplex.
@@ -238,8 +238,8 @@ And so if we want to ensure that we miss $\mathcal{F}^*$ by no more than some sm
 How can we construct $\mathcal{S}_\kappa$? We need only discretize the \textit{output space} $\text{Conv}(\Delta_q)$. For boolean CSP's, we would divide the line $\text{Conv}(\Delta_2)$ into $\lceil \sqrt{2}/\kappa \rceil$ intervals of length no more than $\kappa$. Alternatively for $ q = 3$, we partition $\text{Conv}(\Delta_3)$ into small squares of area approximately $1/\kappa^2$. Both of these instances are illustrated below.
 
 \begin{center}
-\includegraphics[scale=0.4]{../images/GConvDelta2} \qquad
-\includegraphics[scale=0.4]{../images/GConvDelta3}
+\includegraphics[scale=0.4]{images/GConvDelta2} \qquad
+\includegraphics[scale=0.4]{images/GConvDelta3}
 \end{center}
 
 For larger $q$, the process becomes more complicated, but is roughly the same in principle.
