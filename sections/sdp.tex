@@ -25,7 +25,7 @@ s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} \lambda_i[L] = 1  & \forall i : C_i \in C 
      ~ & ~ 0 \leq \lambda_i[L] \leq 1  & \forall  i : C_i \in C, L \in \mathcal{L}_i  \label{eq:SDPlambdaNonNeg} \\ 
      ~& ~ \Sigma_{\lrb{v, \ell},\lrb{v, \ell'}} = 0 & \forall \ell' \neq \ell,  \forall v \in V\\
      ~ & ~ \Sigma \succeq 0& \label{eq:SDPPSD}
-\end{alignat}
+\end{alignat} \label{def:BasicSDP}
 \end{definition}
 
 \begin{theorem}
@@ -183,10 +183,13 @@ Thus we have
 \end{proof}
 
 \subsubsection{Cholesky Decomposition}
-Note that since $\Sigma \succeq 0$ we can use \emph{Cholesky Decomposition} to find 
+
+Since $\Sigma \succeq 0$ we can use decompose it to find 
 $$Y = \lrbb{y_{(v, \ell)}: (v, \ell) \in V \times D}$$
 such that 
 $$\Sigma = Y\trans Y$$ and hence $$ \Sigma_{(v, \ell), (v', \ell')} = y_{(v, \ell)}\trans y_{(v', \ell')}.$$
-And this can be done in polynomial time. This interpretation is also present across literature, and then Basic SDP is equivalent to finding the set of vectors $\{y_{(v, \ell)} : (v, \ell) \in V \times D\}$ which satisfy the appropriately modified version of constraints \ref{eq:SDPtiePSD}-\ref{eq:SDPPSD}.
+This interpretation is also present across literature, and then Basic SDP is equivalent to finding the set of vectors $\{y_{(v, \ell)} : (v, \ell) \in V \times D\}$ which satisfy the appropriately modified version of constraints \ref{eq:SDPtiePSD}-\ref{eq:SDPPSD}.
 
+In the strict sense, the Cholesky decomposition only applies when $\Sigma \succ 0$, but we will very likely have some eigenvalues of $\Sigma$ equal to zero. Nevertheless, we can compute the $LDL^\intercal$ decomposition and merge $\sqrt{D}$ into the triangular matrices to construct the desired $Y$. Even a naive Gaussian-elimination based implementation of the $LDL^\intercal$ decomposition runs in $O(N^3)$ time, so recovering $Y$ from $\Sigma$ does not pose a problem computationally.
 
+Because this process is equivalent to the Cholesky decomposition when $\Sigma \succ 0$, we simply say ``compute the Cholesky decomposition" when we mean the $LDL^\intercal$-to-$Y$ decomposition indicated above.
