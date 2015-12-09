@@ -253,6 +253,7 @@ One practical question remains - how many functions are in $\mathcal{S}_\kappa$?
 
 \begin{algorithm}\textbf{ $\text{Round}_{\mathcal{F}}(\mathcal{C},M)$} \\
 
+
 \textit{Input} : The CSP $\mathcal{C}$ and a matrix $M$ whose columns are the smoothed vectors $v_{(i,c)}$.
 
 \textit{Output} : An assignment of variables $F : V \to D$. 
@@ -294,7 +295,6 @@ One practical question remains - how many functions are in $\mathcal{S}_\kappa$?
 As demonstrated in Section \ref{subsec:buildSolveSmooth}, the time complexity of getting to the beginning of discretizing $\Omega$ is $O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right] + T^u + n^2q^2)$.
 
 As we will see in this section, the time to discretize $\Omega$ and search over $\mathcal{S}_{\kappa}$ makes the algorithm prohibitively slow in practice. We showed in Section \ref{subsubsec:UGDFS_discretize} that the size of the set $S_{\kappa}$ is approximately $\left(\kappa^{-q}\right)^{q^R}$. Even if it were possible to identify each function in $O(1)$ time, we would still be looking at $O(\left(\kappa^{-q}\right)^{q^R})$ iterations of $\text{Round}_{\mathcal{F}}$. 
-
 
 To put this in perspective, consider CSP's with domain size 3. For such CSP's set $\kappa = 1/3$ and assume $R = 2$ (the smallest possible $R$ that could possibly be consistent with its definition). From these parameters we have $|\mathcal{S}_\kappa| \approx 7.65\cdot 10^{12}$ (for comparison, $2^{32} \approx 4.29\cdot 10^9$). And so even if $\text{Round}_{\mathcal{F}}$ ran in $O(1)$ time per call, implementing UGDFS would be very impractical.
 
@@ -418,5 +418,6 @@ Now some discussion on $\beta$. Of course, we are concerned with CSP instances w
 At the time of writing, no exact 3-SAT solver can come close to reliably solving problems with 500,000 variables, and so for practical purposes, using an exact solver on the original CSP $\mathcal{C}$ is likely preferable to the Variable Folding Method as an approximation algorithm.
 
 However, the Variable Folding Method can be modified and still followed ``in spirit" in ways that UGDFS cannot. Namely, rather than projecting on to a subspace of dimension $\beta$ with $\beta \gg k^2q^2/\epsilon^3$, we could project onto a more practical number of dimensions, say $3$. In such a small space, the task of explicitly constructing an $\epsilon$-net $H$ for the unit ball becomes straightforward, and the number of variables in the set $Z$ would invariably be far less than $\exp(\text{poly}(kq/\epsilon))$.
+
 
 %\end{document}
