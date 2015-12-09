@@ -1,57 +1,59 @@
-%\documentclass[letterpaper, 12pt]{article}
-%
-%\usepackage[margin=2.5cm]{geometry}
-%\usepackage{amsmath,amsthm,amssymb}
-%\usepackage[]{mathtools}
-%\usepackage[]{bbm}
-%
-%\numberwithin{equation}{section}
-%
-%% --to donotes
-%\usepackage{xargs}                      % Use more than one optional parameter in a new commands
-%\usepackage[dvipsnames]{xcolor}
-%\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-%\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-%\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-%\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-%\newcommandx{\maybeinclude}[2][1=]{\todo[linecolor=Orange,backgroundcolor=Orange!25,bordercolor=Orange,#1]{#2}}
-%\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-%
-%\usepackage[]{thmtools}
-%\usepackage[dvipsnames]{xcolor}
-%\declaretheoremstyle[
-%	bodyfont=\normalfont, 
-%	spaceabove=0.5cm]{defFormat}
-%\declaretheoremstyle[
-%	postheadspace=1cm,
-%	bodyfont=\normalfont, 
-%	spaceabove=0.5cm]{inLineDefFormat}
-%\declaretheoremstyle[
-%	spaceabove=0.5cm, 
-%	spacebelow=0.5cm,
-%	postheadspace=1cm]{namedTheorem}
-%\declaretheorem[
-%	numberwithin=section, 
-%	style=defFormat, 
-%	shaded]{definition}
-%\declaretheorem[
-%	numbered=no, 
-%	style=defFormat, 
-%	shaded]{algorithm}
-%\declaretheorem[
-%	style=inLineDefFormat, 
-%	sibling=definition,
-%	shaded,
-%	name=Definition]{ILdefinition}
-%\declaretheorem[
-%	numbered=no, 
-%	style=namedTheorem, 
-%	shaded, 
-%	name=The Unique Games Conjecture]{ugc}
-%\newtheorem{thm}{Theorem}
-%\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
-%\begin{document}
-\section{``Optimal" SDP Rounding Schemes}
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{placeins, graphicx}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[]{mathtools}
+\usepackage[]{bbm}
+
+\numberwithin{equation}{section}
+
+% --to donotes
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\maybeinclude}[2][1=]{\todo[linecolor=Orange,backgroundcolor=Orange!25,bordercolor=Orange,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+
+\usepackage[]{thmtools}
+\usepackage[dvipsnames]{xcolor}
+\declaretheoremstyle[
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{defFormat}
+\declaretheoremstyle[
+	postheadspace=1cm,
+	bodyfont=\normalfont, 
+	spaceabove=0.5cm]{inLineDefFormat}
+\declaretheoremstyle[
+	spaceabove=0.5cm, 
+	spacebelow=0.5cm,
+	postheadspace=1cm]{namedTheorem}
+\declaretheorem[
+	numberwithin=section, 
+	style=defFormat, 
+	shaded]{definition}
+\declaretheorem[
+	numbered=no, 
+	style=defFormat, 
+	shaded]{algorithm}
+\declaretheorem[
+	style=inLineDefFormat, 
+	sibling=definition,
+	shaded,
+	name=Definition]{ILdefinition}
+\declaretheorem[
+	numbered=no, 
+	style=namedTheorem, 
+	shaded, 
+	name=The Unique Games Conjecture]{ugc}
+\newtheorem{thm}{Theorem}
+\declaretheorem[numberwithin=section, style=defFormat, shaded]{Definition}
+\begin{document}
+\newpage
+\section{``Optimal" SDP Rounding Schemes}\label{sec:optRoundSchemes}
 In 2008, Prasad Raghavendra published a paper entitled \textit{Optimal Algorithms and Inapproximability Results for Every CSP?}. We highlight the important characteristics below:
 
 \begin{itemize}
@@ -62,7 +64,7 @@ In 2008, Prasad Raghavendra published a paper entitled \textit{Optimal Algorithm
 \item The algorithm does have some performance guarantees for 2-CSP's irrespective of the truth of the UGC.
 \end{itemize}
 
-The second of the points above seems truly profound. It suggests that even purpose-built approximation algorithms could have asymptotically inferior performance to Raghavendra's generic algorithm. Indeed, many using optimization in practice would want to know: is Raghavendra's generic algorithm more computationally expensive than some purpose-built algorithms? Does Raghavendra's algorithm outperform purpose-built algorithms in practice? 
+The third of the points above seems truly profound. It suggests that even purpose-built approximation algorithms could have asymptotically inferior performance to Raghavendra's generic algorithm. Indeed, many using optimization in practice would want to know: is Raghavendra's generic algorithm more computationally expensive than some purpose-built algorithms? Does Raghavendra's algorithm outperform purpose-built algorithms in practice? 
 
 To add to these questions, Raghavendra and Steurer proposed yet another rounding scheme in their 2009 paper \textit{How to Round Any CSP}. Again, we highlight the important characteristics:
 
@@ -74,12 +76,116 @@ To add to these questions, Raghavendra and Steurer proposed yet another rounding
 
 The first point is at first very exciting, but the third is somewhat baffling. Where do these double-exponentials come from, and how is it that this algorithm could possibly be ``polynomial time?"
 
-The remainder of this section is devoted to clearly communicating how these two algorithms would work if they where in fact implemented. Along the way, we will see the extent to which implementation is even possible.
-\subsection{Constructing $\text{SDP}_{\text{gen}}$ (used in both papers)}
-In \textit{Optimal Algorithms ... for Every CSP?}, the following SDP was called SDP(III). In subsequent work (\textit{How to Round Any CSP}) the following SDP was called $\text{SDP}_{\text{gen}}$. We use the newer term here to prevent the misconception that these SDP's are different.
+The remainder of this section is devoted to clearly communicating how these two algorithms would work if they were in fact implemented. Along the way, we will see the extent to which implementation is even possible.
+\subsection{Constructing, Solving, and ``Smoothing" $\text{SDP}_{\text{gen}}$ (used in both papers)}\footnote{In \textit{Optimal Algorithms ... for Every CSP?}, the following SDP was called SDP(I). In subsequent work (\textit{How to Round Any CSP}) the following SDP was called $\text{SDP}_{\text{gen}}$. We use the newer term here to prevent the misconception that these SDP's are different.
+}
+The goals of this section are to (1) develop a clear picture of the semidefinite program used in \textit{Optimal Algorithms} and \textit{How to Round Any CSP}, (2) explain an operation on the SDP solution (called ``smoothing") that both papers require as a technical detail, and (3) state the complexity of these steps combined. We will spend a fair amount of time on (1) before moving to (2) and (3).
+\subsubsection{Constructing $\text{SDP}_{\text{gen}}$}
+Coming to grips with the mathematical program ``$\text{SDP}_{\text{gen}}$" as stated in \textit{Optimal Algorithms} is complicated by the fact that it is \textit{not} an SDP as written. Convexity breaks down twice in ``$\text{SDP}_{\text{gen}}$".
+\begin{enumerate}
+\item ``$\text{SDP}_{\text{gen}}$" contains boolean variables $v_{i,c} \in \{0,1\}$
+\item ``$\text{SDP}_{\text{gen}}$" contains equality constraints which are not affine.
+\end{enumerate}
+Nevertheless, the results of the paper are correct, as Basic SDP can be used in place of $\text{SDP}_{\text{gen}}$ throughout \textit{Optimal Algorithms} and \textit{How to Round Any CSP}. To make the algorithms in \textit{Optimal Algorithms} and \textit{How to Round Any CSP} accessible to the reader, we present a series of mathematical programs which achieve the goal intended by $\text{SDP}_{\text{gen}}$. Each of these programs use the following objective
+\begin{equation}
+\sum_{i : C_i \in C} w_i \sum_{L \in \mathcal{L}_i} P_i(L) \lambda_i[L]
+\end{equation}
+where $P_i(L)$ is a \textit{payoff function} taking a local assignment $L$ for constraint $i$ to the interval $[-1,1]$. This is a generalization of $R_i(L)$ as being a binary relation on $L \in \mathcal{L}_i$.
+
+In \textit{Optimal Algorithms}, Raghavendra defines the variables $v_{(i,c)} \in  \{0,1\}$ as an indicator that variable $i \in V$ takes on value $c \in D$. Using this definition of $v$, the following constraints are intended by ``$\text{SDP}_{\text{gen}}$".
+\begin{alignat}{2}
+&\sum_{c \in D} v_{(i,c)} = 1 & \forall i \in V \label{eq:basicSDPIP_sumTo1} \\
+&v_{(i,c)}v_{(i,c')} = 0        & \forall i \in V , c \in D, c' \neq c \label{eq:basicSDPIP_noContradictions} \\
+&\sum_{\substack{L \in \mathcal{L}_i \\ L(i) = c \\ L(i') = c' }} \lambda_i[L] = v_{(i,c)}v_{(i',c')} & \forall i,i' \in V, c,c' \in D \label{eq:basicSDPIP_constrainLambda}
+\end{alignat}
+The above formulation is really a \textit{mixed integer geometric program} - an extraordinarily difficult to solve class of problems. Nevertheless, we may make one modification and take a big step toward Basic SDP. Namely, define $v_{(i,c)}$ not as indicators, but as \textit{vectors} in $\mathbb{R}^{N}_+$ for $N = n q$, $n = |V|$, and $q = |D|$.
+\begin{alignat}{2}
+(\ref{eq:basicSDPIP_sumTo1}) ~~\Rightarrow & ~~\sum_{c \in D} v_{(i,c)}^\intercal v_{(i,c)} = 1 & \forall i \in V \label{eq:basicSDPnearCVX_sumTo1} \\
+(\ref{eq:basicSDPIP_noContradictions}) ~~\Rightarrow &~~v_{(i,c)}^\intercal v_{(i,c')} = 0 & \forall i \in V, c \in D, c' \neq c \label{eq:basicSDPnearCVX_noContradictions} \\
+(\ref{eq:basicSDPIP_constrainLambda})~~ \Rightarrow & ~~\sum_{\substack{L \in \mathcal{L}_i \\ L(i) = c \\ L(i') = c' }} \lambda_i[L] = v_{(i,c)}^\intercal v_{(i',c')} &  i,i' \in V, c,c' \in D \label{eq:basicSDPnearCVX_constrainLambda}
+\end{alignat}
+The feasible region defined by the above constraint set is \textit{still} non-convex since we can add the constraints
+\begin{equation}
+v^k_{(i,c)} = 0 ~~ \forall ~~ k \in \{2,3,\ldots,N\} 
+\end{equation}
+and achieve an exact formulation for the CSP. To have a true convex mathematical program, we need to remove all non-affine equality constraints. Do this by defining
+\begin{equation}
+M = [v_{(1,0)},\ldots,v_{(1,q-1)},
+	v_{(2,0)},\ldots,v_{(2,q-1)},\ldots,
+	v_{(n,0)},\ldots,v_{(n,q-1)}] \quad  \in \mathbb{R}^{N \times N}
+\end{equation}
+as the Cholesky decomposition of a symmetric positive semidefinite matrix $\Sigma \in \mathbb{S}_+^{N \times N}$ (i.e. $\Sigma = M^\intercal M$). Now write the constraints using the fact that $\Sigma_{(i,c)(i',c')} = v_{(i,c)}^\intercal v_{(i',c')}$.
+\begin{alignat}{2}
+(\ref{eq:basicSDPnearCVX_sumTo1}) ~~\Rightarrow & ~~\sum_{c \in D} \Sigma_{(i,c)(i,c)} = 1 & \forall i \in V \label{eq:basicSDP_sumTo1} \\
+(\ref{eq:basicSDPnearCVX_noContradictions}) ~~\Rightarrow &~~\Sigma_{(i,c)(i,c')} = 0 & \forall i \in V, c \in D, c' \neq c \label{eq:basicSDP_noContradictions} \\
+(\ref{eq:basicSDPnearCVX_constrainLambda})~~ \Rightarrow & ~~\sum_{\substack{L \in \mathcal{L}_i \\ L(i) = c \\ L(i') = c' }} \lambda_i[L] =\Sigma_{(i,c)(i',c')} &  i,i' \in V, c,c' \in D \label{eq:basicSDP_constrainLambda}
+\end{alignat}
+The reader may refer to Definition \ref{def:BasicSDP} and note that (\ref{eq:basicSDP_sumTo1}) through (\ref{eq:basicSDP_constrainLambda}) along with $\Sigma \in \mathbb{S}^N_+$ and $0 \leq \lambda_i[L] \leq 1$ are precisely the constraints found in Basic SDP. It follows that $\text{SDP}_{\text{gen}}$ can \textit{effectively} be solved in polynomial time simply by solving Basic SDP and performing a Cholesky decomposition of $\Sigma = M^\intercal M$ (noting that the columns of $M$ are the desired vectors $v_{(i,c)}$). We are now ready to move on to the ``smoothing" operation mentioned at the beginning of this section. 
+
+\subsubsection{Smoothing a Solution to $\text{SDP}_{\text{gen}}$}
+As a technical detail, the rounding scheme in \textit{Optimal Algorithms} requires that SDP solutions be ``$\alpha$-smooth" (defined below). The rounding scheme from \textit{How to Round Any CSP} differs in that smoothing is required in its proof of correctness, but \textit{not} during run time. 
+
+A solution $(M,\lambda)$ is said to be $\alpha$-smooth for some $\alpha >0 $ if:
+\begin{equation}
+\min_{\substack{ i : C_i \in C \\ L \in \mathcal{L}_i }} \lambda_i[L] \geq \alpha.
+\end{equation}
+Note that smoothness is defined with respect to $\lambda$, not $M$. Note also that an $\alpha$-smooth solution precludes the possibility of some $\lambda_i[L] = 0$, hence an optimal solution $(M, \lambda)$ is not-necessarily $\alpha$-smooth. To handle this, Raghavendra (and Stuerer, in \textit{How to Round Any CSP}) propose the following smoothing operation. If using the algorithm in \textit{Optimal Algorithms}, set $\alpha = \eta / 100$ where $\eta \ll 1$ the controls the error of the approximation algorithm.
+
+ (The reader is advised that the smoothing procedure is not considered the core of either of the algorithms that follow; one would do well to resolve confusion with the smoothing procedure after having read the rest of this section.)
+
+\begin{algorithm}\textbf{Smooth$(\mathcal{C},M,\lambda, \alpha)$} \\
+Input: The CSP $\mathcal{C}$, an optimal solution $(M,\lambda)$ to $\text{SDP}_{\text{gen}}(\mathcal{C})$, and a parameter $\alpha > 0$. \\
+Output : an $\alpha$-smooth solution to $\text{SDP}_{\text{gen}}(\mathcal{C})$.
+\begin{itemize}
+\item For each $i \in V$ and $c \in D$, do
+	\begin{itemize}
+	\item Construct a partial SDP solution $u_{(i,c)}$ corresponding to a uniform distribution over all integral
+	 solutions to
+	$\text{SDP}_{\text{gen}}$ (a solution is said to be integral if all variables take on $\{0,1\}$ values).
+	\item Reassign the vector-valued variable $v_{(i,c)} \leftarrow \sqrt{1-\alpha q^k} v_{(i,c)} \oplus \sqrt{aq^k}
+	u_{(i,c)}$, where $\oplus$ is the external direct sum (or ``concatenation") operator. We note that before this step, we had	
+	$v_{(i,c)} \in \mathbb{R}^N$, while after this step, we have $v_{(i,c)} \in \mathbb{R}^{2N}$.
+	\end{itemize}
+\item $\left[\text{Optional}\right]$ For each $i : C_i \in C$ and $L \in \mathcal{L}_i$, do
+	\begin{itemize}
+	\item  Construct $\mu_i[L]$ as the remaining part of the uniform SDP solution.
+	\item Reassign the variable $\lambda_i[L] \leftarrow (1-\alpha q^k)\lambda_{i}[L] + (\alpha q^k)\mu_i[L]$. 
+	\item This step is optional in that although smoothness is defined with respect to $\lambda$, subsequent
+	 computations only use $v_{(i,c)}$.
+	\end{itemize}
+\end{itemize}
+\end{algorithm}
+
+\subsubsection{Time Complexity for Constructing, Solving, and Smoothing}\label{subsec:buildSolveSmooth}
+Both algorithms require building and solve Basic SDP (as Basic SDP followed by a Cholesky decomposition is the only convex representation of $\text{SDP}_{\text{gen}}$), as well as smoothing the resultant solution. In this section we demonstrate the complexity associated with this \textit{portion} of these algorithms. For the sake of clarity, we redefine some of our parameters.
+
+Let $\mathcal{C} = (V,C,W)$ be fixed. Define the following parameters: $n = |V|$, $m = |C|$, $q = |D|$, and $ k = \max_{1\leq i \leq m}\text{ar}(P_i)$ (the arity of $\mathcal{C}$).
+
+Given this, Basic SDP has $O(n^2q^2 + k^q + mk^q) \in O(n^2q^2 + mk^q)$ variables. In addition, Basic SDP has $O(m + n^2q^2m + mk^q + n^2q^2) \in O(m (n^2q^2 + k^q))$ constraints. If we let $T^{SDP}\left[{n',m',\epsilon'}\right]$ denote the complexity of solving an SDP with $n'$ variables over $m'$ constraints to precision $\epsilon'$, then the time to construct and solve the SDP is approximately
+
+\begin{equation}
+O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right])
+\end{equation}
+
+After solving the SDP, we have a matrix $\Sigma$, but we need a collection of vectors $\{v_{(i,c)}\}$. We get this collection of vectors by performing a Cholesky decomposition on $\Sigma = M^\intercal M$ to get a matrix $M$ whose columns are $\{v_{(i,c)}\}$. Note that for since $\Sigma$ is inevitably positive \textit{semi-definite}, we cannot compute the Cholesky decomposition in a strict sense. Nevertheless, we can compute the $LDL^\intercal$ decomposition and merge $\sqrt{D}$ into the trianglular matrices to construct the desired $M$ (this process is equivalent to the Cholesky decomposition when $\Sigma \succ 0$). Since we can compute the $LDL^\intercal$ decomposition in approximately $O(N^2) \in O(n^2q^2)$ time, we have the desired $M$ in $O(n^2q^2)$ time. Luckily, this complexity is already present in the time to construct and solve Basic SDP.
+
+
+Once we have $M$ and $\lambda$, we may need to construct a ``smooth" SDP solution.\footnote{As mentioned before, the smoothing is required during run time if we use the rounding scheme from \textit{Optimal Algorithms}, but smoothing is only used in a \textit{proof} if we are using the rounding scheme from \textit{How to Round Any CSP}.}  Note that by symmetry, we only need to construct the uniform solution $u_{(i,c)}$ for a single $i \in V$ and $c \in D$. Let $T^u$ denote the time required to construct this solution. If we assume that the smoothed vectors $v_{(i,c)} \in \mathbb{R}^{2N}$ need to be allocated in memory from scratch, then time to smooth is approximately $O(T^u + nq N) \in O(T^u + n^2q^2)$.
+
+And so to get to the point just prior to rounding for these algorithms, we have the following.
+\begin{align}
+&\textit{How to Round Any CSP} \qquad O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right])  \\
+&\textit{Optimal Algorithms} \qquad O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right] + T^u + n^2q^2)
+\end{align} 
+
 
 \subsection{Optimal Algorithms ... for Every CSP? (2008)}
-The reader is advised that this section is organized in a very deliberate way. We present the algorithm at a high level, and then we address each bullet point in detail. We intentionally explain the steps of the algorithm in \textit{increasing order of technical difficulty}, rather than in the order that they would be executed during runtime. Once all this is presented, we have a brief discussion of time complexity and performance guarantees.
+This section is organized as follows :
+\begin{itemize}
+\item First, we present the algorithm at a high level. Presenting the algorithm concretely in this way serves as a reference for the reader and a guidepost for understanding some of the more difficult aspects of the algorithm.
+\item Second, we address key steps in detail, in the order that they would be executed during run time.
+\item Lastly, we have a brief discussion on time complexity and performance guarantees.
+\end{itemize}
 
 This established, we move on to the algorithm itself. In the original paper, the following algorithm is only known as ``Round." We give it a proper\footnote{although not necessarily \textit{good}} name out of necessity.
 
@@ -90,60 +196,193 @@ This established, we move on to the algorithm itself. In the original paper, the
 \textit{Output: } An assignment $F$ of variables $V \in \mathcal{C}$.
 \begin{itemize}
 \item Build an SDP $\text{SDP}_{\text{gen}}(\mathcal{C})$.
-\item Solve $X \leftarrow \text{SDP}_{\text{gen}}(\mathcal{C}).\text{solve}$.
-\item Smooth the SDP solution $X \leftarrow \text{Smooth}(X)$
-\item Discretize a certain space of functions ``$\mathcal{S}$" to form $\mathcal{S}_{\kappa}$.
-\item For every function $\mathcal{F} \in \mathcal{S}_{\kappa}$, run a subroutine called ``$\text{Round}_{\mathcal{F}}(X)$" to get an assignment $F$ of the variables in $\mathcal{C}$. 
+\item Solve $(\Sigma,\lambda) \leftarrow \text{SDP}_{\text{gen}}(\mathcal{C}).\text{solve}$.
+\item Perform a Cholesky decomposition on $\Sigma$ to find $M : M^\intercal M = \Sigma$. Identify the $(i,c)^{\text{th}}$ column of $M$ with the vector $v_{(i,c)}$.
+\item Smooth the SDP solution $(M,\lambda) \leftarrow \text{Smooth}(\mathcal{C},M,\lambda, \alpha)$.
+\item Discretize a certain space of functions ``$\Omega$" to form $\mathcal{S}_{\kappa}$.
+\item For every function $\mathcal{F} \in \mathcal{S}_{\kappa}$, run a subroutine called ``$\text{Round}_{\mathcal{F}}(\mathcal{C},v)$" to get an assignment $F$ of the variables in $\mathcal{C}$. 
 \item Return the best assignment generated over all of these $\mathcal{F} \in \mathcal{S}_{\kappa}$.
 \end{itemize}
 \end{algorithm}
+\newpage
+\subsubsection{What is $\Omega$? How Do We Discretize It?}\label{subsubsec:UGDFS_discretize}
+We need to define a few terms before we precisely state $\Omega$. Let $\Delta_q$ denote the set of standard basis vectors in $\mathbb{R}^q$, and define $\text{Conv}(\Delta_q)$ as the convex hull of these vectors. We plot $\text{Conv}(\Delta_2)$ and $\text{Conv}(\Delta_3)$ below.
 
-\subsubsection{What is $\Omega$? How Do We Discretize It?}
+\begin{center}
+\includegraphics[scale=0.4]{../images/convDelta2} \qquad
+\includegraphics[scale=0.4]{../images/convDelta3}
+\end{center}
+
+For $q = |D|$, and some constant $R$ that is independent of the number of variables and constraints in $\mathcal{C}$,\footnote{$R$ does vary with other parameters. It depends on $q$, $k$ (the arity of $\mathcal{C}$), $\eta$ (the additive error desired in the approximation), and (most importantly) the Unique Games Conjecture. We describe $R$ concretely at the end of this section.}  define $\Omega$ as
+\begin{equation}
+\Omega \doteq \{ \mathcal{F} : D^R \to \text{Conv}(\Delta_q) \}.
+\end{equation}
+In words, $\Omega$ is the set of \textit{all functions} from $D^R$ to $\text{Conv}(\Delta_q)$.
+
+As we will see later on, the distribution of possible assignments returned by $\text{Round}_{\mathcal{F}}$ changes with $\mathcal{F}$. In \textit{Optimal Algorithms}, Raghavendra proves that there always exists a function $\mathcal{F}^* \in \Omega$ such that the value of the assignment returned by $\text{Round}_{\mathcal{F}^*}$ is good in expectation. The trouble is that to find this $\mathcal{F}^*$, we have to search over \textit{all} of $\Omega$.
+
+Of course, there are infinitely many functions in $\Omega$, so we cannot do exactly this. In order to proceed, we need to build a sufficiently large set of representative functions so that we can ensure we come \textit{close} to  $\mathcal{F}^*$.
+
+The most conservative measure for the distance between two functions is the ``infinity norm" (defined below).
+\begin{equation}
+\| \hat{\mathcal{F}} - \mathcal{F} \|_{\infty} \doteq 
+	\max_{\substack{\sigma \in D^R \\ i \in \{1,\ldots,R \}}} \left\{\left|\left[\hat{\mathcal{F}}(\sigma)\right]_i - \left[\mathcal{F}(\sigma)\right]_i\right|\right\}
+\end{equation}
+
+And so if we want to ensure that we miss $\mathcal{F}^*$ by no more than some small amount (say, $\kappa$), we need to build a set of functions $\mathcal{S}_\kappa$ such that for every $\mathcal{F} \in \Omega$, there exists some $\hat{\mathcal{F}} \in \mathcal{S}_\kappa$ such that $\| \hat{\mathcal{F}} - \mathcal{F} \|_{\infty} \leq \kappa $.
+
+How can we construct $\mathcal{S}_\kappa$? We need only grid the output space $\text{Conv}(\Delta_q)$. For boolean CSP's, we would divide the line $\text{Conv}(\Delta_2)$ into $\lceil \sqrt{2}/\kappa \rceil$ intervals of length no more than $\kappa$. Alternatively for $ q = 3$, we partition $\text{Conv}(\Delta_3)$ into small squares of area approximately $1/\kappa^2$. Both of these instances are illustrated below.
+
+\begin{center}
+\includegraphics[scale=0.4]{../images/GConvDelta2} \qquad
+\includegraphics[scale=0.4]{../images/GConvDelta3}
+\end{center}
+
+For larger $q$, the process becomes more complicated, but is roughly the same in principle.
+
+One practical question remains - how many functions are in $\mathcal{S}_\kappa$? Remember that discretizing the \textit{output} space of $\mathcal{F} \in \Omega$ is only part of the battle. Indeed, if $L = |\mathcal{S}_\kappa|$, we can expect something on the order of $\kappa^{-q}$ elements in the gridded output space. Now note that for two finite sets $A$ and $B$, there are exactly $|B|^{|A|}$ unique functions from $A$ to $B$. It follows that the cardinality of $\mathcal{S}_\kappa$ is on the order of
+\begin{equation}
+|\mathcal{S}_\kappa| \approx \left[\frac{1}{\kappa^q}\right]^{q^R}
+\end{equation}
 
 \subsubsection{The $\text{Round}_{\mathcal{F}}$ Subroutine}
 
-\subsubsection{Smoothing an SDP Solution}
+\begin{algorithm}\textbf{ $\text{Round}_{\mathcal{F}}(\mathcal{C},M)$} \\
+
+\textit{Input} : The CSP $\mathcal{C}$ and a matrix $M$ whose columns are the smoothed vectors $v_{(i,c)}$.
+
+\textit{Output} : An assignment of variables $F : V \to D$. 
+\begin{itemize}
+\item Sample $R$ vectors $\psi^{(1)},\ldots,\psi^{(R)}$ in $\mathbb{R}^{2N}$ with each coordinate being i.i.d $\mathcal{N}(0,1)$. We note that these vectors are in $\mathbb{R}^{2N}$ because they must be the same length as smoothed $v_{(i,c)}$ (which are themselves in $\mathbb{R}^{2N}$).
+\item For each variable $i \in V$, do
+	\begin{itemize}
+	\item Compute $R$ projections $v_{(i,c)} \to \mathbb{R}$ in the following way
+		\begin{equation}
+			h^{(j)}_{(i,c)} = \mathbbm{1}^\intercal v_{(i,c)} 
+				+ (1-\epsilon) \left[ \left(v_{(i,c)} - \left(\mathbbm{1}^\intercal v_{(i,c)}
+				\right)\mathbbm{1}\right)^\intercal \psi^{(j)}\right]  \quad 1 \leq j \leq R
+		\end{equation}
+	\item Construct a vector $p_i \in \mathbb{R}^q$ in the following way.
+		\begin{equation}
+			p_i = \sum_{\sigma \in D^R} \left( \prod_{j = 1}^R h^{(j)}_{(i,\sigma_j)} \right) \mathcal{F}(\sigma)
+		\end{equation}
+		Where we note that $\mathcal{F}(\sigma) \in \text{Conv}(\Delta_q)$ and 
+		$\left( \prod_{j = 1}^R h^{(j)}_{(i,\sigma_j)} \right) \in \mathbb{R}$.
+	\item ``Round" $p_i$ to $p_i^* \in \text{Conv}(\Delta_q)$ using the following procedure (where $e_1$ is the first standard basis vector in $\mathbb{R}^q$).
+		\begin{align}
+			&x \in \mathbb{R} ~~~ f(x) \doteq \begin{cases} 0 & \text{ if } x < 0 \\ 
+									x & \text{ if } 0 \leq x \leq 1 \\
+									1 & \text{ if } x > 1 
+						\end{cases} \\
+			&x \in \mathbb{R}^q ~~~ g(x) \doteq 
+								\begin{cases}
+								x/\mathbbm{1}^\intercal x &\text{ if } \mathbbm{1}^\intercal x \neq 0 \\
+								e_1 						 &\text{ if } \mathbbm{1}^\intercal x = 0
+								\end{cases} \\
+			& p_i^* \doteq g(f(p_{i0}),\ldots,f(p_{i,q-1}))
+		\end{align}
+	\item Assign variable $i \in V$ the value $j \in D$ with probability $p^*_{ij}$.
+	\end{itemize}
+\end{itemize}
+\end{algorithm}
 
 \subsubsection{Time Complexity of UGDFS}
+As demonstrated in Section \ref{subsec:buildSolveSmooth}, the time complexity of getting to the beginning of discretizing $\Omega$ is $O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right] + T^u + n^2q^2)$.
 
-\subsubsection{Performance Guarantees of UGDFS}
+As we will see in this section, the time to discretize $\Omega$ and search over $\mathcal{S}_{\kappa}$ makes the algorithm prohibitively slow in practice. We showed in Section \ref{subsubsec:UGDFS_discretize} that the size of the set $S_{\kappa}$ is approximately $\left(\kappa^{-q}\right)^{q^R}$. Even if it were possible to identify each function in $O(1)$ time, we would still be looking at $O(\left(\kappa^{-q}\right)^{q^R})$ iterations of $\text{Round}_{\mathcal{F}}$. The biggest issue this constant ``$R$", which we describe now.
 
+\begin{definition}\textbf{The Constant $R$ Used in UGDFS}\\
+For $\mathcal{C} = (V,C,W)$ and error parameter $\eta$, set $\alpha = \eta/(100q^k)$, $\epsilon = \eta/(100k)$, and denote by $\tau$ a constant given by the Invariance Principle\footnote{A generalization of the central limit theorem considered in literature on CSP approximation.} that is itself a function of $\epsilon$ and $\alpha$. Set $\delta$ as follows.
+\begin{equation}
+\delta = \frac{\tau \eta^2}{3\cdot 10^4} \left(k e \tau \ln(1/(1-\epsilon)) \right)^{-2}
+\end{equation}
+Then $R$ is any integer large enough so that it is NP-Hard to distinguish between $ 
+[\leq \delta]$-satisfiable and $[\geq (1-\delta)]$-satisfiable instances of bipartite Unique Label Cover over an alphabet of size $R$.
+\end{definition}
+
+$R$'s peculiar definition is the reason for the statement ``if the UGC does not hold, then performance guarantees \textit{disappear} for CSP's with arity greater than 2" in the beginning of Section \ref{sec:optRoundSchemes}. That is, if the UGC is false, then there exist $\delta,\eta$ so that appropriate $R$ \textit{does not exist}.\footnote{Except, as we noted, for CSP's of arity 2. We refer the interested reader to Raghavendra's paper.} At this point it becomes clear that implementing UGDFS for CSP's with arity greater than 2 is impractical.
+
+At the same time, we note that for CSP's with domain size greater than 2, the size of the function space $\mathcal{S}_\kappa$ becomes intractably large. For example, if $\kappa = 1/3$ and $q = 3$, then even for $R = 2$ (the smallest possible $R$ that could possibly be consistent with its definition), we have $|\mathcal{S}_\kappa| \approx 7.65\cdot 10^{12}$ (for comparison, $2^{32} \approx 4.29\cdot 10^9$). From this it is clear that even if $\text{Round}_{\mathcal{F}}$ ran in $O(1)$ time per call, implementing UGDFS would be either impossible or impractical.
+
+Because at this point it has become clear that UGDFS is a \textit{theoretical} result, we opt not to derive the asymptotic run time of $\text{Round}_{\mathcal{F}}$.
+\newpage
 \subsection{How to Round Any CSP (2009)}
-As before, we present the algorithm at a high level and then address each bullet point in detail. Unlike the previous section, we explain the steps in the order that they would be executed by the algorithm. The reader is welcome to read these explanatory sub-sections in any order. 
-
-Discussion of runtime and performance guarantees follows the step explanations.
-
+This section is organized in the same way as the one prior.
+\begin{itemize}
+\item First, we present the algorithm at a high level.
+\item Second, we explain the key steps in detail.
+\item Finally, we discuss time complexity and performance guarantees.
+\end{itemize}
 
 \begin{algorithm} \textbf{The Variable Folding Method} \\
 
-\textit{Input: } An instance $\mathcal{C}$ of $\text{CSP}(\Gamma)$, as well as parameters $\epsilon$, THINGS.
+\textit{Input: } An instance $\mathcal{C}$ of $\text{CSP}(\Gamma)$, as well as a parameter $\epsilon$.
 
 \textit{Output: } An assignment $F$ of variables $V \in \mathcal{C}$.
 \begin{itemize}
 \item Build $\text{SDP}_{\text{gen}}(\mathcal{C})$.
-\item Solve $X \leftarrow \text{SDPgen}(\mathcal{C}).\text{solve}$.
-\item SMOOTHING???
-\item Identify a set of ``bad" constraints $B_{\epsilon} = \text{ConstraintAssesor}(\mathcal{C},X)$.
-\item Define a new CSP, $\mathcal{C}'$ with constraint set $\{C_i \in \mathcal{C} : C_i \not \in B_{\epsilon}\}$.
-\item Define yet another CSP, ``$\mathcal{C}'/\phi$" $ \leftarrow \text{Folding}(\mathcal{C}')$.
+\item Solve $(\Sigma,\lambda) \leftarrow \text{SDP}_{\text{gen}}(\mathcal{C}).\text{solve}$.
+\item Perform a Cholesky decomposition on $\Sigma$ to find $M : M^\intercal M = \Sigma$. Identify the $(i,c)^{\text{th}}$ column of $M$ with the vector $v_{(i,c)}$.
+\item Define vectors $u_{(i,c)}$ by projecting $v_{(i,c)}$ on to a random subspace of dimension $\beta$.[\footnote{The parameter $\beta$ is specified in the following subsections.}]
+\item Identify a set of ``bad" constraints by examining $\mathcal{C}$ and $u_{(i,c)}$. Remove these constraints from $\mathcal{C}$ to define a new CSP $\mathcal{C}'$.
+\item Define yet another CSP, ``$\mathcal{C}'/\phi$" $\leftarrow \text{Folding}(\mathcal{C}',\{u_{(i,c)}\},\epsilon)$.[\footnote{The variable set of  $\mathcal{C}'/\phi$ is bounded by a constant independent of the number of variables and constraints in $\mathcal{C}$. The constraint set is no larger than that of $\mathcal{C}'$.}]
 \item Find an \textit{\textbf{optimal}} variable assignment $F^*$ for $\mathcal{C}'/\phi$ with any \textit{\textbf{exact}} algorithm.
 \item Construct $F^{**} = \text{Unfolding}(F^*, \mathcal{C}'/\phi)$ - a variable assignment for $\mathcal{C}'$
 \item Use $F^{**}$ as an assignment of variables for $\mathcal{C}$.
 \end{itemize}
 \end{algorithm}
 
-\subsubsection{Smoothing an SDP Solution (revisited)}
+\subsubsection{Dimension Reduction by Random Projection}
+In the this rounding scheme's proof of correctness, it is required that $ \beta \gg k^2q^2/\epsilon^3$, but $\beta$ is otherwise arbitrary. Critically, the the bound on $\beta$ is constant with respect to the number of constraints and variables in $\mathcal{C}$. 
 
+Asymptotically, we are concerned with CSP instances with sufficiently large $n$ so that $\beta < nq$.
 \subsubsection{Identifying ``Bad" Constraints}
-
+(denoted $B_{\epsilon}$)
 \subsubsection{Constructing $\mathcal{C}'/\phi$ by ``Folding"}
+\begin{algorithm} \textbf{ Folding($\mathcal{C}',~\{u_{(i,c)}\}, ~\epsilon$)} \\
 
-\subsubsection{Computing an Optimal Variable Assignment for $\mathcal{C}'/\phi$}
+\textit{Input: } A CSP $\mathcal{C}'$, a set of projections $\{u_{(i,c)}\}$ of the vectors $\{v_{(i,c)}\}$, and a parameter $\epsilon$. \\
 
-\subsubsection{Unfolding the Variable Assignment $F^*$}
+\textit{Output: } A CSP $\mathcal{C}'/\phi$ whose variable set is bounded by a constant.
+
+\begin{itemize}
+\item Construct an $\epsilon$-net $H$ of the unit ball in $\mathbb{R}^\beta$.
+\item Initialize two empty ``map" data structures $A$ and $\phi$.
+\item For each $i \in V$, do
+	\begin{itemize}
+	\item For each $c \in D$, determine closet representative of $u_{(i,c)}$ in $H$;[\footnote{In $\ell_2$ norm.}] 
+		denote these representatives $w_{(i,c)}$. 
+	\item Assign $z \in \mathbb{R}^{nq \times \beta}$ the value $ [w_{(i,0)},  \ldots, w_{(i,q-1)}]$.
+	\item If $A$ does not contain a key equal to $z$,[\footnote{Where two matrices are equal if all entry-by-entry comparisons evaluate to ``true."}] create $S \leftarrow \{i\}$ and map the key $z$ to the set $S$. 
+		If otherwise, retrieve and reassign $S \leftarrow S\cup\{i\}$.
+	\end{itemize}
+\item Initialize an empty variable set $Z$.
+\item For every key $z \in A$, do
+	\begin{itemize}
+	\item Retrieve the set $S$ associated with key $z$. 
+	\item Assign $i^* \leftarrow \min S$ and add $i^*$ to $Z$.
+	\item For every $i \in S$, establish the mapping $\phi(i) \mapsto i^*$.
+	\end{itemize}
+\item For every payoff $P_j \in \mathcal{C}'$ over with scope $V_{P_j} \subset V$, do
+	\begin{itemize}
+	\item Define a new payoff $\hat{P}_j$ with scope $\{v : \exists ~ i \in V_{P_j}\text{ with } \phi(i) = v \}$.
+	\item Define the output 
+	\end{itemize}
+\end{itemize}
+
+\end{algorithm}
+They appeal to a simple bound $|H| \leq \left(\frac{c}{\epsilon}\right)^\beta$.
+
+
+Variables $i,i' \in V$ are merged into the same cluster iff $\phi(i) = \phi(i')$ where $\phi(i') \doteq (w_{(i',1)},\ldots,w_{(i',q)})$ (i.e. if for \textit{ every } $c\in D$ we have $w_{(i,c)} = w_{(i',c)}$). Those wondering should note: the number of variables cannot increase. In the worst case we have that no $i,i'$ satisfy $\phi(i) = \phi(i')$, and the number of variables remains the same. From this, we have the following.
+
+\begin{equation}
+|W| \leq \min\left\{\left(\frac{c}{\epsilon}\right)^{\beta q}, n \right\} 
+\end{equation}
+
+How can we characterize the \textit{asymptotic} size of the new variable set $W$? Simply note that $\left(\frac{c}{\epsilon}\right)^{\beta q} = 2^{\psi(kq/\epsilon)}$ where $\psi(z)$ is some polynomial in $z$. Of course, this is fully exponential in the ``variable" $kq/\epsilon$, but constant with respect to the number of variables in $\mathcal{C}$. For this reason, we are always ensured a folded variable set $W$ that is bounded by some constant even for arbitrarily large $n$.
+\subsubsection{Finding $F^*$ for $\mathcal{C}'/\phi$, and Unfolding it to $F^{**}$ for $\mathcal{C}$.}
 
 \subsubsection{Time Complexity of The Variable Folding Method}
 
-\subsubsection{Performance Guarantees of The Variable Folding Method}
-
-%\end{document}
+\end{document}
