@@ -1,19 +1,19 @@
 \section{Discussion and Conclusions}	
 	Reflecting on the material presented in this report, we find the following among the more significant aspects of CSP approximations by convex relaxations.
 \begin{itemize}
-\item The rounding schemes in \textit{How to Round Any CSP} and \textit{Optimal Algorithms ... For Every CSP?} are too slow to be implemented in practice.
+\item The rounding schemes in \textit{How to Round Any CSP} and \textit{Optimal Algorithms ... For Every CSP?} are too slow to be implemented in their pure forms. UGDFS is perhaps not suitable for implementation at all, while the Variable Folding Method can be implemented ``in spirit."
 \item The above rounding schemes are not only the only \textit{optimal} rounding schemes for Basic SDP, they are also the \textit{only} rounding schemes that apply to any k-CSP (regardless of whether or not that CSP is Unique).
 \item There are generic rounding schemes for certain sub-classes of CSP's (particularly, any Unique CSP).
+\item Graph coloring is an important benchmark CSP because its arity is 2, but the $\{\neq\}$ operator is non-unique in both arguments on domains of size $q > 2$. 
 \end{itemize}
-	
-Graph coloring is an important benchmark CSP because its arity is 2, but the $\{\neq\}$ operator is non-unique in both arguments on domains of size $q > 2$. Interestingly, all approximation algorithms for graph coloring that we can find increase the number of colors, rather than failing to satisfy some adjacency constraints. 
 	
 	In addition to these theoretical limitations, we found that while the LP relaxation can be solved quickly, the time taken to solve the SDP relaxation was prohibitively slow for problems with thousands of variables. As a result, there are \textit{two} obstacles to using SDP relaxations of CSP's (1) the lack of rounding schemes for non-unique CSP's, and (2) the speed of SDP solvers themselves.
 	
-	Addressing the second problem requires substantial expertise in the implementation of convex optimization algorithms, but the first can potentially be handled in a variety of ways. Using the geometric interpretation of the columns in $Y : Y^\intercal Y = \Sigma^*$, it would be reasonable to classify these vectors according to cosine similarity. For CSP's which are invariant under a permutation of elements in the domain (including graph coloring), a cosine similarity classification is sufficient to characterize a rounding scheme. 
+	Addressing the second problem requires substantial expertise in the implementation of convex optimization algorithms, but the first can potentially be handled in through a broad \textit{framework} of vector clustering on the columns of $Y : Y^\intercal Y = \Sigma$. Indeed, the Variable Folding Method provides an \textit{optimal} way to classify the vectors in $Y$. The an important question in the development in practical approximation algorithms for CSP's is how efficient classification can be performed while simultaneously achieving some useful performance guarantee.
 	
-To use a heuristic approach with a more rigorous foundation, Prasad Raghavendra commented\footnote{in a private communication} that the algorithm proposed in \textit{How to Round Any CSP} could be implemented in spirit simply by projecting SDP vectors onto a very small constant number of directions (say, 3) rather than onto $1/\epsilon^2$ directions.
-
+	We comment that it would be interesting to examine classification of vectors according to cosine similarity. For CSP's which are invariant under a permutation of elements in the domain (including graph coloring), a cosine similarity classification is sufficient to characterize a rounding scheme. For CSP's which are not invariant under permutation of their domain, we can follow the spirit of \textit{How to Round Any CSP} by testing all possible assignments of cluster variables that are consistent with the vector classifications.
+	
+Finally, as a closing remark, we point out that the research described in this report is but a small fraction of the work which has been done on CSP approximation. We focused on building up a foundation that the reader can carry forward to understand other CSP literature, while addressing in great detail two works of particular importance in CSP approximation.
 \iffalse
 Note the following problem specific specific LP relaxations \cite{GoeWil94,Asa97,Yan94}.
 \begin{itemize}

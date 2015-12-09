@@ -129,7 +129,7 @@ A solution $(M,\lambda)$ is said to be $\alpha$-smooth for some $\alpha >0 $ if:
 \begin{equation}
 \min_{\substack{ i : C_i \in C \\ L \in \mathcal{L}_i }} \lambda_i[L] \geq \alpha.
 \end{equation}
-Note that smoothness is defined with respect to $\lambda$, not $M$. Note also that an $\alpha$-smooth solution precludes the possibility of some $\lambda_i[L] = 0$, hence an optimal solution $(M, \lambda)$ is not-necessarily $\alpha$-smooth. To handle this, Raghavendra (and Stuerer, in \textit{How to Round Any CSP}) propose the following smoothing operation. If using the algorithm in \textit{Optimal Algorithms}, set $\alpha = \eta / 100$ where $\eta \ll 1$ the controls the error of the approximation algorithm.
+Note that smoothness is defined with respect to $\lambda$, not $M$. Note also that an $\alpha$-smooth solution precludes the possibility of some $\lambda_i[L] = 0$, hence an optimal solution $(M, \lambda)$ is not-necessarily $\alpha$-smooth. To handle this, Raghavendra (and Steurer, in \textit{How to Round Any CSP}) propose the following smoothing operation. If using the algorithm in \textit{Optimal Algorithms}, set $\alpha = \eta / 100$ where $\eta \ll 1$ the controls the error of the approximation algorithm.
 
  (The reader is advised that the smoothing procedure is not the focus of either of the algorithms that follow; one would do well to resolve confusion with the smoothing procedure after having read the rest of this section.)
 
@@ -167,10 +167,7 @@ Given this, Basic SDP has $O(n^2q^2 + mk^q)$ variables and $ O(m (n^2q^2 + k^q))
 O( T^{SDP}\left[n^2q^2 + mk^q,~ m (n^2q^2 + k^q),~\epsilon'\right])
 \end{equation}
 
-After solving the SDP, we have a matrix $\Sigma$, but we need a collection of vectors $\{v_{(i,c)}\}$. We get this collection of vectors by performing a Cholesky decomposition on $\Sigma = M^\intercal M$ to get a matrix $M$ whose columns are $\{v_{(i,c)}\}$. As stated in Section \ref{sec:sdp}, this can be accomplished with a naive $O(N^3)$ implementation. Regardless of whether or not faster algorithms are used, this does not change the asymptotic complexity built up so far.
-
-Note that for since $\Sigma$ is inevitably positive \textit{semi-definite}, we cannot compute the Cholesky decomposition in a strict sense. Nevertheless, we can compute the $LDL^\intercal$ decomposition and merge $\sqrt{D}$ into the trianglular matrices to construct the desired $M$ (this process is equivalent to the Cholesky decomposition when $\Sigma \succ 0$). Since we can compute the $LDL^\intercal$ decomposition in approximately $O(N^2) \in O(n^2q^2)$ time, we have the desired $M$ in $O(n^2q^2)$ time. Luckily, this complexity is already present in the time to construct and solve Basic SDP.
-
+After solving the SDP, we have a matrix $\Sigma$, but we need a collection of vectors $\{v_{(i,c)}\}$. We get this collection of vectors by performing a Cholesky decomposition on $\Sigma = M^\intercal M$ to get a matrix $M$ whose columns are $\{v_{(i,c)}\}$. As stated in Section \ref{sec:sdpRelax}, this can be accomplished with a naive $O(N^3)$ implementation. Regardless of whether or not faster algorithms are used, this does not change the asymptotic complexity built up so far.
 
 Once we have $M$ and $\lambda$, we may need to construct a ``smooth" SDP solution.\footnote{As mentioned in Section \ref{subsec:buildSolveSmooth}, the smoothing is required during run time if we use the rounding scheme from \textit{Optimal Algorithms}, but smoothing is only used in a \textit{proof} if we are using the rounding scheme from \textit{How to Round Any CSP}.}  Note that by symmetry, we only need to construct the uniform solution $u_{(i,c)}$ for a single $i \in V$ and $c \in D$. Let $T^u$ denote the time required to construct this solution. If we assume that the smoothed vectors $v_{(i,c)} \in \mathbb{R}^{2N}$ need to be allocated in memory from scratch, then time to smooth is approximately $O(T^u + nq N) \in O(T^u + n^2q^2)$.
 
@@ -346,7 +343,7 @@ Once $\beta$ is selected, this step of the algorithm is quite simple: construct 
 \subsubsection{Identifying ``Bad" Constraints}
 The proof of correctness for the Variable Folding Method relies on the fact that the operations of \textit{dimension reduction} (which give us $u_{(i,c)} \in \mathbb{R}^{\beta}$) and \textit{folding} (defined later) results in a CSP $\mathcal{C}'/\phi$ with optimal SDP objective $\text{SDP}_{\text{Opt}}(\mathcal{C}'/\phi) \approx \text{SDP}_{\text{Opt}}(\mathcal{C})$. In particular, the proof constructs a solution for $\text{SDP}_{\text{gen}}(\mathcal{C}'/\phi)$ (with value approximately equal to $ \text{SDP}_{\text{Opt}}(\mathcal{C})$) with the help of the projections $u_{(i,c)}$. 
 
-Note that if we simply ``plug in" $u_{(i,c)}$ and $\lambda_i[L]$ to the SDP constriants, we will find that some are violated. Since the constructive proof requires a \textit{feasible} solution to the SDP for $\mathcal{C}'/\phi$, we cannot leave these violated constraints unaddressed. A key technical insight of Raghavendra and Stuerer is how to address these violated constraints. They accomplish this in two ways.
+Note that if we simply ``plug in" $u_{(i,c)}$ and $\lambda_i[L]$ to the SDP constriants, we will find that some are violated. Since the constructive proof requires a \textit{feasible} solution to the SDP for $\mathcal{C}'/\phi$, we cannot leave these violated constraints unaddressed. A key technical insight of Raghavendra and Steurer is how to address these violated constraints. They accomplish this in two ways.
 
 \begin{itemize}
 \item If a constraint is violated by less than $\epsilon$, we can make minute modifications to variables $(u_{(i,c)},\lambda_i[L])$ and manage to satisfy the constraint.
@@ -371,7 +368,7 @@ We now describe this procedure in detail.
 \textit{Output: } A CSP $\mathcal{C}'/\phi$ whose variable set is bounded by a constant.
 
 \begin{itemize}
-\item Construct an $\epsilon$-net $H$[\footnote{Raghavendra and Stuerer appeal to a simple bound $|H| \leq \left(\frac{\alpha}{\epsilon}\right)^\beta$ for some absolute constant $\alpha$.}] of the unit ball in $\mathbb{R}^\beta$.
+\item Construct an $\epsilon$-net $H$[\footnote{Raghavendra and Steurer appeal to a simple bound $|H| \leq \left(\frac{\alpha}{\epsilon}\right)^\beta$ for some absolute constant $\alpha$.}] of the unit ball in $\mathbb{R}^\beta$.
 \item Initialize two empty ``map" data structures $A$ and $\phi$.
 \item For each $i \in V$, 
 	\begin{itemize}
@@ -402,13 +399,11 @@ We now describe this procedure in detail.
 \end{algorithm}
 
 \subsubsection{Finding $F^*$ for $\mathcal{C}'/\phi$, and Unfolding it to $F^{**}$ for $\mathcal{C}$.}
-
 However counter-intuitive, the Variable Folding Method does call for an exact solution method for CSP's. The key is that given a CSP $\mathcal{C}$, the exact algorithm is only ever called on $\mathcal{C}'/\phi$- and such CSP's necessarily have a set of variables that is bounded by a constant. Indeed, any method may be used to solve $\mathcal{C}'/\phi$ optimally: integer programming is just as viable as dynamic programming with unlimited backtracking.
 
-Once an optimal assignment $F^*$ is found for $\mathcal{C}'/\phi$, we need to apply it to $\mathcal{C}$. Luckily, this is extremely simple. Earlier we established that $\phi$ is simply a map from $V$ to a $Z \subset V$. From this, if we have $i \in Z$ takes value $c \in D$, simply assign this value $c$ to \textit{all} $v \in V$ that map to $i$.
+Once an optimal assignment $F^*$ is found for $\mathcal{C}'/\phi$, we need to apply it to $\mathcal{C}$. Luckily, this is extremely simple. Earlier we established that $\phi$ is simply a map from $V$ to a $Z \subset V$. For $i \in Z$ that takes value $c \in D$, simply assign the value $c$ all $v$ in the pre-image of $i$.
 
 \subsubsection{Practicality of The Variable Folding Method}
-
 How can we characterize the \textit{asymptotic} size of the new variable set $Z$? Simply note that for some absolute constant $\alpha$, we have $|Z| \leq \left(\frac{\alpha}{\epsilon}\right)^{\beta q} = 2^{\psi(kq/\epsilon)}$ for some polynomial $\psi$. Of course, this is fully exponential in the ``variable" $kq/\epsilon$, but constant with respect to the number of variables in $\mathcal{C}$. For this reason, we are always ensured a folded variable set $Z$ that is bounded by some constant even for arbitrarily large $n$.
 
 At this point we can answer a question posted at the beginning of Section \ref{sec:optRoundSchemes} : how can an algorithm be polynomial time, and ``run in time $\text{exp}(\text{exp}(\text{poly}(kq/\epsilon)))$? Of course the answer was that $k,q,$ and $\epsilon$ were not considered part of the input, but where did this strange expression come from? We showed above that the inner exponential (i.e. $\text{exp}(\text{poly}(kq/\epsilon))$) came from the asymptotic size of the set $Z$. In addition, we have now discussed how the Variable Folding Method requires that the CSP $\mathcal{C}'/\phi$ be solved \textit{exactly}. Since at the time of writing the only exact algorithms for CSP's are exponential in the number of variables, we have $\exp(|Z|) = \text{exp}(\text{exp}(\text{poly}(kq/\epsilon)))$ complexity in total.
@@ -417,7 +412,7 @@ Now some discussion on $\beta$. Of course, we are concerned with CSP instances w
 
 At the time of writing, no exact 3-SAT solver can come close to reliably solving problems with 500,000 variables, and so for practical purposes, using an exact solver on the original CSP $\mathcal{C}$ is likely preferable to the Variable Folding Method as an approximation algorithm.
 
-However, the Variable Folding Method can be modified and still followed ``in spirit" in ways that UGDFS cannot. Namely, rather than projecting on to a subspace of dimension $\beta$ with $\beta \gg k^2q^2/\epsilon^3$, we could project onto a more practical number of dimensions, say $3$. In such a small space, the task of explicitly constructing an $\epsilon$-net $H$ for the unit ball becomes straightforward, and the number of variables in the set $Z$ would invariably be far less than $\exp(\text{poly}(kq/\epsilon))$.
+However, the Variable Folding Method can be modified and still followed ``in spirit" in ways that UGDFS cannot. Namely, rather than projecting on to a subspace of dimension $\beta$ with $\beta \gg k^2q^2/\epsilon^3$, we could project onto a more practical number of dimensions, say $3$.\footnote{This is on the recommendation of Prasad Raghavendra in a private communication.} In such a small space, constructing an $\epsilon$-net for the unit ball becomes straightforward, and the number of variables in the set $Z$ would invariably be far less than $\exp(\text{poly}(kq/\epsilon))$.
 
 
 %\end{document}
