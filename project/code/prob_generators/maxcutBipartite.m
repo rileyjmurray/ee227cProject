@@ -19,7 +19,8 @@ E1 = randsample(V1, e, 1);
 E2 = randsample(V2, e, 1); 
 
 E = [E1 E2]; 
-
+E = unique(E,'rows');
+e = size(E,1);
 
 %Weights, with min threshold and normalization
 eps= 0.01; 

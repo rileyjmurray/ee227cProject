@@ -1,4 +1,4 @@
-function [ maxCutProblem ] = maxcut( n, e )
+function [ maxCutProblem ] = our_maxcut( n, e )
 % generate random graph for max cut problem
 % n = number of vertices
 % e = number of edges
@@ -18,7 +18,8 @@ for i=1:e
     second = rnd2(first, second, n);
     E(i,:) = [first, second];  
 end
-
+E = unique(E,'rows');
+e = size(E,1);
 %{
 E = (randi(n, e, 2)); % This way there are self pairs!
 eZ = size(E); 
@@ -37,6 +38,6 @@ for i=1:e
     C{i} = Constraint(E(i,:), @(x) r(x)); 
 end
 
-maxCutProblem = CSP(w, C); 
+maxCutProblem = CSP(w, C, [0,1], n); 
 
 

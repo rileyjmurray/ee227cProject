@@ -21,5 +21,10 @@ classdef Constraint < handle
             inputScope = input( obj.scope );
             value = obj.relation( inputScope );
         end
+        
+        function value = evaluate227c( obj, input )
+            % evaluate assignment
+            value = obj.relation( input );
+        end
     end
 end
