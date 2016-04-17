@@ -1,4 +1,4 @@
-function [ maxCutProblem ] = our_maxcut( n, e )
+function csp = construct_coloring_csp( n, e, c )
 % generate random graph for max cut problem
 % n = number of vertices
 % e = number of edges
@@ -38,6 +38,6 @@ for i=1:e
     C{i} = Constraint(E(i,:), @(x) r(x)); 
 end
 
-maxCutProblem = CSP(w, C, [0,1], n); 
+csp = CSP(w, C, 0:(c-1), n); 
 
 

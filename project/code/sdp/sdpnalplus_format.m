@@ -1,28 +1,28 @@
 function [blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format(csp)
 % Input arguments.
-%  blk: a cell array describing the conic block structure of the SDP problem.
-%  At, C, b, L, U, Bt, l, u: data of the problem (SDP).
-% If L  X but X is unbounded above, one can set U=inf or U=[]. Similarly, if the
-% linear map B is not present, one can set Bt=[], l=[], u=[].
-%  OPTIONS: a structure array of parameters (optional).
-%  X, s, y, S, Z, y2, v: an initial iterate (optional).
+%   
+%   csp - a "CSP" type object representing a well defined Constraint
+%   Satisfaction Problem.
 %
-% Use in a subsequent call to sdpnalplus with:
+% Output arguments are for use in calls to SDPNAL+, in the following way:
 %
 % [obj,X,s,y,S,Z,y2,v,info,runhist] = ...
 %  sdpnalplus(blk,At,C,b,L,U,Bt,l,u,OPTIONS);
 %
+% A limited description of some of these parameters is given below;
+% see SDPNAL+ documentation for details.
+%
 
-Bt = []; 
-l = []; 
-u = [];
+Bt = []; % should never need to be changed.
+l = []; % should never need to be changed.
+u = []; % should never need to be changed.
 OPTIONS.tol = 10^(-6); % default is 10^(-6)
-OPTIONS.tolADM = 10^(-2); % default is 10^(-4)
-OPTIONS.maxiter = 1000; % 1000 is the default
+OPTIONS.tolADM = 10^(-4); % default is 10^(-4)
+OPTIONS.maxiter = 500; % 1000 is the default
 OPTIONS.maxiterADM = 200; % the default is "near" 200.
-OPTIONS.printlevel = 2; % 1 is the default
-OPTIONS.stopoption = 1; % 1 implies "stop the solver if stagnation ocurs."
-OPTIONS.AAtsolve = 1;
+OPTIONS.printlevel = 1; % 1 is the default
+OPTIONS.stopoption = 2; % 1 implies "stop the solver if stagnation ocurs."
+OPTIONS.AAtsolve = 2; % 2 (the default) is to use a Cholesky decomposition
 
 % If the kth block X{k} of the variable X is a nonnegative vector block with
 % dimension nk, then we set
@@ -48,14 +48,20 @@ lambda_dim = 0;
 m = 0;
 b = [];
 tempC = [];
+display(sprintf('Building individual-constraint matrices...'));
 for i = 1:csp.numConstraints
-    [ALcell{i}, AScell{i}, Ccell{i}] = constructConstraintsSDPMatrices(csp, i);
+    [ALcell{i}, AScell{i}, Ccell{i}] = ...
+        constructConstraintsSDPMatrices(csp, i);
+    if (mod(i-1,100) == 0)
+        display(strcat('progress_',num2str(i/csp.numConstraints))); 
+    end
     lambda_dim = lambda_dim + size(ALcell{i},2); % count number of columns
     nr = size(ALcell{i},1); % number of new rows
     m = m + size(ALcell{i},1); % total rows so far
     b = [b, 1, zeros(1,nr-1)]; % b won't be done constructing until later in this function.
     tempC = [tempC, Ccell{i}];
 end
+display(sprintf('Done building individual-constraint matrices. \n'));
 C{1} = -tempC'; % we have a "maximization" objective, but SDPNAL+ assumes 
 % a minimization objective (hence the negative sign).
 C{2} = sparse(N,N); % the SDP block doesn't contribute to the objective.
@@ -95,19 +101,30 @@ b = [b, zeros(1,ct2)];
 m = m + ct2; % m == length(b)
 b = b';
 
+display(sprintf('Vectorizing main SDP constraint matrices...'));
 AS = sparse(m , s_bar); % each matrix needs to be put in svec format.
 count = 0;
 for i = 1:csp.numConstraints
+    if (mod(i-1,100) == 0)
+        display(strcat('progress_',num2str(i/csp.numConstraints))); 
+    end
     for z = 1:length(AScell{i})
-        AS(count + 1,:) = custom_svec(AScell{i}{z});
+        AS(count + 1,:) = svec(blk(2,:), AScell{i}{z});
         count = count + 1;
     end
 end
+display(sprintf('Done vectorizing main SDP constraint matrices. \n'));
+display(sprintf('Vectorizing force-zero SDP constraint matrices...'));
 for i = 1:ct2
-    AS(count + 1,:) = custom_svec(AS_force_zeros{i});
+    if (mod(i-1,100) == 0)
+        display(strcat('progress_',num2str(i/csp.numConstraints))); 
+    end
+    %AS(count + 1,:) = custom_svec(AS_force_zeros{i});
+    AS(count + 1,:) = svec(blk(2,:), AS_force_zeros{i});
     count = count + 1;
 end
 At{2} = AS'; 
+display(sprintf('Done vectorizing force-zero SDP constraint matrices. \n'));
 
 % now do the linear block.
 blk{1,1} = 'l';
@@ -116,13 +133,18 @@ AL = sparse(m, lambda_dim);
 AL(1:size(ALcell{1},1), 1:size(ALcell{1},2)) = sparse(ALcell{1});
 pr = size(ALcell{1},1); % previous row
 pc = size(ALcell{1},2); % previous column
+display(sprintf('Assembling linear constraint matrix...'));
 for i = 2:csp.numConstraints
+    if (mod(i-1,100) == 0)
+        display(strcat('progress_',num2str(i/csp.numConstraints))); 
+    end
     nr = size(ALcell{i},1); % number of new columns
     nc = size(ALcell{i},2); % number of new rows
     AL( (pr + 1):(pr + nr), (pc + 1):(pc + nc) ) = sparse(ALcell{i});
     pr = pr + nr;
     pc = pc + nc;
 end
+display(sprintf('Done assembling linear constraint matrix. \n'));
 At{1} = AL';
 At = At';
 

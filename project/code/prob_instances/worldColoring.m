@@ -2,7 +2,7 @@
 % color of x(1) needs to be different from color x(2).
 relation = @(x) x(1) ~= x(2);
 
-numColors = 4;
+numColors = 2;
 
 % AMERICAS
 % 1. alaska
@@ -77,7 +77,7 @@ for i = 1 : size( borders, 1 )
 end
 
 americasProblem = CSP(ones(length(borders),1), constraints, 0:(numColors-1), 24);
-clear constraints i relation scope;
+clear constraints i scope;
 %%
 % AFRICA
 % 1. Morocco
@@ -152,4 +152,5 @@ for i = 1 : size( borders, 1 )
 end
 
 africaProblem = CSP( ones( size( borders, 1 ), 1 ), constraints, 0:(numColors-1), 49);
-
+clear relation;
+clear constraints i scope;
