@@ -1,4 +1,4 @@
-function idx = subtuple2alllinear( space, tuple )
+function idx = tuple2linear( space, tuple )
 %
 %       space - a struct containing a cell array of vectors defining the 
 %       space of which "tuple" is an element, AND a vector called "offset"

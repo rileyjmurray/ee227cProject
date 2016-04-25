@@ -21,8 +21,8 @@ OPTIONS.tolADM = 10^(-4); % default is 10^(-4)
 OPTIONS.maxiter = 500; % 1000 is the default
 OPTIONS.maxiterADM = 200; % the default is "near" 200.
 OPTIONS.printlevel = 1; % 1 is the default
-OPTIONS.stopoption = 2; % 1 implies "stop the solver if stagnation ocurs."
-OPTIONS.AAtsolve = 2; % 2 (the default) is to use a Cholesky decomposition
+OPTIONS.stopoption = 0; % 1 implies "stop the solver if stagnation ocurs."; can set to 0.
+OPTIONS.AAtsolve = 2; % 2 (the default) is to use a Cholesky decomposition; can set to 1.
 
 % If the kth block X{k} of the variable X is a nonnegative vector block with
 % dimension nk, then we set

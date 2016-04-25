@@ -12,8 +12,10 @@ else
     error('First argument must be a CSP object.');
 end
 
+addpath(genpath('SDPNAL+extended/SDPNAL+v0.3'));
 % "OPTIONS" returned by the function below uses default values.
 [blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format(csp);
+rmpath(genpath('SDPNAL+extended/SDPNAL+v0.3'));
 
 for i = 2:2:(length(varargin)-1)
     switch varargin{i}
@@ -38,7 +40,7 @@ save(strcat(tmp,id,'.mat')); % don't know exactly where this is going...
 
 % [obj,X,s,y,S,Z,y2,v,info,runhist]  note which arguments are dropped
 [obj,X,~,~,~,~,~,~,info,runhist] = ...
-    sdpnalplus(blk,At,C,b,L,U,Bt,l,u,OPTIONS);
+    sdpnalplus_dc_robust(blk,At,C,b,L,U,Bt,l,u,OPTIONS);
 
 [L,D] = ldl(X{2});
 M = L*sqrt(D);

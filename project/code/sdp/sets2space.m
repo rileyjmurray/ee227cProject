@@ -18,6 +18,7 @@ if (nargin == 2 && length(sets) == 1)
     end
 end
 
+
 offset = zeros(1,length(sets));
 offset(end) = 1;
 for i = 1:(length(sets) - 1);

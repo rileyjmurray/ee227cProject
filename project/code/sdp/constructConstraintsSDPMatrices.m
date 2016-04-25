@@ -42,10 +42,11 @@ lambda_space = sets2space({dom},arity);
 % specify ahead of time.
 num_cols = D^arity;
 Alambda(1,:) = ones(1,num_cols);
+temp = zeros(1,2);
 Asigma{1} = sparse(N, N);
 count = 2;
 for a = 1:arity
-    for b = 1:arity
+    for b = a:arity % used to be 1:arity; think maybe should have that some times and not others? Shouldn't have for Ramsey???
         var1 = scope(a);
         var2 = scope(b);
         localassn = NaN(1,arity);
@@ -56,6 +57,7 @@ for a = 1:arity
                 sig_row = tuple2linear(sig_space, [var1, ell]);
                 sig_col = sig_row;
                 Asigma{count} = sparse(sig_row, sig_col, -1, N, N);
+                % temp(count,:) = [min([sig_row, sig_col]), max([sig_row, sig_col])]; for debugging.
                 % update Alambda
                 localassn(a) = ell; % localassn(b) = ell; is redundant
                 Alambda(count,:) = zeros(1,num_cols);
@@ -73,6 +75,7 @@ for a = 1:arity
                     Asigma{count} = sparse([sig_row sig_col],...
                         [sig_col sig_row],...
                         [-1 -1], N, N);
+                    % temp(count,:) = [min([sig_row, sig_col]), max([sig_row, sig_col])]; for debugging.
                     % update Alambda
                     localassn(a) = l1;
                     localassn(b) = l2;
@@ -84,7 +87,7 @@ for a = 1:arity
         end
     end
 end
-Asigma = Asigma';
+Asigma = Asigma'; 
 
 % C will be a vector so that C * lambda = sum_i sum_L w_i * R_i[L] * lambda_i[L] 
 C =  zeros(num_cols, 1); % is a column vector with number of rows that matches "lambda"
