@@ -34,7 +34,7 @@ for i = 2:2:(length(varargin)-1)
     end
 end
 
-id = datestr(datetime('now'));
+id = datestr(datetime('now'),30);
 tmp = computer;
 save(strcat(tmp,id,'.mat')); % don't know exactly where this is going...
 

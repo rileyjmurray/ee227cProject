@@ -4,9 +4,9 @@
 % assignment and y is the indices of input that are negated.
 classdef Constraint < handle
     properties
-        scope
+        scope %names of the variables associated with constraint
         arity
-        relation
+        relation %function handle
     end
     
     methods

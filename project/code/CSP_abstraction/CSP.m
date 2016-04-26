@@ -6,11 +6,11 @@ classdef CSP < handle
         % inputs (required and optional)
         weights
         constraints
-        domain % a vector [0,...,q-1]; assume [0,1] unless otherwise stated.
+        domain % a vector [0,...,q-1]; assume [0,1] unless otherwise stated. (probably required)
         
         % calculated fields
         numConstraints 
-        numVariables
+        numVariables %specified seperately
         arity
     end
     
