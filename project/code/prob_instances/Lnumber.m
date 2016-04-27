@@ -1,7 +1,6 @@
-function Lproblem = Lnumber()
-
-c = 2; %number of colors
-n = 4; %size of grid
+function Lproblem = Lnumber(c, n)
+%c = 2; %number of colors
+%n = 4; %size of grid
 relation=@(x) x(1)~=x(2) || x(1)~=x(3);
 
 x=zeros(n,n);
