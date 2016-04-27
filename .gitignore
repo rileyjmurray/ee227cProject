@@ -1,5 +1,11 @@
 .DS_STORE
 
+course_files_export/*
+hw/*
+midterm/*
+*.zip
+scribe/*
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

@@ -114,16 +114,15 @@ for i = 1:csp.numConstraints
     end
 end
 display(sprintf('Done vectorizing main SDP constraint matrices. \n'));
+
 display(sprintf('Vectorizing force-zero SDP constraint matrices...'));
 for i = 1:ct2
     if (mod(i-1,100) == 0)
         display(strcat('progress_',num2str(i/csp.numConstraints))); 
     end
-    %AS(count + 1,:) = custom_svec(AS_force_zeros{i});
     AS(count + 1,:) = svec(blk(2,:), AS_force_zeros{i});
     count = count + 1;
-end
-At{2} = AS'; 
+end 
 display(sprintf('Done vectorizing force-zero SDP constraint matrices. \n'));
 
 % now do the linear block.
@@ -145,7 +144,13 @@ for i = 2:csp.numConstraints
     pc = pc + nc;
 end
 display(sprintf('Done assembling linear constraint matrix. \n'));
+
+[AL2, AS2, b2] = remove_ld_rows(AL, AS, b);
+b = b2;
+AS = AS2;
+AL = AL2;
 At{1} = AL';
+At{2} = AS';
 At = At';
 
 end
