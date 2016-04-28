@@ -1,7 +1,7 @@
 
 %% Ramsey number instance
-m = 3; % i.e., suppose we are looking for RAMSEY(3)
-n = 13; % Is there a 2-coloring of K_10 such that there are no homogeneous sets of size 3?
+m = 4; % i.e., suppose we are looking for RAMSEY(3)
+n = 5; % Is there a 2-coloring of K_10 such that there are no homogeneous sets of size 3?
 domain = [0,1];
 %% associate a variable index to each edge in K_n
 edge_space = sets2space({1:n, 1:n}); % use special function for this space which skips self-edges

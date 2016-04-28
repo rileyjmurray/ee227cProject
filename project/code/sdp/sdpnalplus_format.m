@@ -145,10 +145,6 @@ for i = 2:csp.numConstraints
 end
 display(sprintf('Done assembling linear constraint matrix. \n'));
 
-[AL2, AS2, b2] = remove_ld_rows(AL, AS, b);
-b = b2;
-AS = AS2;
-AL = AL2;
 At{1} = AL';
 At{2} = AS';
 At = At';

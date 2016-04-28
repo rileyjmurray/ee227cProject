@@ -37,8 +37,26 @@ tmp = computer;
 save(strcat(tmp,id,'.mat')); % don't know exactly where this is going...
 
 % [obj,X,s,y,S,Z,y2,v,info,runhist]  note which arguments are dropped
+try
 [obj,X,~,~,~,~,~,~,info,runhist] = ...
     sdpnalplus(blk,At,C,b,L,U,Bt,l,u,OPTIONS);
+catch ME
+    if(strcmp(ME.message(1:10),'mexbwsolve') || strcmp(ME.message(1:10),'mexfwsolve'))
+        str = strcat({'SDPNAL+ exited with an error (likely due to'},...
+            {' '},{'linearly dependent constraints). \n'},{' '},...
+            {'Executing a subroutine to remove linearly dependent constraints'},...
+            {' '},{'(this may take a while).'});
+        warning(char(str));
+        [AL2, AS2, b2] = remove_ld_rows(At{1}', At{2}', b);
+        b = b2;
+        AS = AS2;
+        AL = AL2;
+        At{1} = AL';
+        At{2} = AS';
+        [obj,X,~,~,~,~,~,~,info,runhist] = ...
+            sdpnalplus(blk,At,C,b,L,U,Bt,l,u,OPTIONS);
+    end
+end
 
 [L,D] = ldl(X{2});
 M = L*sqrt(D);
