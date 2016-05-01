@@ -1,4 +1,4 @@
-function sol = solve_basic_sdp( varargin )
+function sol = solve_basic_sdp_parallel_construct( varargin )
 % The first argument must be a CSP object.
 %
 % All subsequent arguments come in name-value pairs, and currently only
@@ -13,7 +13,7 @@ else
 end
 
 % "OPTIONS" returned by the function below uses default values.
-[blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format(csp);
+[blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format_parallel(csp);
 
 for i = 2:2:(length(varargin)-1)
     switch varargin{i}

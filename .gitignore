@@ -5,6 +5,7 @@ hw/*
 midterm/*
 *.zip
 scribe/*
+*.m~
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

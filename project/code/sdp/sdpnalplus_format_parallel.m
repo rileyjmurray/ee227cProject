@@ -1,4 +1,4 @@
-function [blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format(csp)
+function [blk, At, C, b, L, U, Bt, l, u, OPTIONS] = sdpnalplus_format_parallel(csp)
 % Input arguments.
 %   
 %   csp - a "CSP" type object representing a well defined Constraint
@@ -33,23 +33,24 @@ Nbar = N * (N + 1)/2;
 sig_space = sets2space({prob_vars, dom});
 
 ALcell = cell(csp.numConstraints,1);
-AScell = cell(csp.numConstraints,1);
+%AScell = cell(csp.numConstraints,1);
 AS_struct_cell = cell(csp.numConstraints,1);
 Ccell = cell(csp.numConstraints,1);
-m = 0; bIdx = [];
 
 %%%%%%%%%%%%%%% Get matrices for each "constraint" in CSP %%%%%%%%%%%%%%%%
 
 display(sprintf('\n Building individual-constraint matrices...'));
-for i = 1:csp.numConstraints
-    [ALcell{i}, AScell{i}, Ccell{i}, AS_struct_cell{i}] = ...
-        constructConstraintsSDPMatricesNoSvec(csp, i);
-    if (mod(i-1,100) == 0)
-         display(char(strcat({'progress'},{' '},{num2str(i/csp.numConstraints)}))); 
-    end
-    bIdx = [bIdx, m + 1];
-    m = m + size(ALcell{i},1); % total rows so far
+parfor i = 1:csp.numConstraints
+    [ALcell{i}, ~, Ccell{i}, AS_struct_cell{i}] = ...
+        constructConstraintsSDPMatricesNoSvec(csp, i); 
 end
+bIdx = zeros(1,csp.numConstraints);
+m = 0; 
+for i = 1:csp.numConstraints
+   bIdx(i) = m + 1;
+   m = m + size(ALcell{i},1); % total rows so far  
+end
+
 b = full(sparse(1, bIdx, 1, 1, m));
 %%%%%%%%%%%%%%%% Construct force-zero constraint matrices %%%%%%%%%%%%%%%%
 
