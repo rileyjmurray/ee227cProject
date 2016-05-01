@@ -105,7 +105,7 @@ for a = 1:arity
     end
 end
 Asigma = sparse(2:(count-1),ASigmaColIdx,ASigmaVal,count-1,Nbar);
-
+Alambda = sparse(Alambda);
 % C will be a vector so that C * lambda = sum_i sum_L w_i * R_i[L] * lambda_i[L] 
 C =  zeros(num_cols, 1); % is a column vector with number of rows that matches "lambda"
 for i = 1:num_cols
