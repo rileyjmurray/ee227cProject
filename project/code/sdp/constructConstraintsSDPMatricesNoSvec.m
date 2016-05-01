@@ -48,7 +48,6 @@ lambda_space = sets2space({dom},arity);
 Nbar = (N+1)*N/2;
 num_cols = D^arity;
 Alambda(1,:) = ones(1,num_cols);
-temp = zeros(1,2);
 ASigmaVal = [];
 ASigmaColIdx = []; % at the end of this, will have #rows - 1 entries.
 count = 2;
