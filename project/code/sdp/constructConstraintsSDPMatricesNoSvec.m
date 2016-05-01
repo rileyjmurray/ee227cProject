@@ -1,4 +1,4 @@
-function [ Alambda, Asigma, C ] = constructConstraintsSDPMatricesNoSvec( csp, constr )
+function [ Alambda, Asigma, C , AS_struct] = constructConstraintsSDPMatricesNoSvec( csp, constr )
 %
 %   csp - a CSP object for the problem we're constructing an SDP for.
 %
@@ -104,7 +104,11 @@ for a = 1:arity
         end
     end
 end
-Asigma = sparse(2:(count-1),ASigmaColIdx,ASigmaVal,count-1,Nbar);
+% Asigma = sparse(2:(count-1),ASigmaColIdx,ASigmaVal,count-1,Nbar);
+Asigma = []; % check correctness first, then speed.
+AS_struct.colIdx = ASigmaColIdx;
+AS_struct.val = ASigmaVal;
+AS_struct.numRows = count - 1;
 Alambda = sparse(Alambda);
 % C will be a vector so that C * lambda = sum_i sum_L w_i * R_i[L] * lambda_i[L] 
 C =  zeros(num_cols, 1); % is a column vector with number of rows that matches "lambda"

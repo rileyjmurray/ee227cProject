@@ -34,6 +34,7 @@ sig_space = sets2space({prob_vars, dom});
 
 ALcell = cell(csp.numConstraints,1);
 AScell = cell(csp.numConstraints,1);
+AS_struct_cell = cell(csp.numConstraints,1);
 Ccell = cell(csp.numConstraints,1);
 m = 0; bIdx = [];
 
@@ -41,7 +42,7 @@ m = 0; bIdx = [];
 
 display(sprintf('\n Building individual-constraint matrices...'));
 for i = 1:csp.numConstraints
-    [ALcell{i}, AScell{i}, Ccell{i}] = ...
+    [ALcell{i}, AScell{i}, Ccell{i}, AS_struct_cell{i}] = ...
         constructConstraintsSDPMatricesNoSvec(csp, i);
     if (mod(i-1,100) == 0)
          display(char(strcat({'progress'},{' '},{num2str(i/csp.numConstraints)}))); 
@@ -75,7 +76,7 @@ for v = prob_vars
 end
 ASFZ = sparse(1:lfz,ASFZcolindices,ASFZvalues,lfz,Nbar);
 b = [b, zeros(1,lfz)];
-% m = m + lfz; % m == length(b), don't need "m" anymore.
+% m = m + lfz; DON'T UPDATE "m"!!!!!; m =/= length(b) is OKAY!
 
 %%%%%%%%%%%%%%%% Assemble SDP variable constraint matrix %%%%%%%%%%%%%%%%
 
@@ -92,8 +93,32 @@ b = [b, zeros(1,lfz)];
 % end
 % step = lfz;
 % AS((count + 1):(count + step),:) = ASFZ;
-temp = [AScell; {ASFZ}];
-AS = vertcat(temp{:});
+
+% %%% OLD %%% Asigma = sparse(2:(count-1),ASigmaColIdx,ASigmaVal,count-1,Nbar);
+% AS_struct.colIdx = ASigmaColIdx;
+% AS_struct.val = ASigmaVal;
+% AS_struct.numRows = count - 1;
+% 
+% IMPORTANT : there is only one nonzero value per row in ASigma!!!!
+behind_us = 0;
+row_count_offset = 0;
+row_ind = zeros(m-csp.numConstraints, 1);
+col_ind = zeros(m-csp.numConstraints, 1);
+vals = zeros(m-csp.numConstraints, 1);
+for i = 1:csp.numConstraints
+    nnzr = AS_struct_cell{i}.numRows - 1; % num nonzero rows
+    start_idx = behind_us + 1; % +1 for zero indexing
+    end_idx = start_idx + (nnzr-1);
+    row_ind(start_idx:end_idx) = (row_count_offset + (2:(nnzr+1)));
+    col_ind(start_idx:end_idx) = AS_struct_cell{i}.colIdx;
+    vals(start_idx:end_idx) = AS_struct_cell{i}.val;
+    row_count_offset = row_count_offset + (nnzr + 1);
+    behind_us = behind_us + nnzr;
+end
+AS = sparse(row_ind, col_ind, vals, m, Nbar);
+AS = [AS; ASFZ];
+%temp = [AScell; {ASFZ}];
+%AS_known_OK = vertcat(temp{:});
 
 %%%%%%%%%%%%%%% Assemble linear variable constraint matrix %%%%%%%%%%%%%%%
 
@@ -130,8 +155,10 @@ b = b'; % b should be a column vector.
 At{1} = AL';
 At{2} = AS';
 At = At'; % This is only reshaping the cell array for SDPNAL+!
-U{1} = sparse(ones(lambda_dim,1));
-U{2} = sparse(ones(N));
+% U{1} = sparse(ones(lambda_dim,1));
+U{1} = []; % The upper bound is implied by other constraints.
+% U{2} = sparse(ones(N));
+U{2} = []; % The upper bound is implied by other constraints.
 U = U'; % This is only reshaping the cell array for SDPNAL+!
 L{1} = sparse(zeros(lambda_dim,1));
 L{2} = sparse(zeros(N));
