@@ -1,7 +1,7 @@
 %vector clustering
 %assume M (kD x kD)
-k=500; %number of variables
-D=2; %size of domain
+k=6; %number of variables
+D=3; %size of domain
 %M=rand(k*D,k*D); %random M for testing
 M=sol.sigmaFactor;
 A=rand(1,k*D); %random subspace
@@ -31,6 +31,9 @@ for i=1:D
         %vectors(j, ((i-1)*k*D+1):(i*k*D))=M(:,(j-1)*D+i)'; %unprojected
         vectors(j, ((i-1)*size(M_proj,1)+1):(i*size(M_proj,1)))=M_proj(:,(j-1)*D+i)'; %projected
     end
+end
+for i=1:size(vectors,1)
+    vectors(i,:)=vectors(i,:)/norm(vectors(i,:)); %normalize to unit vectors
 end
 
 [x,esq,j]=kmeanlbg_solo(vectors,D) %clustering
