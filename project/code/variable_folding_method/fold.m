@@ -18,6 +18,7 @@ function [A_map, phi_map, Z, invZ, folded_CSP] = fold(csp, sdpsol, epsilon, seed
     D = length(csp.domain);
     PHI_proj = normc(normrnd(0,1/beta,beta,n*D));
     uvecs = PHI_proj * sdpsol.sigmaFactor;
+    plotv(uvecs);
     % ... technically, supposed to identify and drop the "bad" constraints
     % given this projection.
     

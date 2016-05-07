@@ -1,0 +1,104 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage[]{mathtools}
+\usepackage{amsthm}
+\DeclareMathOperator{\Tr}{Tr}
+\usepackage[]{thmtools}
+\usepackage[]{bbm}
+\usepackage[]{amssymb}
+\usepackage[]{eufrak}
+\usepackage{multicol}
+
+%Environments
+\newcommand{\be}[1]{\begin{eqnarray}#1\end{eqnarray}}
+\newcommand{\al}[1]{\begin{align}#1\end{align}}
+\newcommand{\iit}[1]{\begin{itemize}#1\end{itemize}}
+\newcommand\bmat[1]{\begin{bmatrix}#1\end{bmatrix}}
+
+%Genuine Shortcuts
+\newcommand{\lrr}{\Longleftrightarrow}
+\newcommand{\rr}{\Rightarrow}
+\newcommand{\fa}{\ \forall \ }
+
+\newcommand{\Rn}[1]{\mathbb{R}^{#1}}
+\newcommand{\Pb}{\mathbb{P}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Lm}{\mathcal{L}}
+\newcommand{\Sm}{\mathcal{S}}
+\newcommand{\Ra}{\mathcal{R}}
+\newcommand{\D}{\Delta}
+\newcommand{\G}{\Gamma}
+\newcommand{\La}{\Lambda}
+\newcommand{\la}{\lambda}
+\newcommand{\Si}{\Sigma}
+
+\newcommand{\simax}{{\sigma_{\mathrm{max}}}}
+\newcommand{\simin}{{\sigma_{\mathrm{min}}}}
+\newcommand{\lmax}{{\lambda_{\mathrm{max}}}}
+\newcommand{\lmin}{{\lambda_{\mathrm{min}}}}
+
+\newcommand{\prob}{{\mbox{\rm Prob}}}
+\newcommand{\var}{{\mbox{\rm var}}}
+\newcommand{\sint}{{\mbox{\rm int}\,}} %set interior
+\newcommand{\relint}{{\mbox{\rm relint}\,}} %set interior
+\newcommand{\ns}{{\mbox{\tt ns}}} 
+
+\newcommand{\lrb}[1]{\left(#1\right)}
+\newcommand{\lrbb}[1]{\left[#1\right]}
+\newcommand{\inv}{^{-1}}
+\newcommand{\trans}{^T}
+
+\newcommand{\os}[1]{\overset{#1}}
+\newcommand{\us}[1]{\underset{#1}}
+\newcommand{\sgn}[1]{\mbox{sgn}\lrb{#1}}
+\newcommand{\tr}[1]{\mbox{Tr}\lrb{#1}}
+
+
+
+\begin{document}
+\begin{multicols}{2}
+\noindent An instance $\mathcal{C}$ of CSP($\Gamma$) is characterized by
+\begin{itemize}
+\item a set of $n$ variables (denoted $V$), 
+\item a set of $m$ constraints (denoted $C$),
+\end{itemize}
+We write this as a triple $\mathcal{C} = (V,C)$.
+\columnbreak
+\\
+\noindent Each constraint $C_i \in C$ is characterized by
+\begin{itemize}
+\item a list of variables associated with the constraint (called the \textit{scope} of $C_i$; denoted $S_i$),
+\item and a function $R_i \in \Gamma$ that operates on assignments of variables in $S_i$.
+\end{itemize}
+We write $C_i$ as an ordered pair $C_i = (R_i, S_i)$.
+\end{multicols}
+If $F$ (a mapping $ V\to D$) is a given assignment of variables, then $R_i(F(S_i))$ equals either 1 or 0, in which case constraint $C_i$ is said to be ``satisfied" or ``not satisfied" respectively.
+The objective is to maximize the weighted sum of satisfied constraints $\sum_{i = 1}^m w_i R_i(F(S_i))$. For a given $F$ we call this value as  $\text{Val}_{\mathcal{C}}[F]$.
+
+$\mathcal{C}$ is said to be \textit{satisfiable} if $\forall i, ~ R_i(F(S_i)) = 1$ at optimality.
+\newpage
+$\Omega_D^k$ \qquad  $D$ \qquad $\mathcal{C}$ \qquad $ \mathfrak{C}$ \qquad $k$ \qquad $\{\neq\}$ \qquad $\{ \cdot \vee \cdot \vee \cdot \}$ \qquad $\Gamma \subset \Omega_D^k$ \qquad ${5 \choose 2}$
+\newline
+\newline
+
+\begin{alignat}{2}
+\max_{\substack{y \geq 0 \\ X \succeq 0 }} ~&~ 
+	\sum_{i : C_i\in C} \sum_{L \in \mathcal{L}_i} R_i(L) y_i[L]  & \nonumber \\
+s.t. ~ & ~ \sum_{L \in \mathcal{L}_i} y_i[L] = 1  & \forall i : C_i \in C  \\
+     ~ & ~~ \sum_{\substack{L\in \mathcal{L}_{i} \\ L(v) = \ell \\ L(v')=\ell'} } y_{i}[L]  = X_{\lrb{v, \ell},\lrb{v', \ell'}}  \qquad &~\forall ~ v,v' \in V, \ell,\ell' \in D, i : C_i \in C \\
+     ~& ~ X_{\lrb{v, \ell},\lrb{v, \ell'}} = 0 \quad \forall ~ \ell' \neq \ell & \forall ~ \ell' \neq \ell,  \forall ~ v \in V 
+\end{alignat}
+
+\al{
+X_{\lrb{v, \ell},\lrb{v', \ell'}} ~ = ~ \Ex\lrbb{I_v(\ell) I_{v'}(\ell')}  ~ = ~ \Pb_{L\sim y_i} \lrbb{L(v) = \ell, L(v')= \ell'} \quad \forall ~ i : C_i \in C
+}
+
+\al{
+&&X_{\lrb{v, \ell},\lrb{v, \ell'}} &= 0 &\fa \ell \neq \ell' , v \in V\\
+&\rr &\Pb_{L \sim y_{i}}\lrbb{L(v) = \ell, L(v)= \ell'} &= 0 &\fa \ell \neq \ell', v \in V, i:C_i \in C
+}
+
+\end{document}
