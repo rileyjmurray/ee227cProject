@@ -1,8 +1,12 @@
 %% manual constraint checker : do we have all the constraints we're supposed to have?
 % suppose you have a matrix variable of size 494 x 494. Well, that means
 % you have 122265 scalars in that matrix variable. From the formulation of
-% Basic SDP, you would expect >= 122265 linear constraints for the SDP
-% representation of this SDP. 
+% Basic SDP, you would expect >= 122,265 linear constraints for the SDP
+% representation of this SDP. But what if you have significantly fewer
+% linear constriants? What if you had more like ~ 10,000 linear
+% constraints? Is something missing? Was the SDP defined correctly? The
+% purpose of this script is to show how one could investigate such
+% quesitons.
 %% load data saved at the end of solve_basic_sdp
 load('/Users/RJMurray/Documents/Classes/EE227C/project/code/prob_instances/php/MACI6420160503T090319.mat');
 %% grab the linear operator on the matrix variable
