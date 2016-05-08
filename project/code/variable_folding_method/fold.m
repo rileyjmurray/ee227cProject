@@ -1,24 +1,28 @@
 function [A_map, phi_map, Z, invZ, folded_CSP] = fold(csp, sdpsol, epsilon, seed)
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Get input %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     if (nargin == 0)
-        load('africaProblem_CSP_SDPL_solution_2colors.mat');
-        csp = africaProblem;
-        epsilon = 0.7;
-        rng(0);
+        error('Must pass in at least 3 arguments.');
+%         load('africaProblem_CSP_SDPL_solution_2colors.mat');
+%         csp = africaProblem;
+%         epsilon = 0.7;
+%         rng(0);
     elseif (nargin == 3)
         rng(0);
-    else
+    elseif (nargin == 4)
         rng(seed); 
+    else
+        error('Must pass in either 3 or 4 arguments.');
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%% random projection %%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     beta = 2; %... don't change this.
     n = csp.numVariables;
     D = length(csp.domain);
     PHI_proj = normc(normrnd(0,1/beta,beta,n*D));
     uvecs = PHI_proj * sdpsol.sigmaFactor;
-    plotv(uvecs);
     % ... technically, supposed to identify and drop the "bad" constraints
     % given this projection.
     
@@ -42,7 +46,6 @@ function [A_map, phi_map, Z, invZ, folded_CSP] = fold(csp, sdpsol, epsilon, seed
             oldvar = C.scope(i);
             folded_oldvar = phi_map(oldvar);
             newvar = invZ(folded_oldvar);
-            % display([j, oldvar, folded_oldvar, newvar]);
             ns(i) = newvar;
         end
         [newscope,~,icount] = unique(ns,'stable');
@@ -54,6 +57,7 @@ function [A_map, phi_map, Z, invZ, folded_CSP] = fold(csp, sdpsol, epsilon, seed
             count = count + 1;
         end
     end
-    folded_CSP = CSP(csp.weights(keepers), folded_constraints, csp.domain, length(Z));
+    folded_CSP = CSP(csp.weights(keepers), folded_constraints,...
+        csp.domain, length(Z));
 end
  

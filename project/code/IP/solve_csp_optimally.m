@@ -1,6 +1,61 @@
 function sol = solve_csp_optimally(csp)
 
-%%%%%%%%%%%%%%%%%%%$%%%%% define constants %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ********************* Function signature ********************************
+%
+% sol = solve_csp_optimally(csp)
+%
+% *************************** Inputs **************************************
+%
+% csp - a well-defined "CSP" object. (Likely a "folding" of another CSP;
+% see the Background section of this help document.)
+%
+% *************************** Outputs ************************************
+%
+% sol - a struct containing two fields, "gurobi_output" and "assn".
+%
+%   sol.gurobi_output is the information returned from Gurobi for the 
+%   attempt to optimally solve the CSP.
+%
+%   sol.assn is the assignment of variables for the CSP according 
+%   to the output of the Gurobi solver.
+%
+% *************************** BACKGROUND *********************************
+%
+%  This function uses a general-purpose IP formulation based on the same
+%  variables as in Basic SDP. The matrix variable in Basic SDP is dropped
+%  in lieu of logical constraints formulated with linear variables. This
+%  allows us to solve CSP's with any structure, provided they are
+%  sufficiently small (or one has access to a computer with sufficiently
+%  large processing power).
+%
+%  (Note : Most interesting CSP's are those which are NP-Hard to solve 
+%   optimally. Thus, an integer program is an appropriate choice when one
+%   absolutely must find an optimal solution.)
+%
+%  We provide this function for two reasons.
+%
+%       First, such a function is required for an implementation of the
+%       Variable Folding Method.
+%
+%       Second, it is helpful to compare performance of CSP hueristics
+%       (such as the simplified Variable Folding Method, and SDP vector
+%       clustering) to the true optimal value. Obviously, this cannot be
+%       done unless the true optimal objective value for a CSP is known.
+%       Since this function is capable of finding optimal solutions for
+%       sufficiently small CSP's, it can help us in making these emprical
+%       comparisons.
+%
+%  Because the CSP framework is quite general, it should come as little
+%  surprise that this integer program is not very efficient. By this we
+%  mean: if one wanted to solve a specific CSP (say, Max-Cut), one would 
+%  do better to use an integer programming formulation specifically
+%  designed for that CSP.
+%
+% ************************************************************************
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% define constants %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 n = csp.numVariables;
 m = csp.numConstraints;
@@ -61,12 +116,12 @@ model.rhs = [vertcat(rhss{:}); ones(csp.numVariables, 1)];
 model.obj = f;
 model.vtype = 'B';
 params.method = -1;
-save('about_to_solve_folded_csp.mat');
+save('tmp_about_to_solve_folded_csp.mat');
 
 %%%%%%%%%%%%%%%%%%%% solve Gurobi model %%%%%%%%%%%%%%%%%%%%%%%
 
 result = gurobi(model, params);
-save('solved_folded_csp.mat')
+save('tmp_solved_folded_csp.mat')
 
 %%%%%%%%%%%%%%%%%%%% record solution %%%%%%%%%%%%%%%%%%%%%%%
 
