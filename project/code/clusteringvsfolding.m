@@ -1,9 +1,10 @@
 clear
 clc
-%worldColoring;
-%now have africaProblem and americasProblem
+worldColoring;
+%mycsp=africaProblem;
+mycsp=americasProblem;
 epsilon=0.3:0.1:0.7;
-mycsp=read_3sat_dimacs('random_3sat_n300_c3000_1.dimacs');
+%mycsp=read_3sat_dimacs('random_3sat_n300_c3000_1.dimacs');
 
 %get optimal solution
 opt=solve_csp_optimally(mycsp);
@@ -19,6 +20,9 @@ clust_sol=solve_basic_sdp(mycsp);
             bigvectors(j, ((i-1)*size(M,1)+1):(i*size(M,1)))=M(:,(j-1)*size(mycsp.domain,2)+i)';
         end
     end
+    for i=1:size(bigvectors,1) %normalize to unit vectors
+        bigvectors(i,:)=bigvectors(i,:)/norm(bigvectors(i,:));
+    end
     [x,esq,j]=kmeanlbg_solo(bigvectors,size(mycsp.domain,2)); %clustering
 clust_assn=j';
 
@@ -32,3 +36,9 @@ for i=1:size(epsilon,2)
 end
 
 comparison=[opt.assn;clust_assn;vfm_assn];
+objValue=zeros(size(comparison,1),1);
+for i=1:size(comparison,1)
+    objValue(i,1)=evaluateObjective(mycsp,comparison(i,:));
+end
+
+copytoexcel=[[mycsp.numVariables;mycsp.numVariables;vfm_size],objValue,comparison];
