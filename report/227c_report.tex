@@ -112,7 +112,9 @@
 	
 \end{titlepage}
 
-\section*{Abstract}
+\newpage
+
+\begin{abstract}
 
 A Constraint Satisfaction Problem (CSP) is a discrete optimization problem consisting of a set of variables (which take on values in a finite domain) and a set of constraints (indicator functions defined on a subset of variables of some specified cardinality). The objective in a CSP is to assign each variable a value in the domain so that the largest number of constraints are satisfied.
 
@@ -120,7 +122,15 @@ CSP's subsume a wide range of fundamental combinatorial optimization problems, i
 
 Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP (called ``Basic SDP" \cite{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{dwivedi2015introduction}, these algorithms require impossibly powerful machines.
 
-In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future. We developed a Matlab-based software package for CSP's. This package takes a CSP object, computes the Basic SDP relaxation of the problem and solves it using SDPNAL+, and then uses heuristic methods to turn the SDP solution into an assignment of variables for the CSP.  The assignment heuristics used are SDP vector clustering and an approximation of the Variable Folding Method. We tested this software package on two CSP's: a graph-coloring problem, and Pigeonhole Principle statments of various sizes. Our approximation of the Variable Folding Method is found to perform best, closely approximating or matching the optimal solution while reducing the number of variables in the folded CSP by over 80\% in large problems. We conclude with a discussion of issues related to scaling and applications in Ramsey Theory.
+In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future.
+
+\end{abstract} 
+
+\newpage
+
+\tableofcontents
+
+\newpage
 
 \section{Introduction}
 
@@ -130,8 +140,7 @@ Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each tak
 
 While the generality of this framework is useful, it can appear a bit opaque. \autoref{cspdeffig} aims to consolidate these structures to make more clear how a CSP \textit{instance} is constructed. To bring us back to still more familiar territory, we can divide CSP's into well known classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$. \autoref{cspclasses} presents such classes of problems for different $\Gamma$, $D$, and $k$.
 
-
-\begin{figure}
+\begin{figure}[htb]
 \begin{center}
 \includegraphics[width=0.8\textwidth]{images/cspdefsec_thinner}
 \caption{A diagram showing how different objects in the CSP framework come together to define a CSP instance. Objects at the tail of an arrow play a defining role the objects at the head of the same.}
@@ -139,8 +148,7 @@ While the generality of this framework is useful, it can appear a bit opaque. \a
 \end{center}
 \end{figure}
 
-
-\begin{table}
+\begin{table}[htb]
 \begin{center}
 \begin{tabular}{c c c l}
 \hline
@@ -159,9 +167,8 @@ k & D & $\Gamma$ & Problem \\
 
 Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP ``Basic SDP" \cite{raghavendra2008optimal}. This report is concerned with constructing, solving, and rounding solutions for the Basic SDP relaxation of a CSP. Along the way, we present new links between hardness-of-approximation (in the computer algorithms sense) and Ramsey Theory.
 
-
 \subsection{Our Contributions}
- 
+
 Our primary contribution is the development of a Matlab based software package for working with CSP's. Our codes deal with the Basic SDP relaxation for a CSP, rounding of the associated SDP solutions, and solving small scale CSP's exactly via integer programming. The software package has the following capabilities.
 
 \begin{enumerate}
@@ -171,9 +178,12 @@ Our primary contribution is the development of a Matlab based software package f
 
 \item Given the solution to Basic SDP for a given CSP, we can return an assignment of variables for the CSP based on various heuristic adaptations of published (but impractical) algorithms.
 \end{enumerate}
+
+The assignment heuristics used are SDP vector clustering and an approximation of the Variable Folding Method \citep{raghavendra2009round}. We tested this software package on two types of CSP's: a graph-coloring problems, and Max 3-SAT. Our approximation of the Variable Folding Method is found to perform best, closely approximating or matching the optimal solution while reducing the number of variables in the folded CSP by over 80\% in large problems. 
+
 Our software package makes use of the Matlab CSP abstraction of \cite{dwivedi2015introduction}. All code for this project can be found at \texttt{https://github.com/rileyjmurray/ee227cProject}.
 
-We address a variety of considerations for semidefinite programming at scale (particularly memory management and linearly independent constraint qualification), and we demonstrate how hardness-of-approximation relates to Ramsey Theory.
+In addition to these contributions, we address a variety of considerations for semidefinite programming at scale (particularly memory management and linearly independent constraint qualification). Lastly, we demonstrate how hardness-of-approximation relates to Ramsey Theory.
 
 
 \section{CSP's for Ramsey Theory}
@@ -193,7 +203,9 @@ More generally, one can construct a CSP which asks whether $R(n) \leq L$ by iden
 
 Of course, our use of CSP's is posed as a decision problem in a way that could also be modeled with 3-SAT by introduction of appropriate helper variables. Our insight is that while SAT solvers try to find \textit{exact} solutions, algorithms in CSP literature are concerned with \textit{approximate} solutions, and approximate solutions can be used to bound optimal solutions. In particular, if the Basic SDP relaxation for a Ramsey CSP has optimal objective less than 1, then that CSP \textit{cannot} be satisfiable. 
 
-Since the integrality gap of Basic SDP is quite possibly smallest-possible\footnote{In that there may not exist a mathematical programming relaxation of any subclass of CSP's for which the largest distance between a relaxation's objective and the true optimal objective is smaller than that of Basic SDP.} \cite{raghavendra2008optimal}, it is reasonable to use SDP relaxations for CSP's in the manner of one-sided hypothesis tests on Ramsey number bounds.
+Since the integrality gap of Basic SDP is quite possibly smallest-possible\footnote{In that there may not exist a mathematical programming relaxation of any subclass of CSP's for which the largest distance between a relaxation's objective and the true optimal objective is smaller than that of Basic SDP.} \cite{raghavendra2008optimal}, it is reasonable to use SDP relaxations for CSP's in the manner of one-sided hypothesis tests on Ramsey number bounds. 
+
+This is where Ramsey theory and hardness-of-approximation intersect : determining the \textit{smallest possible} size of an object (i.e., s$K_{\alpha}$ for some $\alpha$) so that a property of interest is guaranteed to hold represents an increasingly challenging algorithmic task as the proportion of satisfied constraints approaches but \textit{does not reach} 1.
 
 \section{An Overview of Basic SDP}
 
@@ -254,12 +266,12 @@ Our biggest runtime bottleneck for SDP construction came in creating linear oper
 
 In our experiments, SDPNAL+ is capable of solving these SDP's with matrix variable on the order of multiple thousands of rows and columns (and hundreds of thousands of linear constraints in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
 
-\begin{figure}[ht!]
+\begin{figure}[htb]
 \includegraphics[width=\textwidth]{images/runtime}
 \caption{Time to solve Basic SDP relaxations of 3-SAT statements of the Pigeon Hole Principle. The machine used for these instances had 64GB RAM and dual Xeon processors (8 cores / socket) at 2.2GHz.}
 \end{figure}
 
-Our greatest difficultly with SDPNAL+ lay in linearly independent constraint qualification. While any well-posed SDP can have linearly dependent constraints removed without loss of generality, it is difficult to determine a-priori a subset of linearly independent constriants for a CSP $\mathfrak{C}$'s Basic SDP relaxation. On the other hand, once an instance is \textit{built}, the constraint matrices are too large for standard constraint reduction techniques (which involve computing Cholesly or QR factorizations of the entire constriant matrix). Thus for small problems we have implemented constraint reduction techniques that make SDPNAL+ robust, large problems (such as those for bounding $R(5)$) are not solveable at this time (even on our machine with 64GB RAM).
+Our greatest difficultly with SDPNAL+ lay in linearly independent constraint qualification. While any well-posed SDP can have linearly dependent constraints removed without loss of generality, it is difficult to determine a-priori a subset of linearly independent constraints for a CSP $\mathfrak{C}$'s Basic SDP relaxation. On the other hand, once an instance is \textit{built}, the constraint matrices are too large for standard constraint reduction techniques (which involve computing Cholesky or QR factorizations of the entire constraint matrix). Thus for small problems we have implemented constraint reduction techniques that make SDPNAL+ robust, large problems (such as those for bounding $R(5)$) are not solve able at this time (even on our machine with 64GB RAM).
 
 \section{Experimental Results}
 
@@ -269,7 +281,7 @@ We conducted empirical testing on two different CSPs to evaluate and compare the
 
 The first CSP is the ``Americas problem,'' a graph coloring problem (i.e. max-cut on a larger domain) where the graph is a map of North and South America with the countries rendered as nodes and borders as edges. The CSP contains 24 variables and 38 constraints, which is a small enough size that it can be solved exactly using Gurobi. We solved this problem with domains of 2, 3, and 4 colors in three different ways: exactly, using SDP vector clustering, and using the Variable Folding Method. The results are shown in \autoref{americas}. 
 
-\begin{figure}[ht!]
+\begin{figure}[htb]
 \centering
 	\begin{subfigure}[b]{0.45\textwidth}
 	\centering
@@ -306,18 +318,19 @@ For those graph coloring problems, we are interested in how much the Variable Fo
 
 We observe that the Variable Folding Method is closest to the optimal solution in all three plots. The difference is 4\% in \ref{2-coloring}, and Variable Folding Method has the optimal solution in \ref{3-coloring} and \ref{4-coloring}. The best result achieved by SDP vector clustering in \ref{4-coloring} is a 25\% difference.
 
+\FloatBarrier
 \subsection{SAT and the Pigeonhole Principle}
 
 The second CSP is a 3-SAT formulation of the Pigeonhole Principle. These CSP's have the objective to place items in boxes without having more than 1 item in the same box. Whenever the number of items is greater than the number of boxes, these problems make for interesting candidates for CSP approximation. The reasoning is that for a sufficiently large gap between items and boxes, even an SDP relaxation should be able to tell that not all constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 CSP constraints, 165 CSP variables and an arity of 2 to 3 (depending on CSP constraint), resulting in nearly 5,000 integer variables in gurobi. We note that more generally, the integer program used to solve a CSP (on $n$ variables and $m$ constraints over domain $D$ with arity $k$) has $m \cdot |D|^k + n \cdot |D|$ integer variables.
 
  The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables in the folded CSP the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. Even with small $\epsilon$, the number of variables is reduced by 50\% in the largest problems. In the solution quality plots, we see that the Variable Folding Method achieves or is very close to the optimal solution, with a slight degradation in solution quality as $\epsilon$ increases. SDP vector clustering is not close to the optimal solution, although the approximation error improves from about 30\% in \ref{n6m4} to 15\% in \ref{n11m9} as the problem size grows.
 
-\begin{figure}[ht!]
+\begin{figure}[htb]
 \centering
 	\begin{subfigure}[b]{0.45\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{variables_epsilon_pigeon}
-	\caption{Reduction in variables with variable folding method vs. epsilon and domain}
+	\caption{VFM variable reduction vs. $\epsilon$ and $|D|$}
 	\label{pigeon-reduction}
 	\end{subfigure}
 	~
@@ -341,7 +354,13 @@ The second CSP is a 3-SAT formulation of the Pigeonhole Principle. These CSP's h
 	\caption{Solution quality for 8 items in 6 boxes}
 	\label{n8m6}
 	\end{subfigure}
+\caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Pigeonhole Problem (1 of 2)}
+\label{pigeon}
+\end{figure}
 
+
+\begin{figure}[htb]
+\centering
 	\begin{subfigure}[b]{0.45\textwidth}
 	\centering
 	\includegraphics[width=\textwidth]{solution_epsilon_n10m8}
@@ -355,9 +374,13 @@ The second CSP is a 3-SAT formulation of the Pigeonhole Principle. These CSP's h
 	\caption{Solution quality for 11 items in 9 boxes}
 	\label{n11m9}
 	\end{subfigure}
-\caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Pigeonhole Problem}
-\label{pigeon}
+\caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Pigeonhole Problem (2 of 2)}
+\label{pigeon2}
 \end{figure}
+
+
+
+
 
 \section{Conclusion}
 
