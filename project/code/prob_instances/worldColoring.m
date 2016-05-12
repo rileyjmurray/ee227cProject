@@ -2,7 +2,7 @@
 % color of x(1) needs to be different from color x(2).
 relation = @(x) x(1) ~= x(2);
 
-numColors = 3; %change this
+numColors = 4; %change this
 
 % AMERICAS
 % 1. alaska

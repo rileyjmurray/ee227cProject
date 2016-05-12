@@ -14,7 +14,7 @@
 
 %%% PAGE DIMENSIONS
 \usepackage{geometry} % to change the page dimensions
-\geometry{letterpaper} % or letterpaper (US) or a5paper or....
+\geometry{letterpaper,margin=1in} % or letterpaper (US) or a5paper or....
 % \geometry{margin=2in} % for example, change the margins to 2 inches all round
 % \geometry{landscape} % set up the page for landscape
 %   read geometry.pdf for detailed page layout information
@@ -62,7 +62,7 @@
 %%% END Article customizations
 
 %%% The "real" document content comes below...
-
+\graphicspath{{./images/}}
 \begin{document}
 \begin{titlepage}
 	
@@ -201,11 +201,95 @@ VFM has two computationally expensive operations (three if you count solving Bas
 
 \section{Results}
 
-Content goes here
+We conducted empirical testing on two different CSPs to evaluate and compare the performance of SDP vector clustering and the Variable Folding Method. We also performed sensitivity testing on the Variable Folding Method with respect to the parameter $\epsilon$, which determines the spacing of the $\epsilon$-net, and to the domain size.
+
+The first CSP is the Americas problem, a graph coloring problem (i.e. max-cut) where the graph is a map of North and South America with the countries rendered as nodes and borders as edges. The CSP contains 24 variables and 38 constraints, which is a small enough size that it can be solved exactly using Gurobi. We solved this problem with domains of 2, 3, and 4 colors in three different ways: exactly, using SDP vector clustering, and using the Variable Folding Method. The results are shown in \autoref{americas}. First, we are interested in how much the Variable Folding Method is able to reduce the size of the problem. In \autoref{americas-reduction}, we can see that the reduction in variables depends on both domain size and $\epsilon$, with domain size having the larger impact. The number of variables cannot be reduced at all when the domain size is 4, and $\epsilon$ has little effect for a domain size of 3. In the best case, with domain 2 and a large $\epsilon$, the number of variables can be reduced by over 40\%. Next we are interested in the solution quality with SDP vector clustering and the Variable Folding Method, relative to each other and to the optimal solution. These plots are also contained in \autoref{americas}. Note that 2- and 3-colorings of this graph are not satisfiable, but the y-axis of all the solution plots has been normalized so that the optimal solution is 1. We observe that the Variable Folding Method is closest to the optimal solution in all three plots. The difference is 4\% in \ref{2-coloring}, and Variable Folding Method has the optimal solution in \ref{3-coloring} and \ref{4-coloring}. The best result achieved by SDP vector clustering in \ref{4-coloring} is a 25\% difference.
+
+The second CSP is the pigeonhole problem, a SAT problem where the objective is to place items in boxes without having more than 1 item in the same box. All of the instances tested are not satisfiable (more items than boxes) but are still interesting as a test of our method for solving CSPs. Even an approximation algorithm should be able to identify (1) that not all constraints can be satisfied and (2) how many constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 constraints, 165 variables and an arity of 2, for $numConstraints |D|^{arity} + numVariables |D|=$4,906 integer variables in Gurobi. The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. In the solution quality plots, we see the exact opposite trend as the Americas problem. In this case, SDP vector clustering is closer to the optimal solution, achieving it in \ref{n4m2} even when the Variable Folding Method does not. For both methods, the approximation with respect to the optimal solution gets worse as the problem size grows, which is to be expected.
+
+\begin{figure}[h!]
+\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{variables_epsilon_americas}
+	\caption{Reduction in variables with variable folding method vs. epsilon and domain}
+	\label{americas-reduction}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_2coloring}
+	\caption{Solution quality for 2-coloring the Americas}
+	\label{2-coloring}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_3coloring}
+	\caption{Solution quality for 3-coloring the Americas}
+	\label{3-coloring}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_4coloring}
+	\caption{Solution quality for 4-coloring the Americas}
+	\label{4-coloring}
+	\end{subfigure}
+\caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Americas Graph-Coloring Problem}
+\label{americas}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{variables_epsilon_pigeon}
+	\caption{Reduction in variables with variable folding method vs. epsilon and domain}
+	\label{pigeon-reduction}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_n4m2}
+	\caption{Solution quality for 4 items in 2 boxes}
+	\label{n4m2}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_n6m4}
+	\caption{Solution quality for 6 items in 4 boxes}
+	\label{n6m4}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_n8m6}
+	\caption{Solution quality for 8 items in 6 boxes}
+	\label{n8m6}
+	\end{subfigure}
+
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_n10m8}
+	\caption{Solution quality for 10 items in 8 boxes}
+	\label{n10m8}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{solution_epsilon_n11m9}
+	\caption{Solution quality for 11 items in 9 boxes}
+	\label{n11m9}
+	\end{subfigure}
+\caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Pigeonhole Problem}
+\label{pigeon}
+\end{figure}
 
 \section{Conclusion}
 
-Content goes here
+The two problems used to evaluate SDP vector clustering and the Variable Folding Method are favorable cases for SDP vector clustering because there are no constraints that reference specific values in the domain. In graph coloring, we simply want adjacent nodes to be different colors, and in the pigeonhole problem we want each box to contain no more than one item. If, for example, we wanted one node to be a particular color, or for one item to go in a specific box, then the assignment would affect the CSP objective. In the problems we tested, only the clustering process affects the CSP objective, not the assignment of values. If the assignment matters, then it is necessary to test all $|D|!$ possible assignments and the clustering method would be slower as a result.
 
 %references
 \renewcommand{\bibname}{References}

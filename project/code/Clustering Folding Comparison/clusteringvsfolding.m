@@ -1,10 +1,12 @@
 clear
 clc
-worldColoring;
+%worldColoring;
 %mycsp=africaProblem;
-mycsp=americasProblem;
+%mycsp=americasProblem;
 epsilon=0.3:0.1:0.7;
 %mycsp=read_3sat_dimacs('random_3sat_n300_c3000_1.dimacs');
+pigeon_csp;
+mycsp=ppcsp;
 
 %get optimal solution
 opt=solve_csp_optimally(mycsp);

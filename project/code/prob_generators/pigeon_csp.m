@@ -5,8 +5,8 @@
 % load the 3-SAT representation in as a CSP
 
 %% params
-n = 15; % number of items
-m = 11; % number of boxes
+n = 11; % number of items
+m = 9; % number of boxes
 numlits = n*m; % variables are blocked by box (i.e. x_{i1} is in a block, x_{i2} is in the next block)
 numclauses = n + m*(n*(n-1)/2);
 % normally, x_{ij} says "item i in box j".
