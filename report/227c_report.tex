@@ -41,6 +41,7 @@
 \usepackage{setspace} %for double space
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\newcommand{\ar}[1]{\text{ar}\left( #1 \right)}
 
 %%% HEADERS & FOOTERS
 \usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
@@ -124,7 +125,7 @@ In this work, we deploy approximation algorithms rooted in theory but driven by 
 
 CSP's are concerned with a set of variables, $V$, taking values in a finite domain $D$ with consideration to a set of constraints $C$. We emphasize that while most optimization literature considers``constraints'' inviolable, this is not the case for CSP's. In fact, it is the \textit{objective} of a CSP to satisfy as many of constraints as possible, and an optimal solution may well only satisfy a small portion of these constraints. We say that a CSP is \textit{satisfiable} if there exists an assignment of variables for which all constraints are satisfied. Inviolable constraints do exist within the CSP framework, but those constraints are \textit{only} that each $v \in V$ takes a value in $D$. This established, we discuss the constraints of a CSP in more detail. 
 
-Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each taking values in $D$) with range $\{ 0,1 \}$. A \textit{constraint} for a CSP over variable set $V$ is any function in $\Omega_D^k$ defined on $S \subset V : |S| \leq k$. We refer to the $S \subset V$ as the \textit{scope} of the constraint, and refer to $|S|$ as the \textit{arity} of the constraint. The maximum arity of all constraints in a CSP is considered a fixed parameter (in the fixed-parameter tractability sense); CSP's with different maximum arity are considered as being different classes of problems.
+Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each taking values in $D$) with range $\{ 0,1 \}$. A \textit{constraint} $C_i$ for a CSP over variable set $V$ is any function in $\Omega_D^k$ defined on $S \subset V : |S| \leq k$. We refer to the $S \subset V$ as the \textit{scope} of the constraint, and refer to $|S|$ as the \textit{arity} of the constraint. The maximum arity of all constraints in a CSP is considered a fixed parameter (in the fixed-parameter tractability sense). In view of this, we simplify exposition by assuming that all constraints are of arity $k$.\footnote{Our software package for CSP approximation does not make this assumption.}
 
 While the generality of this framework is useful, it can appear a bit opaque. To bring us back to more familiar territory, we can divide CSP's into well-known classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$.
 
@@ -171,9 +172,9 @@ This``smallest $\alpha$'' is referred to as ``Ramsey of $n,m$'', or simply $R(n,
 
 Although it has been proven for any $n,m$ there \textit{exists} a finite $R(n,m)$ satisfying the requirements above, the exact values $R(n,m)$ are largely unknown. For example, $R(5)$ is only known to lay in $[43,49]$, and this has remained unchanged for the past 20 years \cite{rn}. We now turn to formulating a sequence of CSP's for which optimal solutions would determine $R(5)$, and for which approximate solutions may yield new bounds on the same.
 
-Suppose we are interested in testing whether $R(5) \leq 48$. Construct the complete graph on 48 vertices, $K_{48}$, and assign a numeric ID to every edge in the graph. Each edge will correspond to a variable in our CSP, and our domain will be $\{\text{red},\text{blue}\}$. For every induced subgraph on 5 vertices, define a constraint with scope of the 5-choose-2 edges in this subgraph. Set the relation for this constraint as the not-all-equal operator (i.e., this constraint will be satisfied as long as all edges are not of the same color). Stated in these terms, $R(5) \leq 48$ if and only if the optimal solution to this CSP satisfies fewer than 100\% of all constraints.
+Suppose we are interested in testing whether $R(5) \leq 48$. Construct the complete graph on 48 vertices, $K_{48}$, and for each edge in $K_{48}$ define a variable taking values in $\{\text{red},\text{blue}\}$ for our CSP. For every induced subgraph on 5 vertices, define a constraint with scope of the 5-choose-2 edges in this subgraph. Set the relation for this constraint as the not-all-equal operator. Stated in these terms, $R(5) \leq 48$ if and only if the optimal solution to this CSP satisfies less than 100\% of all constraints (i.e. if the CSP is ``not satisfiable'').
 
-More generally, one can construct a CSP which asks whether $R(n) \leq L$ by identifying edge colors of $K_L$ with variables in our CSP, and by identifying edges of induced subgraphs on $n$ vertices as scopes for our constraints. In all cases, the relation on these variables is the not-all-equal operator. In all cases, $R(n) \leq L$ if and only if the optimal solution to this CSP satisfies fewer than 100\% of all constraints.
+More generally, one can construct a CSP which asks whether $R(n) \leq L$ by identifying edge colors of $K_L$ with variables in our CSP, and by identifying edges of induced subgraphs on $n$ vertices as scopes for our constraints. In all cases, the relation on these variables is the not-all-equal operator. In all cases, $R(n) \leq L$ if and only if this CSP is not satisfiable.
 
 Of course, our use of CSP's is posed as a decision problem in a way that could also be modeled with 3-SAT by introduction of appropriate helper variables. Our insight is that while SAT solvers try to find \textit{exact} solutions, algorithms in CSP literature are concerned with \textit{approximate} solutions, and approximate solutions can be used to bound optimal solutions. In particular, if the Basic SDP relaxation for a Ramsey CSP has optimal objective less than 1, then that CSP \textit{cannot} be satisfiable. 
 
@@ -181,7 +182,11 @@ Since the integrality gap of Basic SDP is quite possibly smallest-possible\footn
 
 \section{An Overview of Basic SDP}
 
-A \emph{local assignment} for constraint $C_i$ is a mapping from $S_i$ to $D^k$ that specifies the values for all variables in the scope of constraint $C_i$. There are $|D|^k$ such local assignments for each constraint. Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \cite{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
+Basic SDP operates on a principle of consistency across local assignments. A local assignment for a constraint $C_i$ is a mapping $L_i$ from $S_i$ to $D^{k}$; there are $|D|^k$ such local assignments for each constraint. A collection of \textit{consistent} local assignments is any set of mappings $\mathfrak{L}$ such that for all $L_i, L_j \in \mathfrak{L}$ with $v \in S_i \cap S_j$, we have $L_i(v) = L_j(v)$.
+
+Basic SDP introduces one variable for each local assignment of each constraint, and establishes coupling constraints between 
+
+Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \cite{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
 
 \begin{align}
 \operatorname*{max}_{\substack{y \geq 0 \\  X \succeq 0}} ~ & ~ \sum\limits_{i:C_i\in C} \sum\limits_{L\in \mathcal{L}_i} R_i(L)y_i[L] \nonumber  \\
