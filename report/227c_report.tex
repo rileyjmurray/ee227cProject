@@ -4,7 +4,7 @@
 % This is a simple template for a LaTeX document using the "article" class.
 % See "book", "report", "letter" for other types of document.
 
-\documentclass[11pt]{article} % use larger type; default would be 10pt
+\documentclass[12pt]{article} % use larger type; default would be 10pt
 
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 
@@ -24,6 +24,7 @@
 % \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
 %%% PACKAGES
+\usepackage{bbm}
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
@@ -121,66 +122,79 @@ In this work, we deploy approximation algorithms rooted in theory but driven by 
 
 \section{Introduction}
 
-CSP's are concerned with a set of variables, $v$, taking values in a finite domain $D$ with the goal of satisfying as many constraints as possible. Such constraints are sometimes called ``soft constraints."
+CSP's are concerned with a set of variables, $V$, taking values in a finite domain $D$ with consideration to a set of constraints $C$. We emphasize that while most optimization literature considers``constraints'' inviolable, this is not the case for CSP's. In fact, it is the \textit{objective} of a CSP to satisfy as many of constraints as possible, and an optimal solution may well only satisfy a small portion of these constraints. We say that a CSP is \textit{satisfiable} if there exists an assignment of variables for which all constraints are satisfied. Inviolable constraints do exist within the CSP framework, but those constraints are \textit{only} that each $v \in V$ takes a value in $D$. This established, we discuss the constraints of a CSP in more detail. 
 
-Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each taking values in $D$) with range $\{ 0,1 \}$. A constraint is defined by a function from $\Omega_D^k$ and an appropriately sized subset $S$ of variables.
+Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each taking values in $D$) with range $\{ 0,1 \}$. A \textit{constraint} for a CSP over variable set $V$ is any function in $\Omega_D^k$ defined on $S \subset V : |S| \leq k$. We refer to the $S \subset V$ as the \textit{scope} of the constraint, and refer to $|S|$ as the \textit{arity} of the constraint. The maximum arity of all constraints in a CSP is considered a fixed parameter (in the fixed-parameter tractability sense); CSP's with different maximum arity are considered as being different classes of problems.
 
-We can divide CSP's into familiar classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$.
+While the generality of this framework is useful, it can appear a bit opaque. To bring us back to more familiar territory, we can divide CSP's into well-known classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$.
 
+\begin{center}
 \begin{tabular}{c c c l}
 \hline
 k & D & $\Gamma$ & Problem \\
 \hline
-2 & \{0,1\} & $\{\neq\}$ & Max-Cut \\
-3 & \{0,1\} & All 8 disjunctions on 3 literals & Max 3-SAT \\
-$\left(\begin{array}{c}
-      5 \\
-      2
-    \end{array}\right)$
-& \{0,1\} & N.A.E. & Max Non-Homog. 5-Set \\
-2 & \{0,1,...,q-1\} & $\{\neq\}$ & Graph Coloring \\
+2  & \{0,1\} & $\{\neq\}$ & Max-Cut \\
+3  & \{0,1\} & All disjunctions on $\leq $ 3 literals & Max 3-SAT \\
+10 & \{0,1\} & $\neg$[All-Equal] & Finding Ramsey(5,5) \\
+2  & \{0,1,...,q-1\} & $\{\neq\}$ & Graph Coloring \\
 \hline
 \end{tabular}
+\end{center}
 
+Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP ``Basic SDP" \cite{raghavendra2008optimal}. This report is concerned with constructing, solving, and rounding solutions for the Basic SDP relaxation of a CSP. Along the way, we present new links between hardness-of-approximation (in the computer algorithms sense) and Ramsey Theory.
 
-%A Constraint Satisfaction Problem (CSP) is a discrete optimization problem consisting of a set of variables (which take on values in a finite domain) and a set of constraints (indicator functions defined on a subset of variables of some specified cardinality). The objective in a CSP is to assign each variable a value in the domain so that the largest number of constraints are satisfied.
-
-%CSP's subsume a wide range of fundamental combinatorial optimization problems, including Max k-SAT, graph coloring (approximately defined), and Unique Games.
-
-%Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP (called ``Basic SDP" \cite{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{dwivedi2015introduction}, these algorithms require impossibly powerful machines.
-
-%In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future.
 
 \subsection{Our Contributions}
  
-Using a Matlab abstraction for Constraint Satisfaction Problems developed in \cite{dwivedi2015introduction}, we have developed a software system with the following capabilities:
+Our primary contribution is the development of a Matlab based software package for working with CSP's. Our codes deal with the Basic SDP relaxation for a CSP, rounding of the associated SDP solutions, and solving small scale CSP's exactly via integer programming. The software package has the following capabilities.
 
 \begin{enumerate}
-\item Given a Matlab CSP object, we can efficiently construct SDP input parameters in the format used by SDPT3 ( a core routing in CVX and Yalmip) and SDPNAL+ ( a cutting edge solver capable of solving SDP's with >10 million linear equality constraints).
+\item Given a Matlab CSP object, we can efficiently construct SDP input parameters in the format used by SDPT3 ( a core routing in CVX and Yalmip) and SDPNAL+ ( a cutting edge solver capable of solving SDP's with $>$ 10 million linear equality constraints).
 
-\item Given a Matlab CSP object, we can solve it to arbitrary accuracy with a MIP formulation via the Gurobi optimization solver.
+\item Given a Matlab CSP object, we can solve it to arbitrary accuracy with a MIP formulation via the Gurobi Optimization solver.
 
 \item Given the solution to Basic SDP for a given CSP, we can return an assignment of variables for the CSP based on various heuristic adaptations of published (but impractical) algorithms.
 \end{enumerate}
+Our software package makes use of the Matlab CSP abstraction of \cite{dwivedi2015introduction}.
 
-In addition, we have explored how the CSP framework can be applied to longstanding open questions in Ramsey Theory.
+We address a variety of considerations for semidefinite programming at scale (particularly memory management and linearly independent constraint qualification), and we demonstrate how hardness-of-approximation relates to Ramsey Theory.
 
-\subsection{Report Outline}
+
+\section{CSP's for Ramsey Theory}
+Ramsey theory is the study of combinatorial objects in which a certain amount of order must occur as the scale of the object becomes large \cite{rt}. The most well-known topic in Ramsey theory is that of Ramsey \textit{numbers}. Ramsey numbers deal with questions of the following form : 
+
+\vspace{1em}
+\noindent \textit{for fixed $n$ and $m$, what is the smallest $\alpha$ such that for \textit{any} 2-coloring of edges in $K_\alpha$, there necessarily exists a monochromatic clique of size $n$, or a monochromatic clique of size $m$?}
+\vspace{1em}
+
+This``smallest $\alpha$'' is referred to as ``Ramsey of $n,m$'', or simply $R(n,m)$. When $n = m$, we write $R(n)$.
+
+Although it has been proven for any $n,m$ there \textit{exists} a finite $R(n,m)$ satisfying the requirements above, the exact values $R(n,m)$ are largely unknown. For example, $R(5)$ is only known to lay in $[43,49]$, and this has remained unchanged for the past 20 years \cite{rn}. We now turn to formulating a sequence of CSP's for which optimal solutions would determine $R(5)$, and for which approximate solutions may yield new bounds on the same.
+
+Suppose we are interested in testing whether $R(5) \leq 48$. Construct the complete graph on 48 vertices, $K_{48}$, and assign a numeric ID to every edge in the graph. Each edge will correspond to a variable in our CSP, and our domain will be $\{\text{red},\text{blue}\}$. For every induced subgraph on 5 vertices, define a constraint with scope of the 5-choose-2 edges in this subgraph. Set the relation for this constraint as the not-all-equal operator (i.e., this constraint will be satisfied as long as all edges are not of the same color). Stated in these terms, $R(5) \leq 48$ if and only if the optimal solution to this CSP satisfies fewer than 100\% of all constraints.
+
+More generally, one can construct a CSP which asks whether $R(n) \leq L$ by identifying edge colors of $K_L$ with variables in our CSP, and by identifying edges of induced subgraphs on $n$ vertices as scopes for our constraints. In all cases, the relation on these variables is the not-all-equal operator. In all cases, $R(n) \leq L$ if and only if the optimal solution to this CSP satisfies fewer than 100\% of all constraints.
+
+Of course, our use of CSP's is posed as a decision problem in a way that could also be modeled with 3-SAT by introduction of appropriate helper variables. Our insight is that while SAT solvers try to find \textit{exact} solutions, algorithms in CSP literature are concerned with \textit{approximate} solutions, and approximate solutions can be used to bound optimal solutions. In particular, if the Basic SDP relaxation for a Ramsey CSP has optimal objective less than 1, then that CSP \textit{cannot} be satisfiable. 
+
+Since the integrality gap of Basic SDP is quite possibly smallest-possible\footnote{In that there may not exist a mathematical programming relaxation of any subclass of CSP's for which the largest distance between a relaxation's objective and the true optimal objective is smaller than that of Basic SDP.} \cite{raghavendra2008optimal}, it is reasonable to use SDP relaxations for CSP's in the manner of one-sided hypothesis tests on Ramsey number bounds.
 
 \section{An Overview of Basic SDP}
 
-A \emph{local assignment} for constraint $C_i$ is a mapping from $S_i$ to $D^k$ that specifies the values for all variables in the scope of constraint $C_i$. There are $|D|^k$ such local assignments for each constraint. Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \citep{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
+A \emph{local assignment} for constraint $C_i$ is a mapping from $S_i$ to $D^k$ that specifies the values for all variables in the scope of constraint $C_i$. There are $|D|^k$ such local assignments for each constraint. Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \cite{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
 
-$\begin{aligned}
-\operatorname*{max}_{\substack{y \geq 0 \\  X \geq 0}} & \sum\limits_{i:C_i\in C} \sum\limits_{L\in \mathcal{L}_i} R_i(L)y_i[L] \\
-s.t. & \sum\limits_{L \in \mathcal{L}_i} y_i[L] = 1 \\
-& \sum\limits_{\substack{L \in \mathcal{L}_i \\ L(v)=\ell \\ L(v')=\ell '}} y_i[L] = X_{(v,\ell),(v',\ell')} \\
-& X_{(v,\ell),(v',\ell')} = 0 \quad \forall \ell' \neq \ell \\
-\end{aligned}$
+\begin{align}
+\operatorname*{max}_{\substack{y \geq 0 \\  X \succeq 0}} ~ & ~ \sum\limits_{i:C_i\in C} \sum\limits_{L\in \mathcal{L}_i} R_i(L)y_i[L] \nonumber  \\
+s.t. ~ & ~ \sum\limits_{L \in \mathcal{L}_i} y_i[L] = 1  \quad \forall i : C_i \in C \\
+& ~ \sum\limits_{\substack{L \in \mathcal{L}_i \\ L(v)=\ell \\ L(v')=\ell '}} y_i[L] = X_{(v,\ell),(v',\ell')}  \quad \forall (v,\ell,v',\ell') : \exists C_i = (S_i, f_i) \text{ with } v,v' \in S_i \\
+& ~ 0 \leq  X_{(v,\ell),(v',\ell')}  \leq \mathbbm{1}\{ v \neq v' \text{ or } \ell = \ell' \}
+\end{align}
 
-The first of these equality constraints is for all $i : C_i$ is in $C$. The second of these equality constraints is far more numerous: for all $v$ and $v'$ in $V$, and for all $\ell$ and $\ell'$ in $D$ (in addition to all $i:C_i$ is in $C$). This SDP also has a probabilistic interpretation, if we made the following identifications:
+This SDP also has a probabilistic interpretation, if we made the following identifications:
 
-$X_{(v,\ell),(v',\ell')} = \mathbb{E}[I_v(\ell)I_{v'}(\ell')] = \mathbb{P}_{L\sim y_i}[L(v)=\ell, L(v')=\ell']$
+\begin{equation}
+X_{(v,\ell),(v',\ell')} = \mathbb{E}[I_v(\ell)I_{v'}(\ell')] = \mathbb{P}_{L\sim y_i}[L(v)=\ell, L(v')=\ell']
+\end{equation}
 
 \section{Rounding Schemes for Basic SDP (principled and heuristic)}
 
@@ -204,7 +218,9 @@ SDPNAL+ is not supported by any general purpose modeling language. As a result, 
 
 With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. In our experiments, SDPNAL+ is capable of solving these SDP's in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
 
-(put figure here)
+\begin{figure}
+\includegraphics[width=\textwidth]{images/runtime}
+\end{figure}
 
 \section{Experimental Results}
 
@@ -212,9 +228,7 @@ We conducted empirical testing on two different CSPs to evaluate and compare the
 
 The first CSP is the Americas problem, a graph coloring problem (i.e. max-cut) where the graph is a map of North and South America with the countries rendered as nodes and borders as edges. The CSP contains 24 variables and 38 constraints, which is a small enough size that it can be solved exactly using Gurobi. We solved this problem with domains of 2, 3, and 4 colors in three different ways: exactly, using SDP vector clustering, and using the Variable Folding Method. The results are shown in \autoref{americas}. First, we are interested in how much the Variable Folding Method is able to reduce the size of the problem. In \autoref{americas-reduction}, we can see that the reduction in variables depends on both domain size and $\epsilon$, with domain size having the larger impact. The number of variables cannot be reduced at all when the domain size is 4, and $\epsilon$ has little effect for a domain size of 3. In the best case, with domain 2 and a large $\epsilon$, the number of variables can be reduced by over 40\%. Next we are interested in the solution quality with SDP vector clustering and the Variable Folding Method, relative to each other and to the optimal solution. These plots are also contained in \autoref{americas}. Note that 2- and 3-colorings of this graph are not satisfiable, but the y-axis of all the solution plots has been normalized so that the optimal solution is 1. We observe that the Variable Folding Method is closest to the optimal solution in all three plots. The difference is 4\% in \ref{2-coloring}, and Variable Folding Method has the optimal solution in \ref{3-coloring} and \ref{4-coloring}. The best result achieved by SDP vector clustering in \ref{4-coloring} is a 25\% difference.
 
-The second CSP is the pigeonhole problem, a SAT problem where the objective is to place items in boxes without having more than 1 item in the same box. All of the instances tested are not satisfiable (more items than boxes) but are still interesting as a test of our method for solving CSPs. Even an approximation algorithm should be able to identify (1) that not all constraints can be satisfied and (2) how many constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 constraints, 165 variables and an arity of 2, for $numConstraints |D|^{arity} + numVariables |D|=$4,906 integer variables in Gurobi. The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. In the solution quality plots, we see the exact opposite trend as the Americas problem. In this case, SDP vector clustering is closer to the optimal solution, achieving it in \ref{n4m2} even when the Variable Folding Method does not. For both methods, the approximation with respect to the optimal solution gets worse as the problem size grows, which is to be expected.
-
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 	\begin{subfigure}[b]{0.45\textwidth}
 	\centering
@@ -246,8 +260,10 @@ The second CSP is the pigeonhole problem, a SAT problem where the objective is t
 \caption{Evaluation of SDP Vector Clustering and the Variable Folding Method on the Americas Graph-Coloring Problem}
 \label{americas}
 \end{figure}
+\FloatBarrier
+The second CSP is the pigeonhole problem, a SAT problem where the objective is to place items in boxes without having more than 1 item in the same box. All of the instances tested are not satisfiable (more items than boxes) but are still interesting as a test of our method for solving CSPs. Even an approximation algorithm should be able to identify (1) that not all constraints can be satisfied and (2) how many constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 constraints, 165 variables and an arity of 2, for $numConstraints |D|^{arity} + numVariables |D|=$4,906 integer variables in Gurobi. The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. In the solution quality plots, we see the exact opposite trend as the Americas problem. In this case, SDP vector clustering is closer to the optimal solution, achieving it in \ref{n4m2} even when the Variable Folding Method does not. For both methods, the approximation with respect to the optimal solution gets worse as the problem size grows, which is to be expected.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 	\begin{subfigure}[b]{0.45\textwidth}
 	\centering
