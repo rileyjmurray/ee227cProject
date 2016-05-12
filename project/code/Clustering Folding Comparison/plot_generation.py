@@ -74,7 +74,7 @@ pyplot.savefig("variables_epsilon_pigeon.png", dpi=200, transparent=True)
 
 #4 in 2
 pyplot.figure(6)
-solution=np.array([0.625,0.625,0.875,0.875,0.875,0.875,0.875])
+solution=np.array([0.875,0.625,0.875,0.875,0.875,0.875,0.875])
 pyplot.title("Solution Quality")
 pyplot.xlabel("epsilon in epsilon net")
 pyplot.ylabel("objective value")
@@ -88,7 +88,7 @@ pyplot.savefig("solution_epsilon_n4m2.png",dpi=200,transparent=True)
 
 #6 in 4
 pyplot.figure(7)
-solution=np.array([0.58974359,0.653846154,0.974358974,0.974358974,0.974358974,0.974358974,0.961538462])
+solution=np.array([0.974359,0.653846154,0.974358974,0.974358974,0.974358974,0.974358974,0.961538462])
 pyplot.title("Solution Quality")
 pyplot.xlabel("epsilon in epsilon net")
 pyplot.ylabel("objective value")
@@ -102,7 +102,7 @@ pyplot.savefig("solution_epsilon_n6m4.png",dpi=200,transparent=True)
 
 #8 in 6
 pyplot.figure(8)
-solution=np.array([0.43,0.78,0.99,0.98,0.98,0.98,0.97])
+solution=np.array([0.99,0.78,0.99,0.98,0.98,0.98,0.97])
 pyplot.title("Solution Quality")
 pyplot.xlabel("epsilon in epsilon net")
 pyplot.ylabel("objective value")
@@ -116,7 +116,7 @@ pyplot.savefig("solution_epsilon_n8m6.png",dpi=200,transparent=True)
 
 #10 in 8
 pyplot.figure(9)
-solution=np.array([0.348837209,0.781395349,0.988372093,0.981395349,0.981395349,0.979069767,0.979069767])
+solution=np.array([0.995349,0.781395349,0.988372093,0.981395349,0.981395349,0.979069767,0.979069767])
 pyplot.title("Solution Quality")
 pyplot.xlabel("epsilon in epsilon net")
 pyplot.ylabel("objective value")
@@ -130,7 +130,7 @@ pyplot.savefig("solution_epsilon_n10m8.png",dpi=200,transparent=True)
 
 #11 in 9
 pyplot.figure(10)
-solution=np.array([0.323426573,0.867132867,0.98951049,0.986013986,0.984265734,0.982517483,0.982517483])
+solution=np.array([0.996503,0.867132867,0.98951049,0.986013986,0.984265734,0.982517483,0.982517483])
 pyplot.title("Solution Quality")
 pyplot.xlabel("epsilon in epsilon net")
 pyplot.ylabel("objective value")

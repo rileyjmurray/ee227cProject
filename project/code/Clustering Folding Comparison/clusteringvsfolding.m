@@ -10,6 +10,7 @@ mycsp=ppcsp;
 
 %get optimal solution
 opt=solve_csp_optimally(mycsp);
+temp=[evaluateObjective(mycsp,opt.assn),opt.assn];
 
 %get clustering solution
 clust_sol=solve_basic_sdp(mycsp);
