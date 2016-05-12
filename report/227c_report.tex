@@ -128,8 +128,19 @@ CSP's are concerned with a set of variables, $V$, taking values in a finite doma
 
 Let $\Omega_D^k$ be the set of all functions on $k$ or fewer variables (each taking values in $D$) with range $\{ 0,1 \}$. A \textit{constraint} $C_i$ for a CSP over variable set $V$ is any function in $\Omega_D^k$ defined on $S \subset V : |S| \leq k$. We refer to the $S \subset V$ as the \textit{scope} of the constraint, and refer to $|S|$ as the \textit{arity} of the constraint. The maximum arity of all constraints in a CSP is considered a fixed parameter (in the fixed-parameter tractability sense). In view of this, we simplify exposition by assuming that all constraints are of arity $k$.\footnote{Our software package for CSP approximation does not make this assumption.}
 
-While the generality of this framework is useful, it can appear a bit opaque. To bring us back to more familiar territory, we can divide CSP's into well-known classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$.
+While the generality of this framework is useful, it can appear a bit opaque. \autoref{cspdeffig} aims to consolidate these structures to make more clear how a CSP \textit{instance} is constructed. To bring us back to still more familiar territory, we can divide CSP's into well known classes of problems by drawing the constraint functions from some $\Gamma \subset \Omega_D^k$. \autoref{cspclasses} presents such classes of problems for different $\Gamma$, $D$, and $k$.
 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{images/cspdefsec_thinner}
+\caption{A diagram showing how different objects in the CSP framework come together to define a CSP instance. Objects at the tail of an arrow play a defining role the objects at the head of the same.}
+\label{cspdeffig}
+\end{center}
+\end{figure}
+
+
+\begin{table}
 \begin{center}
 \begin{tabular}{c c c l}
 \hline
@@ -141,7 +152,10 @@ k & D & $\Gamma$ & Problem \\
 2  & \{0,1,...,q-1\} & $\{\neq\}$ & Graph Coloring \\
 \hline
 \end{tabular}
+\caption{How the CSP framework can be restricted to result in a variety of heavily studied problem classes.}
+\label{cspclasses}
 \end{center}
+\end{table}
 
 Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP ``Basic SDP" \cite{raghavendra2008optimal}. This report is concerned with constructing, solving, and rounding solutions for the Basic SDP relaxation of a CSP. Along the way, we present new links between hardness-of-approximation (in the computer algorithms sense) and Ramsey Theory.
 
@@ -206,7 +220,7 @@ We note that while Basic SDP has a probabilistic interpretation, this interpreta
 
 \section{Rounding Schemes for Basic SDP (principled and heuristic)}
 
-Rounding a solution to Basic SDP involves performing a Cholesky (or LDL) factorization of the SDP matrix $X \rightarrow MM^{\intercal} $, followed by carefully designed operations on the SDP vectors in the columns of $M$. The two most prominent rounding schemes for Basic SDP are the Variable Folding Method\footnote{sometimes called ``Rounding by Miniatures''} \cite{raghavendra2009round} and a peculiar algorithm introduced by Raghavendra \citep{raghavendra2008optimal} and analyzed under the name ``UGDFS'' in Dwivedi et. al\cite{dwivedi2015introduction}. Both of these rounding schemes technically have polynomial runtime, but the constant factors in their runtime complexity are so large that the authors state the constant -- \textit{but not the polynomial}.
+Rounding a solution to Basic SDP involves performing a Cholesky (or LDL) factorization of the SDP matrix $X \rightarrow MM^{\intercal} $, followed by carefully designed operations on the SDP vectors in the columns of $M$. The two most prominent rounding schemes for Basic SDP are the Variable Folding Method\footnote{sometimes called ``Rounding by Miniatures''} \cite{raghavendra2009round} and a peculiar algorithm introduced by Raghavendra \citep{raghavendra2008optimal} and analyzed under the name ``UGDFS'' by Dwivedi et. al\cite{dwivedi2015introduction}. Both of these rounding schemes technically have polynomial runtime, but the constant factors in their runtime complexity are so large that the authors state the constant -- \textit{but not the polynomial}.
 
 As shown in Dwivedi et. al \cite{dwivedi2015introduction}, there is no hope of implementing UGDFS on computers of today or the foreseeable future. The Variable Folding Method on the other hand, can be simplified while retaining the core idea. Our software package implements a simplified version of the Variable Folding Method on recommendation of Prasad Raghavendra. 
 
@@ -251,7 +265,9 @@ Our greatest difficultly with SDPNAL+ lay in linearly independent constraint qua
 
 We conducted empirical testing on two different CSPs to evaluate and compare the performance of SDP vector clustering and the Variable Folding Method. We also performed sensitivity testing on the Variable Folding Method with respect to the parameter $\epsilon$, which determines the spacing of the $\epsilon$-net, and to the domain size.
 
-The first CSP is the Americas problem, a graph coloring problem (i.e. max-cut on a larger domain) where the graph is a map of North and South America with the countries rendered as nodes and borders as edges. The CSP contains 24 variables and 38 constraints, which is a small enough size that it can be solved exactly using Gurobi. We solved this problem with domains of 2, 3, and 4 colors in three different ways: exactly, using SDP vector clustering, and using the Variable Folding Method. The results are shown in \autoref{americas}. 
+\subsection{Graph Coloring}
+
+The first CSP is the ``Americas problem,'' a graph coloring problem (i.e. max-cut on a larger domain) where the graph is a map of North and South America with the countries rendered as nodes and borders as edges. The CSP contains 24 variables and 38 constraints, which is a small enough size that it can be solved exactly using Gurobi. We solved this problem with domains of 2, 3, and 4 colors in three different ways: exactly, using SDP vector clustering, and using the Variable Folding Method. The results are shown in \autoref{americas}. 
 
 \begin{figure}[ht!]
 \centering
@@ -290,10 +306,9 @@ For those graph coloring problems, we are interested in how much the Variable Fo
 
 We observe that the Variable Folding Method is closest to the optimal solution in all three plots. The difference is 4\% in \ref{2-coloring}, and Variable Folding Method has the optimal solution in \ref{3-coloring} and \ref{4-coloring}. The best result achieved by SDP vector clustering in \ref{4-coloring} is a 25\% difference.
 
+\subsection{SAT and the Pigeonhole Principle}
 
 The second CSP is a 3-SAT formulation of the Pigeonhole Principle. These CSP's have the objective to place items in boxes without having more than 1 item in the same box. Whenever the number of items is greater than the number of boxes, these problems make for interesting candidates for CSP approximation. The reasoning is that for a sufficiently large gap between items and boxes, even an SDP relaxation should be able to tell that not all constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 CSP constraints, 165 CSP variables and an arity of 2 to 3 (depending on CSP constraint), resulting in nearly 5,000 integer variables in gurobi. We note that more generally, the integer program used to solve a CSP (on $n$ variables and $m$ constraints over domain $D$ with arity $k$) has $m \cdot |D|^k + n \cdot |D|$ integer variables.
-
-\FloatBarrier
 
  The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables in the folded CSP the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. Even with small $\epsilon$, the number of variables is reduced by 50\% in the largest problems. In the solution quality plots, we see that the Variable Folding Method achieves or is very close to the optimal solution, with a slight degradation in solution quality as $\epsilon$ increases. SDP vector clustering is not close to the optimal solution, although the approximation error improves from about 30\% in \ref{n6m4} to 15\% in \ref{n11m9} as the problem size grows.
 
@@ -352,7 +367,7 @@ The two problems used to evaluate SDP vector clustering and the Variable Folding
 
 We encountered various issues related to scaling in this work. Because SDPNAL+ is not supported by any general purpose modeling language, we had to construct the Basic SDP relaxation ourselves. In large CSP's, the constraint matrices have millions of rows and columns, which created a large memory bottleneck. We identified and removed these issues using Matlab's Code Profiler. Another issue is that the Variable Folding Method depends on solving the folded problem exactly. Using the published version of this method which projects onto a random subspace in $\mathbb{R}^\beta$, we would end up with folded problems that are too large to solve exactly. Our approximation of projecting onto $\mathbb{R}^2$ instead helped to keep the folded problems small enough to solve exactly.
 
-While developing our software, we identified to small bugs in the API for SDPNAL+ (no bugs relating to algorithmic correctness). Our communications with Dr. Kim-Chuan Toh (corresponding author for SDPNAL+) indicated that these issues and others will be resolved in time, as SDPNAL+ is still very much under development. This bodes well for our project sense it suggests that our CSP API will allow those interested developing rounding schemes for Basic SDP ready-access to a solver with expanding capabilities.
+While developing our software, we identified two small bugs in the API for SDPNAL+ (no bugs relating to algorithmic correctness). Our communications with Dr. Kim-Chuan Toh (corresponding author for SDPNAL+) indicated that these issues and others will be resolved in time, as SDPNAL+ is still very much under development. This bodes well for our project since it suggests that our CSP API will allow those interested in developing rounding schemes for Basic SDP ready-access to a solver with expanding capabilities.
 
 
 %references
