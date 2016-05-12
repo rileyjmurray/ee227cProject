@@ -76,7 +76,7 @@
 		\includegraphics[width=.5\textwidth]{./images/primarylogo}\\[3cm]    
 		
 		\normalsize EE 227C\\
-		\textsc{\large Convex Optimization}\\[1cm]		
+		\textsc{\large Convex Optimization and Approximation}\\[1cm]		
 		
 		% Title
 		\hrule 
@@ -143,7 +143,7 @@ While the generality of this framework is useful, it can appear a bit opaque. \a
 \begin{figure}[htb]
 \begin{center}
 \includegraphics[width=0.8\textwidth]{images/cspdefsec_thinner}
-\caption{A diagram showing how different objects in the CSP framework come together to define a CSP instance. Objects at the tail of an arrow play a defining role the objects at the head of the same.}
+\caption{A diagram showing how different objects in the CSP framework come together to define a CSP instance $\mathfrak{C}$. Objects at the tail of an arrow play a defining role the objects at the head of the same.}
 \label{cspdeffig}
 \end{center}
 \end{figure}
@@ -193,11 +193,9 @@ Ramsey theory is the study of combinatorial objects in which a certain amount of
 \noindent \textit{for fixed $n$ and $m$, what is the smallest $\alpha$ such that for \textit{any} 2-coloring of edges in $K_\alpha$, there necessarily exists a monochromatic clique of size $n$, or a monochromatic clique of size $m$?}
 \vspace{1em}
 
-This``smallest $\alpha$'' is referred to as ``Ramsey of $n,m$'', or simply $R(n,m)$. When $n = m$, we write $R(n)$.
+This``smallest $\alpha$'' is referred to as ``Ramsey of $n,m$'', or simply $R(n,m)$. When $n = m$, we write $R(n)$. Although it has been proven for any $n,m$ there \textit{exists} a finite $R(n,m)$ satisfying the requirements above, the exact values $R(n,m)$ are largely unknown. For example, $R(5)$ is only known to lay in $[43,49]$, and this has remained unchanged for the past 20 years \cite{rn}. 
 
-Although it has been proven for any $n,m$ there \textit{exists} a finite $R(n,m)$ satisfying the requirements above, the exact values $R(n,m)$ are largely unknown. For example, $R(5)$ is only known to lay in $[43,49]$, and this has remained unchanged for the past 20 years \cite{rn}. We now turn to formulating a sequence of CSP's for which optimal solutions would determine $R(5)$, and for which approximate solutions may yield new bounds on the same.
-
-Suppose we are interested in testing whether $R(5) \leq 48$. Construct the complete graph on 48 vertices, $K_{48}$, and for each edge in $K_{48}$ define a variable taking values in $\{\text{red},\text{blue}\}$ for our CSP. For every induced subgraph on 5 vertices, define a constraint with scope of the 5-choose-2 edges in this subgraph. Set the relation for this constraint as the not-all-equal operator. Stated in these terms, $R(5) \leq 48$ if and only if the optimal solution to this CSP satisfies less than 100\% of all constraints (i.e. if the CSP is ``not satisfiable'').
+We now turn to formulating a sequence of CSP's for which optimal solutions would determine $R(5)$, and for which approximate solutions may yield new bounds on the same. Suppose we are interested in testing whether $R(5) \leq 48$. Construct the complete graph on 48 vertices, $K_{48}$, and for each edge in $K_{48}$ define a variable (in the CSP sense) taking values in $\{\text{red},\text{blue}\}$. For every induced subgraph on 5 vertices, define a constraint with scope of the 5-choose-2 edges in this subgraph. Set the relation for this constraint as the not-all-equal operator. Stated in these terms, $R(5) \leq 48$ if and only if the optimal solution to this CSP satisfies less than 100\% of all constraints (i.e. if the CSP is ``not satisfiable'').
 
 More generally, one can construct a CSP which asks whether $R(n) \leq L$ by identifying edge colors of $K_L$ with variables in our CSP, and by identifying edges of induced subgraphs on $n$ vertices as scopes for our constraints. In all cases, the relation on these variables is the not-all-equal operator. In all cases, $R(n) \leq L$ if and only if this CSP is not satisfiable.
 
@@ -205,7 +203,7 @@ Of course, our use of CSP's is posed as a decision problem in a way that could a
 
 Since the integrality gap of Basic SDP is quite possibly smallest-possible\footnote{In that there may not exist a mathematical programming relaxation of any subclass of CSP's for which the largest distance between a relaxation's objective and the true optimal objective is smaller than that of Basic SDP.} \cite{raghavendra2008optimal}, it is reasonable to use SDP relaxations for CSP's in the manner of one-sided hypothesis tests on Ramsey number bounds. 
 
-This is where Ramsey theory and hardness-of-approximation intersect : determining the \textit{smallest possible} size of an object (i.e., s$K_{\alpha}$ for some $\alpha$) so that a property of interest is guaranteed to hold represents an increasingly challenging algorithmic task as the proportion of satisfied constraints approaches but \textit{does not reach} 1.
+This is where Ramsey theory and hardness-of-approximation intersect : determining the \textit{smallest possible} size of an object (i.e., s$K_{\alpha}$ for some $\alpha$) so that a property of interest is guaranteed to hold represents an increasingly challenging algorithmic task as the proportion of satisfied constraints approaches but \textit{does not reach} 1. 
 
 \section{An Overview of Basic SDP}
 
@@ -262,9 +260,9 @@ Because Basic SDP is quite large even for moderate CSP's, standard solvers based
 
 SDPNAL+ is not supported by any general purpose modeling language. As a result, we needed to build all constraint matrices directly. Since constraint matrices of the types we consider have millions of rows and columns, severe memory bottlenecks (requiring $>$ 50 GB RAM) are faced in SDP construction even with diligent usage of sparse matrix storage formats. With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. 
 
-Our biggest runtime bottleneck for SDP construction came in creating linear operators for the matrix variable. In the symbolic statement of standard form SDP for SDPNAL+, the linear operators are defined as matrices. In the code for SDPNAL+, the linear operators must be stored as \textit{vectorized} matrices. We found that author-provided C code written specifically for vectorizing linear operators in matrix form was too slow for our formulation. Ultimately, we bypassed this bottleneck by constructing the linear operators directly in vector form.
+Our biggest runtime bottleneck for SDP construction came in creating linear operators for the matrix variable. In the symbolic statement of a standard form SDP for SDPNAL+, the linear operators are defined as matrices. In the code for SDPNAL+, the linear operators must be stored as \textit{vectorized} matrices. We found that author-provided C code written specifically for vectorizing matrix-represented linear operators was too slow for our formulation. Ultimately, we bypassed this bottleneck by constructing the linear operators directly in vector form.
 
-In our experiments, SDPNAL+ is capable of solving these SDP's with matrix variable on the order of multiple thousands of rows and columns (and hundreds of thousands of linear constraints in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
+In our experiments, SDPNAL+ is capable of solving these SDP's with matrix variable on the order of multiple thousands of rows and columns (and hundreds of thousands of linear constraints) in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
 
 \begin{figure}[htb]
 \includegraphics[width=\textwidth]{images/runtime}
