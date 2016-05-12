@@ -129,6 +129,6 @@ assignment = zeros(1,n);
 for i = 1:n
     assignment(i) = folded_sol.assn(invZ(phi_map(i)));
 end
-sol.assn = csp.domain(assignment);
+sol.assn = assignment;
 
 end

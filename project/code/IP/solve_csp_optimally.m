@@ -135,7 +135,7 @@ for i = 1:(csp.numVariables)
 end
 
 sol.gurobi_output = result;
-sol.assn = assignment;
+sol.assn = csp.domain(assignment);
 
 end
 

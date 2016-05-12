@@ -78,7 +78,7 @@
 		% Title
 		\hrule 
 		\vspace{1 cm}
-		{ \Large \textbf{Semidefinite Programming Relaxations of Constraint Satisfaction Problems}\\[0.5cm]
+		{ \Large \textbf{A Platform for Solving Constraint Satisfaction Problems via Semidefinite Programming}\\[0.5cm]
 			\vspace{0.5 cm}
 			\hrule
 			\vspace{1.5 cm}
@@ -111,37 +111,15 @@
 
 \section*{Abstract}
 
-Content goes here
-
-\section{Introduction}
-
-A Constraint Satisfaction Problem (CSP) is a discrete optimization problem consisting of a set of variables ( which take on values in a finite domain) and a set of constraints (indicator functions defined on a subset of variables of some specified cardinality).
-
-The goal is to assign each variable a value in the domain so that the largest number of constraints are satisfied.
+A Constraint Satisfaction Problem (CSP) is a discrete optimization problem consisting of a set of variables (which take on values in a finite domain) and a set of constraints (indicator functions defined on a subset of variables of some specified cardinality). The objective in a CSP is to assign each variable a value in the domain so that the largest number of constraints are satisfied.
 
 CSP's subsume a wide range of fundamental combinatorial optimization problems, including Max k-SAT, graph coloring (approximately defined), and Unique Games.
 
-Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP, (which we call ``Basic SDP" \citep{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{qwivedi2015introduction}, these algorithms require impossibly powerful machines.
+Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP (called ``Basic SDP" \cite{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{dwivedi2015introduction}, these algorithms require impossibly powerful machines.
 
-In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future.
+In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future. 
 
-\section{Method}
-
-\subsection{Our Contribution}
-
-Using a Matlab abstraction for Constraint Satisfaction Problems developed in \citet{qwivedi2015introduction}, we have developed a software system with the following capabilities:
-
-\begin{enumerate}
-\item Given a Matlab CSP object, we can effiiciently construct SDP input parameters in the format used by SDPT3 ( a core routing in CVX and Yalmip) and SDPNAL+ ( a cutting edge solver capable of solving SDP's with >10 million linear equality constraints).
-
-\item Given a Matlab CSP object, we can solve it to arbitrary accuracy with a MIP formulation via the Gurobi optimization solver.
-
-\item Given the solution to Basic SDP for a given CSP, we can return an assignment of variables for the CSP based on various heuristic adaptations of published (but impractical) algorithms.
-\end{enumerate}
-
-In addition, we have explored how the CSP framework can be applied to longstanding open questions in Ramsey Theory.
-
-\subsection{Definition of a CSP}
+\section{Introduction}
 
 CSP's are concerned with a set of variables, $v$, taking values in a finite domain $D$ with the goal of satisfying as many constraints as possible. Such constraints are sometimes called ``soft constraints."
 
@@ -164,7 +142,32 @@ $\left(\begin{array}{c}
 \hline
 \end{tabular}
 
-\subsection{Definition of a Basic SDP}
+
+%A Constraint Satisfaction Problem (CSP) is a discrete optimization problem consisting of a set of variables (which take on values in a finite domain) and a set of constraints (indicator functions defined on a subset of variables of some specified cardinality). The objective in a CSP is to assign each variable a value in the domain so that the largest number of constraints are satisfied.
+
+%CSP's subsume a wide range of fundamental combinatorial optimization problems, including Max k-SAT, graph coloring (approximately defined), and Unique Games.
+
+%Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP (called ``Basic SDP" \cite{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{dwivedi2015introduction}, these algorithms require impossibly powerful machines.
+
+%In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future.
+
+\subsection{Our Contributions}
+ 
+Using a Matlab abstraction for Constraint Satisfaction Problems developed in \cite{dwivedi2015introduction}, we have developed a software system with the following capabilities:
+
+\begin{enumerate}
+\item Given a Matlab CSP object, we can efficiently construct SDP input parameters in the format used by SDPT3 ( a core routing in CVX and Yalmip) and SDPNAL+ ( a cutting edge solver capable of solving SDP's with >10 million linear equality constraints).
+
+\item Given a Matlab CSP object, we can solve it to arbitrary accuracy with a MIP formulation via the Gurobi optimization solver.
+
+\item Given the solution to Basic SDP for a given CSP, we can return an assignment of variables for the CSP based on various heuristic adaptations of published (but impractical) algorithms.
+\end{enumerate}
+
+In addition, we have explored how the CSP framework can be applied to longstanding open questions in Ramsey Theory.
+
+\subsection{Report Outline}
+
+\section{An Overview of Basic SDP}
 
 A \emph{local assignment} for constraint $C_i$ is a mapping from $S_i$ to $D^k$ that specifies the values for all variables in the scope of constraint $C_i$. There are $|D|^k$ such local assignments for each constraint. Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \citep{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
 
@@ -179,27 +182,31 @@ The first of these equality constraints is for all $i : C_i$ is in $C$. The seco
 
 $X_{(v,\ell),(v',\ell')} = \mathbb{E}[I_v(\ell)I_{v'}(\ell')] = \mathbb{P}_{L\sim y_i}[L(v)=\ell, L(v')=\ell']$
 
-\subsection{Solving Large SDP's}
+\section{Rounding Schemes for Basic SDP (principled and heuristic)}
 
-SDPNAL+ \citep{yang2015sdpnal+, zhao2010newton} is a combination MATLAB / C implementation of a hybrid Newton Conjugate Gradient \& Alternating Direction Method of Multipliers solver for SDP's with bound constraints.
-
-SDPNAL+ is not supported by any general purpose modeling language. As a result, we needed to build all constraint matrices directly. Since constraint matrices of the types we consider have millions of rows and columns, severe memory bottlenecks (requiring >50 GB RAM) are faced in SDP construction even with diligent usage of sparse matrix storage formats.
-
-With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. In our experiments, SDPNAL+ is capable of solving these SDP's in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
-
-(put figure here)
 
 \subsection{The Variable Folding Method}
 
 The Variable Folding Method (VFM) is a rounding scheme for Basic SDP introduced in \citet{raghavendra2009round}. At a high level, VFM performs a Cholesky (or LDL) factorization of the SDP matrix $X$, then projects the resulting SDP vectors onto a random subspace of dimension $\beta$. Once the SDP vectors are projected onto this random subspace, they are classified over an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$. Variables whose associated SDP vectors are classified in identical ways are merged, and a new CSP is defined in this variable-merging process. The new CSP is called a ``folding" of the original CSP and needs to be solved by an exact algorithm (we use Gurobi Optimization solver for this purpose). VFM completes by ``unfolding" the optimal assignment of variables for the folded CSP into an assignment of variables for the original CSP.
 
-VFM is polynomial in that the folded CSP has a bounded number of variables, but this bound is impossibly large to be useful with today's computer systems \citep{qwivedi2015introduction}. We mitigate this issue by projecting onto an extremely small dimension ($\beta = 2$), and choosing $\epsilon$ for our $\epsilon$-net in a generous way.
+VFM is polynomial in that the folded CSP has a bounded number of variables, but this bound is impossibly large to be useful with today's computer systems \citep{dwivedi2015introduction}. We mitigate this issue by projecting onto an extremely small dimension ($\beta = 2$), and choosing $\epsilon$ for our $\epsilon$-net in a generous way.
 
 \subsection{SDP Vector Clustering}
 
 VFM has two computationally expensive operations (three if you count solving Basic SDP): (1) constructing an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$ for $\beta>>2$, and (2) solving a resulting CSP exactly. We have implemented a much simpler procedure that appeals to the notion that CSP variables with similar sets of SDP vectors can be lumped together as a single variable. Step 1: project SDP vectors onto a random subspace of any dimension $\geq |D|$. Step 2: assemble all SDP vectors associated with a CSP variable into a single vector. Step 3: cluster the resulting vectors into $|D|$ equivalence classes. Step 4: assign variables arbitrarily for symmetric CSP's (e.g. graph coloring) and test $|D|!$ assignments for asymmetric CSP's (e.g. 3-SAT).
 
-\section{Results}
+
+\section{Practical Considerations in Solving Large SDP's}
+
+SDPNAL+ \cite{yang2015sdpnal+, zhao2010newton} is a combination MATLAB / C implementation of a hybrid Newton Conjugate Gradient \& Alternating Direction Method of Multipliers solver for SDP's with bound constraints.
+
+SDPNAL+ is not supported by any general purpose modeling language. As a result, we needed to build all constraint matrices directly. Since constraint matrices of the types we consider have millions of rows and columns, severe memory bottlenecks (requiring $>$ 50 GB RAM) are faced in SDP construction even with diligent usage of sparse matrix storage formats.
+
+With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. In our experiments, SDPNAL+ is capable of solving these SDP's in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
+
+(put figure here)
+
+\section{Experimental Results}
 
 We conducted empirical testing on two different CSPs to evaluate and compare the performance of SDP vector clustering and the Variable Folding Method. We also performed sensitivity testing on the Variable Folding Method with respect to the parameter $\epsilon$, which determines the spacing of the $\epsilon$-net, and to the domain size.
 
