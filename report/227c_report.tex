@@ -25,6 +25,7 @@
 
 %%% PACKAGES
 \usepackage{bbm}
+\usepackage{amssymb}
 \usepackage{booktabs} % for much better looking tables
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
@@ -119,7 +120,7 @@ CSP's subsume a wide range of fundamental combinatorial optimization problems, i
 
 Significant effort has been dedicated to developing approximation algorithms for CSP's. The most general of these algorithms involve solving a canonical SDP relaxation of the CSP (called ``Basic SDP" \cite{raghavendra2008optimal}) and use extremely sophisticated post-processing of SDP vectors to determine an assignment of variables. Unfortunately, as was shown in \cite{dwivedi2015introduction}, these algorithms require impossibly powerful machines.
 
-In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future. We developed a Matlab-based software package for CSP's. This package takes a CSP object, computes the Basic SDP relaxation of the problem and solves it using SDPNAL+, and then uses heuristic methods to turn the SDP solution into an assignment of variables for the CSP.  The assignment heuristics used are SDP vector clustering and an approximation of the Variable Folding Method. We tested this software package on two CSP's: a graph-coloring problem, and pigeonhole problems of various sizes. Our approximation of the Variable Folding Method is found to perform best, closely approximating or matching the optimal solution while reducing the number of variables by over 80\% in large problems. We conclude with a discussion of issues related to scaling and applications in Ramsey Theory.
+In this work, we deploy approximation algorithms rooted in theory but driven by practical considerations to approximate CSP's with the machines of today and the near future. We developed a Matlab-based software package for CSP's. This package takes a CSP object, computes the Basic SDP relaxation of the problem and solves it using SDPNAL+, and then uses heuristic methods to turn the SDP solution into an assignment of variables for the CSP.  The assignment heuristics used are SDP vector clustering and an approximation of the Variable Folding Method. We tested this software package on two CSP's: a graph-coloring problem, and Pigeonhole Principle statments of various sizes. Our approximation of the Variable Folding Method is found to perform best, closely approximating or matching the optimal solution while reducing the number of variables in the folded CSP by over 80\% in large problems. We conclude with a discussion of issues related to scaling and applications in Ramsey Theory.
 
 \section{Introduction}
 
@@ -184,48 +185,67 @@ Since the integrality gap of Basic SDP is quite possibly smallest-possible\footn
 
 Basic SDP operates on a principle of consistency across local assignments. A local assignment for a constraint $C_i$ is a mapping $L_i$ from $S_i$ to $D^{k}$; there are $|D|^k$ such local assignments for each constraint. A collection of \textit{consistent} local assignments is any set of mappings $\mathfrak{L}$ such that for all $L_i, L_j \in \mathfrak{L}$ with $v \in S_i \cap S_j$, we have $L_i(v) = L_j(v)$.
 
-Basic SDP introduces one variable for each local assignment of each constraint, and establishes coupling constraints between 
+Basic SDP introduces one linear variable for each local assignment of each constraint $(y_i[L])$, and establishes coupling constraints between these variables. The coupling constraints are with respect to a matrix variable (which has the probabilistic interpretation as the covariance matrix of indicator variables). Using this interpretation, Basic SDP optimizes over a set of probability distributions.
 
-Basic SDP introduces one variable for each local assignment of each constraint $(y_i[L])$ and establishes coupling constraints between these variables. Basic SDP \cite{raghavendra2008optimal} is reproduced below, \emph{without} the usual scaling of the objective by $1/m$.
+For a CSP $\mathfrak{C} = (V,D,C)$ including $|C| = m$ constraints, the Basic SDP of $\mathfrak{C}$ is as follows.
 
 \begin{align}
-\operatorname*{max}_{\substack{y \geq 0 \\  X \succeq 0}} ~ & ~ \sum\limits_{i:C_i\in C} \sum\limits_{L\in \mathcal{L}_i} R_i(L)y_i[L] \nonumber  \\
+\operatorname*{max}_{\substack{y \geq 0 \\  X \succeq 0}} ~ & ~ \frac{1}{m}\sum\limits_{i:C_i\in C} \sum\limits_{L\in \mathcal{L}_i} R_i(L)y_i[L]  \nonumber  \\
 s.t. ~ & ~ \sum\limits_{L \in \mathcal{L}_i} y_i[L] = 1  \quad \forall i : C_i \in C \\
 & ~ \sum\limits_{\substack{L \in \mathcal{L}_i \\ L(v)=\ell \\ L(v')=\ell '}} y_i[L] = X_{(v,\ell),(v',\ell')}  \quad \forall (v,\ell,v',\ell') : \exists C_i = (S_i, f_i) \text{ with } v,v' \in S_i \\
 & ~ 0 \leq  X_{(v,\ell),(v',\ell')}  \leq \mathbbm{1}\{ v \neq v' \text{ or } \ell = \ell' \}
 \end{align}
 
-This SDP also has a probabilistic interpretation, if we made the following identifications:
+The probabilistic interpretation arises from the following identifications.
 
 \begin{equation}
-X_{(v,\ell),(v',\ell')} = \mathbb{E}[I_v(\ell)I_{v'}(\ell')] = \mathbb{P}_{L\sim y_i}[L(v)=\ell, L(v')=\ell']
+X_{(v,\ell),(v',\ell')} = \mathbb{E}[I_v(\ell)I_{v'}(\ell')] = \mathbb{P}_{L\sim y_i}[L(v)=\ell, L(v')=\ell'] \quad \forall ~ i : v,v' \in S_i
 \end{equation}
+
+We note that while Basic SDP has a probabilistic interpretation, this interpretation only serves to motivate the formulation, and is not used in the rounding schemes that follow (either disciplined rounding schemes, or more ad-hoc schemes).
 
 \section{Rounding Schemes for Basic SDP (principled and heuristic)}
 
+Rounding a solution to Basic SDP involves performing a Cholesky (or LDL) factorization of the SDP matrix $X \rightarrow MM^{\intercal} $, followed by carefully designed operations on the SDP vectors in the columns of $M$. The two most prominent rounding schemes for Basic SDP are the Variable Folding Method\footnote{sometimes called ``Rounding by Miniatures''} \cite{raghavendra2009round} and a peculiar algorithm introduced by Raghavendra \citep{raghavendra2008optimal} and analyzed under the name ``UGDFS'' in Dwivedi et. al\cite{dwivedi2015introduction}. Both of these rounding schemes technically have polynomial runtime, but the constant factors in their runtime complexity are so large that the authors state the constant -- \textit{but not the polynomial}.
+
+As shown in Dwivedi et. al \cite{dwivedi2015introduction}, there is no hope of implementing UGDFS on computers of today or the foreseeable future. The Variable Folding Method on the other hand, can be simplified while retaining the core idea. Our software package implements a simplified version of the Variable Folding Method on recommendation of Prasad Raghavendra. 
 
 \subsection{The Variable Folding Method}
 
-The Variable Folding Method (VFM) is a rounding scheme for Basic SDP introduced in \citet{raghavendra2009round}. At a high level, VFM performs a Cholesky (or LDL) factorization of the SDP matrix $X$, then projects the resulting SDP vectors onto a random subspace of dimension $\beta$. Once the SDP vectors are projected onto this random subspace, they are classified over an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$. Variables whose associated SDP vectors are classified in identical ways are merged, and a new CSP is defined in this variable-merging process. The new CSP is called a ``folding" of the original CSP and needs to be solved by an exact algorithm (we use Gurobi Optimization solver for this purpose). VFM completes by ``unfolding" the optimal assignment of variables for the folded CSP into an assignment of variables for the original CSP.
+The Variable Folding Method (VFM) is a rounding scheme for Basic SDP introduced in \cite{raghavendra2009round}. Given the SDP vectors in the matrix $M$ (from the Cholesky decomposition of $X$), VFM projects the vectors onto a random subspace of dimension $\beta$. Once the SDP vectors are projected onto this random subspace, they are classified over an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$.\footnote{An $\epsilon$-net is a discretization of a compact subset of a metric space such that for any point in the subset, there exists a discrete representative within $\epsilon$ distance under the associated metric.} Variables whose associated SDP vectors are classified in identical ways are merged, and a new CSP is defined in this variable-merging process. The new CSP is called a ``folding" of the original CSP and needs to be solved by an \textit{exact} algorithm. VFM completes by ``unfolding" the optimal assignment of variables for the folded CSP into an assignment of variables for the original CSP. VFM is polynomial in that the folded CSP has a bounded number of variables, but this bound is impossibly large to be useful with today's computer systems \citep{dwivedi2015introduction}. 
 
-VFM is polynomial in that the folded CSP has a bounded number of variables, but this bound is impossibly large to be useful with today's computer systems \citep{dwivedi2015introduction}. We mitigate this issue by projecting onto an extremely small dimension ($\beta = 2$), and choosing $\epsilon$ for our $\epsilon$-net in a generous way.
+In our implementation of VFM, we push the folding to an extreme by projecting onto an extremely small dimension ($\beta = 2$), and choosing $\epsilon$ for our $\epsilon$-net in a generous way. For the phase requiring an exact solution of the folded CSP, we wrote a generic function that accepts arbitrary Matlab CSP objects and returns optimal solutions via the Gurobi Optimization integer programming solver \cite{gurobi}.
 
 \subsection{SDP Vector Clustering}
 
-VFM has two computationally expensive operations (three if you count solving Basic SDP): (1) constructing an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$ for $\beta>>2$, and (2) solving a resulting CSP exactly. We have implemented a much simpler procedure that appeals to the notion that CSP variables with similar sets of SDP vectors can be lumped together as a single variable. Step 1: project SDP vectors onto a random subspace of any dimension $\geq |D|$. Step 2: assemble all SDP vectors associated with a CSP variable into a single vector. Step 3: cluster the resulting vectors into $|D|$ equivalence classes. Step 4: assign variables arbitrarily for symmetric CSP's (e.g. graph coloring) and test $|D|!$ assignments for asymmetric CSP's (e.g. 3-SAT).
+VFM has three computationally expensive operations: (1) constructing and solving Basic SDP, (2) constructing an $\epsilon$-net of the unit ball in $\mathbb{R}^\beta$ for $\beta>>2$, and (3) solving a resulting CSP exactly.
 
+While we are interested in approaches that solve Basic SDP, there are natural alternatives to the second and third of these steps. We propose the following procedure as an ad-hoc rounding scheme for Basic SDP.
+\begin{enumerate}
+\item Project SDP vectors onto a random subspace of any dimension $\geq |D|$.
+\item Assemble all SDP vectors associated with a CSP variable (there are $|D|$ such vectors) into a single vector.
+\item Cluster the resulting vectors into $|D|$ equivalence classes.
+\item Assign variables arbitrarily for symmetric CSP's (e.g. graph coloring) and test all $|D|!$ assignments for asymmetric CSP's (e.g. 3-SAT).
+\end{enumerate}
+
+While the last of these steps is expensive for problems with large domain size, the CSP framework is intentionally used for classes of problems where the domain is small (often binary).
 
 \section{Practical Considerations in Solving Large SDP's}
 
-SDPNAL+ \cite{yang2015sdpnal+, zhao2010newton} is a combination MATLAB / C implementation of a hybrid Newton Conjugate Gradient \& Alternating Direction Method of Multipliers solver for SDP's with bound constraints.
+Because Basic SDP is quite large even for moderate CSP's, standard solvers based on interior-point methods (e.g. SDPT3 or Mosek's SDP solver) are not viable for our purpose. Recently, a group from the National University of Singapore has developed a hybrid Netwon Conjugate Gradient and ADMM solver for SDP's with bound constraints \cite{yang2015sdpnal+, zhao2010newton}. Their solver, SDPNAL+, uses Matlab as the organizing language and C for numerically intensive operations (via Mex files). SDPNAL+ is capable of high levels of shared-memory parallelism (e.g. effective use of more than 8 cores in our experiments) and has been shown to capable of solving SDP's with matrix varible on the order of 5,000 $\times$ 5,000 and over 10 million linear equality constraints.
 
-SDPNAL+ is not supported by any general purpose modeling language. As a result, we needed to build all constraint matrices directly. Since constraint matrices of the types we consider have millions of rows and columns, severe memory bottlenecks (requiring $>$ 50 GB RAM) are faced in SDP construction even with diligent usage of sparse matrix storage formats.
+SDPNAL+ is not supported by any general purpose modeling language. As a result, we needed to build all constraint matrices directly. Since constraint matrices of the types we consider have millions of rows and columns, severe memory bottlenecks (requiring $>$ 50 GB RAM) are faced in SDP construction even with diligent usage of sparse matrix storage formats. With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. 
 
-With Matlab's Code Profiler, we identified and removed these memory bottlenecks. Our code can construct a CSP's Basic SDP relaxation even with large matrix variable (in excess of 3,000 x 3,000) with under 500 MB RAM. In our experiments, SDPNAL+ is capable of solving these SDP's in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
+Our biggest runtime bottleneck for SDP construction came in creating linear operators for the matrix variable. In the symbolic statement of standard form SDP for SDPNAL+, the linear operators are defined as matrices. In the code for SDPNAL+, the linear operators must be stored as \textit{vectorized} matrices. We found that author-provided C code written specifically for vectorizing linear operators in matrix form was too slow for our formulation. Ultimately, we bypassed this bottleneck by constructing the linear operators directly in vector form.
 
-\begin{figure}
+In our experiments, SDPNAL+ is capable of solving these SDP's with matrix variable on the order of multiple thousands of rows and columns (and hundreds of thousands of linear constraints in minutes. A set of SDP instances with time-to-solve is given below (with CSP's corresponding to 3-SAT statements of the Pigeonhole Principle).
+
+\begin{figure}[ht!]
 \includegraphics[width=\textwidth]{images/runtime}
+\caption{Time to solve Basic SDP relaxations of 3-SAT statements of the Pigeon Hole Principle. The machine used for these instances had 64GB RAM and dual Xeon processors (8 cores / socket) at 2.2GHz.}
 \end{figure}
+
+Our greatest difficultly with SDPNAL+ lay in linearly independent constraint qualification. While any well-posed SDP can have linearly dependent constraints removed without loss of generality, it is difficult to determine a-priori a subset of linearly independent constriants for a CSP $\mathfrak{C}$'s Basic SDP relaxation. On the other hand, once an instance is \textit{built}, the constraint matrices are too large for standard constraint reduction techniques (which involve computing Cholesly or QR factorizations of the entire constriant matrix). Thus for small problems we have implemented constraint reduction techniques that make SDPNAL+ robust, large problems (such as those for bounding $R(5)$) are not solveable at this time (even on our machine with 64GB RAM).
 
 \section{Experimental Results}
 
@@ -266,7 +286,7 @@ The first CSP is the Americas problem, a graph coloring problem (i.e. max-cut) w
 \label{americas}
 \end{figure}
 \FloatBarrier
-The second CSP is the pigeonhole problem, a SAT problem where the objective is to place items in boxes without having more than 1 item in the same box. All of the instances tested are not satisfiable (more items than boxes) but are still interesting as a test of our method for solving CSPs. Even an approximation algorithm should be able to identify (1) that not all constraints can be satisfied and (2) how many constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 constraints, 165 variables and an arity of 2, for $numConstraints |D|^{arity} + numVariables |D|=$4,906 integer variables in Gurobi. The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. Even with small $\epsilon$, the number of variables is reduced by 50\% in the largest problems. In the solution quality plots, we see that the Variable Folding Method achieves or is very close to the optimal solution, with a slight degradation in solution quality as $\epsilon$ increases. SDP vector clustering is not close to the optimal solution, although the approximation error improves from about 30\% in \ref{n6m4} to 15\% in \ref{n11m9} as the problem size grows.
+The second CSP is a 3-SAT formulation of the Pigeonhole Principle. These CSP's have the objective to place items in boxes without having more than 1 item in the same box. Whenever the number of items is greater than the number of boxes, these problems make for interesting candidates for CSP approximation. The reasoning is that for a sufficiently large gap between items and boxes, even an SDP relaxation should be able to tell that not all constraints can be satisfied. We limited ourselves to instances that were small enough to solve exactly. The largest instance presented here (11 items in 9 boxes) has 572 constraints, 165 variables and an arity of 2, for $numConstraints |D|^{arity} + numVariables |D|=$4,906 integer variables in Gurobi. The figures are similar to those presented for the Americas problem. In \autoref{pigeon-reduction}, only $\epsilon$ varies, not the domain. We see that the Variable Folding Method can eliminate more variables in the folded CSP the larger the problem gets, with a reduction of over 80\% possible with large $\epsilon$ for 10 items in 8 boxes and 11 items in 9 boxes. Even with small $\epsilon$, the number of variables is reduced by 50\% in the largest problems. In the solution quality plots, we see that the Variable Folding Method achieves or is very close to the optimal solution, with a slight degradation in solution quality as $\epsilon$ increases. SDP vector clustering is not close to the optimal solution, although the approximation error improves from about 30\% in \ref{n6m4} to 15\% in \ref{n11m9} as the problem size grows.
 
 \begin{figure}[ht!]
 \centering
@@ -323,10 +343,12 @@ The two problems used to evaluate SDP vector clustering and the Variable Folding
 
 We encountered various issues related to scaling in this work. Because SDPNAL+ is not supported by any general purpose modeling language, we had to construct the basic SDP relaxation ourselves. In large CSP's, the constraint matrices have millions of rows and columns, which created a large memory bottleneck. We identified and removed these issues using Matlab's Code Profiler. Another issue is that the Variable Folding Method depends on solving the folded problem exactly. Using the published version of this method which projects onto a random subspace in $\mathbb{R}^\beta$, we would end up with folded problems that are too large to solve exactly. Our approximation of projecting onto $\mathbb{R}^2$ instead helped to keep the folded problems small enough to solve exactly.
 
+While developing our software, we identified to small bugs in the API for SDPNAL+ (no bugs relating to algorithmic correctness). Our communications with Dr. Kim-Chuan Toh (corresponding author for SDPNAL+) indicated that these issues and others will be resolved in time, as SDPNAL+ is still very much under development. This bodes well for our project sense it suggests that our CSP API will allow those interested developing rounding schemes for Basic SDP ready-access to a solver with expanding capabilities.
+
 
 %references
 \renewcommand{\bibname}{References}
-\bibliographystyle{apalike}
+\bibliographystyle{alpha}
 \bibliography{./227c_references}
 
 \end{document}
